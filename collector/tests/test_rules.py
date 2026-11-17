@@ -64,3 +64,21 @@ def test_load_rules_missing_key_raises_valueerror(tmp_path):
 def test_shipped_rules_file_loads():
     rules = load_rules(Path(__file__).resolve().parents[2] / "rules.yaml")
     assert "Switzerland" in rules.countries
+
+
+def _shipped():
+    return load_rules(Path(__file__).resolve().parents[2] / "rules.yaml")
+
+
+def test_shipped_rules_reject_engineering_marketing_and_sales_support_roles():
+    rules = _shipped()
+    for title in ["Software Engineer Intern - Fullstack", "Marketing Associate - Netherlands",
+                  "Associate Account Executive - Netherlands", "Data Engineer", "Product Designer"]:
+        assert not matches(role(title=title, country="Spain"), rules), title
+
+
+def test_shipped_rules_keep_target_roles():
+    rules = _shipped()
+    for title in ["Business Analyst Intern", "Strategy Associate, Life Sciences", "Investment Analyst",
+                  "Graduate Consultant", "Business Development Associate", "CDD Risk Analyst"]:
+        assert matches(role(title=title, country="Spain"), rules), title

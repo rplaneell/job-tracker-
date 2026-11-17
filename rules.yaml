@@ -3,7 +3,9 @@ countries: [Spain, Switzerland, Belgium, Netherlands, Denmark]
 include_keywords:
   [analyst, consultant, consulting, associate, intern, internship, graduate,
    business development, strategy, investment, venture]
-exclude_keywords: [senior, director, principal, vice president, head of]
+exclude_keywords:
+  [senior, director, principal, vice president, head of, engineer, engineering, developer,
+   software, designer, recruiter, marketing, account executive, customer success, support]
 field_keywords:
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]

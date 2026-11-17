@@ -130,3 +130,26 @@ Plain, editable rules in a config file: allowed countries and cities, title keyw
 - Large firms may not offer public data, so Stage 3 may only cover part of them.
 - Public endpoints can change without notice. The Sources health page and a failure email cover this.
 - Terms of use differ per site. Check each one before adding it.
+
+## Addendum, 2026-11-17: wider sources and the compliance gate
+
+The owner asked to cover the vast majority of sources that can legally be read, including small and specialised firms. LinkedIn, Indeed and Glassdoor are out because their terms forbid automated collection (the owner's LinkedIn route is email alerts, a later step). This addendum is not legal advice. The rules below are deliberately cautious and the owner confirmed all of them.
+
+### Compliance gate (applies to every source)
+
+1. Official public feed or API first. Scrape pages only when none exists.
+2. Public pages only. No login, no fake accounts, nothing that gets around blocking. If a site blocks the tool, drop that source.
+3. robots.txt is read automatically and respected, per request. A missing robots file (404) allows. Access denied (401 or 403), a server error or no answer disallows for that run.
+4. Terms of use are read once per site by a person or by Claude, and the result is saved in `sources.yaml` (`terms: ok | no`, `basis`, `reviewed_on`). Reading HTML pages without `terms: ok` is refused. Entries marked `no` are skipped.
+5. One request per second per host at most, once a day, with the user agent `job-tracker personal tool (one check per day)`.
+6. Keep only job data: title, location, link, short description, posting date. No recruiter or candidate personal data. Every role links back to its original posting.
+
+### New sources, in order
+
+Verified with one light request each on 2026-11-17: Personio XML feed (robots allows all), Teamtailor RSS feed (job pages allowed), SmartRecruiters public postings API (answered without a login). Not verified, so not included: Recruitee (guessed address failed; needs a real company to test). Dropped: Workable (official API needs a token, public address blocked the first request).
+
+Then a generic reader for schema.org JobPosting markup (JSON-LD) on company career pages that pass the gate. Large firms on undocumented systems (for example Workday) are reviewed one by one and may be marked `no`.
+
+### Out of scope here
+
+LinkedIn email alert reading, Adzuna and Jooble (need keys from the owner), Getro boards (unverified).

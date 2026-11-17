@@ -114,3 +114,18 @@ def test_repo_root_contains_config_files():
     from jobtracker.run import repo_root
 
     assert (repo_root() / "sources.yaml").exists() and (repo_root() / "rules.yaml").exists()
+
+
+def test_run_registers_adapter_for_each_kind():
+    from jobtracker.run import ADAPTERS
+
+    assert set(ADAPTERS) == {"greenhouse", "lever", "ashby", "personio", "teamtailor", "smartrecruiters", "jsonld"}
+
+
+def test_make_client_is_the_polite_client():
+    from jobtracker.compliance import PoliteClient
+    from jobtracker.run import make_client
+
+    client = make_client()
+    assert isinstance(client, PoliteClient)
+    client.client.close()

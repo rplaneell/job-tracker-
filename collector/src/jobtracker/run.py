@@ -13,7 +13,12 @@ import httpx
 from jobtracker.adapters import SourceError
 from jobtracker.adapters.ashby import fetch_ashby
 from jobtracker.adapters.greenhouse import fetch_greenhouse
+from jobtracker.adapters.jsonld import fetch_jsonld
 from jobtracker.adapters.lever import fetch_lever
+from jobtracker.adapters.personio import fetch_personio
+from jobtracker.adapters.smartrecruiters import fetch_smartrecruiters
+from jobtracker.adapters.teamtailor import fetch_teamtailor
+from jobtracker.compliance import PoliteClient
 from jobtracker.models import Role
 from jobtracker.registry import Source, load_sources
 from jobtracker.rules import Rules, load_rules, matches, tag_field, tag_level
@@ -23,8 +28,17 @@ ADAPTERS: dict[str, Callable[[httpx.Client, Source], list[Role]]] = {
     "greenhouse": fetch_greenhouse,
     "lever": fetch_lever,
     "ashby": fetch_ashby,
+    "personio": fetch_personio,
+    "teamtailor": fetch_teamtailor,
+    "smartrecruiters": fetch_smartrecruiters,
+    "jsonld": fetch_jsonld,
 }
 USER_AGENT = "job-tracker personal tool (one check per day)"
+
+
+def make_client() -> PoliteClient:
+    """The only HTTP client the collector uses: obeys robots.txt and paces requests."""
+    return PoliteClient(httpx.Client(follow_redirects=True), USER_AGENT)
 PAUSE_SECONDS = 1.0
 RETRY_PAUSE_SECONDS = 5.0
 
@@ -101,8 +115,11 @@ def main() -> int:
     sources = load_sources(root / "sources.yaml")
     rules = load_rules(root / "rules.yaml")
     db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
-    with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True) as http:
+    http = make_client()
+    try:
         result = run_collection(sources, rules, Store(db), http, datetime.now(timezone.utc), time.sleep)
+    finally:
+        http.client.close()
     resend.api_key = os.environ["RESEND_API_KEY"]
     deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")

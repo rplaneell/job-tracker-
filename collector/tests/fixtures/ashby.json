@@ -1,0 +1,5 @@
+{"apiVersion":"1","jobs":[
+ {"title":"Investment Analyst","location":"Copenhagen","secondaryLocations":[],"isRemote":false,"workplaceType":"OnSite","isListed":true,"publishedAt":"2026-11-12T08:00:00.000+00:00","employmentType":"FullTime","descriptionPlain":"Back biotech founders.","address":{"postalAddress":{"addressLocality":"Copenhagen","addressCountry":"Denmark"}},"jobUrl":"https://jobs.ashbyhq.com/gamma/111","applyUrl":"https://jobs.ashbyhq.com/gamma/111/application"},
+ {"title":"Hidden Role","location":"Zurich","isRemote":false,"isListed":false,"publishedAt":"2026-11-12T08:00:00.000+00:00","descriptionPlain":"","jobUrl":"https://jobs.ashbyhq.com/gamma/222"},
+ {"title":"Remote Associate","location":"Remote","isRemote":true,"isListed":true,"descriptionPlain":"x","jobUrl":"https://jobs.ashbyhq.com/gamma/333"}
+]}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import json
 import re
 from html.parser import HTMLParser
 
@@ -38,16 +39,23 @@ def strip_html(text: str) -> str:
     return re.sub(r"\s+", " ", plain).strip()
 
 
-def get_json(client: httpx.Client, url: str, what: str) -> object:
+def get_text(client: httpx.Client, url: str, what: str) -> str:
     try:
         response = client.get(url, timeout=30)
+    except SourceError:
+        raise
     except httpx.HTTPError as exc:
         raise SourceError(f"{what}: {exc}") from exc
     if response.status_code == 404:
         raise SourceNotFound(f"{what}: board not found", 404)
     if response.status_code >= 400:
         raise SourceError(f"{what}: HTTP {response.status_code}", response.status_code)
+    return response.text
+
+
+def get_json(client: httpx.Client, url: str, what: str) -> object:
+    text = get_text(client, url, what)
     try:
-        return response.json()
+        return json.loads(text)
     except ValueError as exc:
         raise SourceError(f"{what}: invalid JSON") from exc

@@ -1,0 +1,10 @@
+# Secrets: API keys live in .env and must never reach GitHub
+.env
+.env.local
+.env.*.local
+
+# Common clutter
+node_modules/
+venv/
+__pycache__/
+.DS_Store

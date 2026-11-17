@@ -13,3 +13,6 @@ __pycache__/
 .superpowers/
 .pytest_cache/
 .next/
+
+web/next-env.d.ts
+web/*.tsbuildinfo

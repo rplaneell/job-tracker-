@@ -1,0 +1,18 @@
+[project]
+name = "jobtracker"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["httpx", "pyyaml", "supabase", "resend"]
+
+[project.optional-dependencies]
+dev = ["pytest", "respx"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

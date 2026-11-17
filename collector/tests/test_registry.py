@@ -45,3 +45,35 @@ def test_load_sources_rejects_duplicate_board(tmp_path):
 
 def test_load_sources_empty_file_returns_empty_list(tmp_path):
     assert load_sources(write(tmp_path, "")) == []
+
+
+def entry(kind="personio", terms=None, board="acme"):
+    extra = f"  terms: {terms}\n" if terms else ""
+    return f"- name: Acme {kind}\n  kind: {kind}\n  board: {board}\n  city: Zurich\n  field: consulting\n{extra}"
+
+
+def test_terms_no_entries_are_skipped(tmp_path):
+    text = entry("personio", "no", "a") + entry("teamtailor", "ok", "b")
+    sources = load_sources(write(tmp_path, text))
+    assert [s.kind for s in sources] == ["teamtailor"]
+
+
+def test_jsonld_requires_terms_ok(tmp_path):
+    for terms in (None, "unreviewed"):
+        with pytest.raises(ValueError, match="Acme jsonld"):
+            load_sources(write(tmp_path, entry("jsonld", terms, "https://acme.example/careers")))
+
+
+def test_invalid_terms_value_raises(tmp_path):
+    with pytest.raises(ValueError, match="terms"):
+        load_sources(write(tmp_path, entry("personio", "maybe")))
+
+
+def test_official_api_kinds_default_to_ok(tmp_path):
+    (s,) = load_sources(write(tmp_path, entry("smartrecruiters")))
+    assert s.terms == "ok"
+
+
+def test_new_kinds_are_accepted(tmp_path):
+    text = "".join(entry(k, "ok", f"b{i}") for i, k in enumerate(["personio", "teamtailor", "smartrecruiters", "jsonld"]))
+    assert [s.kind for s in load_sources(write(tmp_path, text))] == ["personio", "teamtailor", "smartrecruiters", "jsonld"]

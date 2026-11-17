@@ -28,7 +28,7 @@
 
 ---
 
-### Task A: Compliance gate (PoliteClient)
+### Task 1: Compliance gate (PoliteClient)
 
 **Files:**
 - Create: `collector/src/jobtracker/compliance.py`, `collector/tests/test_compliance.py`
@@ -44,7 +44,7 @@
 - [ ] **Step 4: Run** and expect all passed, then the full suite.
 - [ ] **Step 5: Commit** `feat: add robots and pacing compliance gate`.
 
-### Task B: Source fields for terms review
+### Task 2: Source fields for terms review
 
 **Files:**
 - Modify: `collector/src/jobtracker/registry.py`, `collector/tests/test_registry.py`
@@ -58,7 +58,7 @@
 - [ ] **Step 4: Run** and expect passed.
 - [ ] **Step 5: Commit** `feat: add terms review fields to source list`.
 
-### Task C: Personio adapter
+### Task 3: Personio adapter
 
 **Files:**
 - Create: `adapters/personio.py`, `tests/fixtures/personio.xml`, `tests/test_personio.py`; Modify `pyproject.toml` (add `defusedxml`)
@@ -72,7 +72,7 @@
 - [ ] **Step 4: Implement** with `defusedxml.ElementTree`.
 - [ ] **Step 5: Run** and expect passed. **Step 6: Commit** `feat: add Personio adapter`.
 
-### Task D: Teamtailor adapter
+### Task 4: Teamtailor adapter
 
 **Files:**
 - Create: `adapters/teamtailor.py`, `tests/fixtures/teamtailor.xml`, `tests/test_teamtailor.py`
@@ -84,7 +84,7 @@
 - [ ] **Step 2: Write failing tests**: `test_fetch_teamtailor_maps_fields`; `test_fetch_teamtailor_item_without_location`; `test_fetch_teamtailor_rejects_entity_expansion`; `test_fetch_teamtailor_404_raises_sourcenotfound`.
 - [ ] **Step 3 to 5:** run red, implement, run green. **Step 6: Commit** `feat: add Teamtailor adapter`.
 
-### Task E: SmartRecruiters adapter
+### Task 5: SmartRecruiters adapter
 
 **Files:**
 - Create: `adapters/smartrecruiters.py`, `tests/fixtures/smartrecruiters.json`, `tests/test_smartrecruiters.py`
@@ -95,7 +95,7 @@
 - [ ] **Step 1: Save a sanitised real sample** as the fixture. **Step 2: Write failing tests**: `test_fetch_smartrecruiters_maps_fields`; `test_fetch_smartrecruiters_follows_paging` (two pages via respx, 150 postings total gives 150 roles); `test_fetch_smartrecruiters_page_cap` (stops after 20 pages even if the server keeps claiming more); `test_fetch_smartrecruiters_404_raises_sourcenotfound`.
 - [ ] **Step 3 to 5:** red, implement, green. **Step 6: Commit** `feat: add SmartRecruiters adapter`.
 
-### Task F: JSON-LD career page adapter
+### Task 6: JSON-LD career page adapter
 
 **Files:**
 - Create: `adapters/jsonld.py`, `tests/fixtures/jsonld_page.html`, `tests/test_jsonld.py`
@@ -106,7 +106,7 @@
 - [ ] **Step 1: Write failing tests**: `test_jsonld_single_jobposting`; `test_jsonld_graph_and_itemlist`; `test_jsonld_invalid_json_block_is_skipped_not_fatal`; `test_jsonld_page_without_jobs_returns_empty`; `test_jsonld_location_as_list_and_string_country`; `test_jsonld_missing_date_is_none`.
 - [ ] **Step 2 to 4:** run red, implement, run green. **Step 5: Commit** `feat: add JSON-LD career page adapter`.
 
-### Task G: Wire in, discovery and a bigger list
+### Task 7: Wire in, discovery and a bigger list
 
 **Files:**
 - Modify: `run.py` (register adapters, wrap client with `PoliteClient`), `discover.py` (probes for Personio, Teamtailor, SmartRecruiters), `tests/test_run.py`, `tests/test_discover.py`, `sources.yaml`

@@ -31,7 +31,10 @@ def load_sources(path: Path) -> list[Source]:
             raise ValueError(f"{entry.get('name', '?')}: missing {missing}")
         if entry["kind"] not in KINDS:
             raise ValueError(f"{entry['name']}: unknown kind {entry['kind']!r}")
-        terms = str(entry.get("terms", "unreviewed" if entry["kind"] == "jsonld" else "ok"))
+        raw_terms = entry.get("terms", "unreviewed" if entry["kind"] == "jsonld" else "ok")
+        if isinstance(raw_terms, bool):  # YAML reads an unquoted no or yes as False or True
+            raw_terms = "ok" if raw_terms else "no"
+        terms = str(raw_terms)
         if terms not in TERMS:
             raise ValueError(f"{entry['name']}: terms must be one of {sorted(TERMS)}, got {terms!r}")
         if entry["kind"] == "jsonld" and terms != "ok":

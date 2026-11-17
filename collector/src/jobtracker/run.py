@@ -87,15 +87,24 @@ def run_collection(
     return result
 
 
+def repo_root() -> Path:
+    return Path(__file__).resolve().parents[3]
+
+
 def main() -> int:
+    import resend
     from supabase import create_client
 
-    root = Path(__file__).resolve().parents[3].parent
+    from jobtracker.notify import deliver
+
+    root = repo_root()
     sources = load_sources(root / "sources.yaml")
     rules = load_rules(root / "rules.yaml")
     db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
     with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True) as http:
         result = run_collection(sources, rules, Store(db), http, datetime.now(timezone.utc), time.sleep)
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")
     return 1 if sources and len(result.failures) == len(sources) else 0
 

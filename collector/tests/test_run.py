@@ -108,3 +108,9 @@ def test_vanished_role_is_closed_when_board_still_has_others():
     go([src("Acme")], {"greenhouse": lambda _c, s: [role("1")]}, client=client)
     status = {r["source_id"]: r["status"] for r in client.tables["roles"]}
     assert status == {"1": "open", "2": "closed"}
+
+
+def test_repo_root_contains_config_files():
+    from jobtracker.run import repo_root
+
+    assert (repo_root() / "sources.yaml").exists() and (repo_root() / "rules.yaml").exists()

@@ -299,6 +299,16 @@
    "detail": "Tests failed first, then 237 collector tests pass at 90% coverage. New matched roles become tasks of at most 50 roles, with no cap, so a huge first run drops nothing (410 roles become 9 tasks). How many tasks one daily session works through is a limit in the run instructions, not in the queue. Roles that do not match the profile are never queued, a second run with the same roles queues nothing, and a failing queue write is reported but never stops the collection or the email. Deliberate breaks of the queueing code are all caught (39 of 39).",
    "limit": "Tested against the in memory stand in. The queue write against the live database is exercised in Task 6. A big backlog means Scouting shows as waiting for several days.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 31,
+   "area": "Agent honesty",
+   "check": "Scouting panel in Job HQ and the database reading code",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (modules missing), then 55 HQ tests pass with coverage above the floors. The panel shows idle, waiting, working, completed or failed in plain words, lists the top five shortlisted roles best first, and shows a Simulation badge whenever the data is not real. Text written by companies or by the agent is escaped (a script tag and an image with an onerror handler render as plain text). The reader drops malformed rows and scores outside 0 to 100, and a failed read throws instead of showing an empty office as if it were real.",
+   "limit": "The panel shows sample data, labelled Simulation. Job HQ has no sign in yet, so it cannot read your real database until milestone M1. There is no Scouting character or desk in the 3D scene yet, so nothing in the scene lights up for it. The panel layout was checked by screenshot only, not by browser click tests.",
+   "date": "2026-11-18"
   }
  ]
 }

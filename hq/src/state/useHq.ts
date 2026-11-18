@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type Department = 'reception';
+export type Department = 'reception' | 'scouting';
 
 interface HqState {
   /** Which department the camera is focused on, if any. */

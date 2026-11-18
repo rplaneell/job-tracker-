@@ -47,7 +47,7 @@ export function scoutStatus(tasks: AgentTask[], now: Date): ScoutStatus {
 }
 
 /** The agent's own shortlist: best score first, a longer written reason wins a tie. Returns a new list. */
-export function shortlist(verdicts: Verdict[], limit: number): Verdict[] {
+export function shortlist<T extends Verdict>(verdicts: T[], limit: number): T[] {
   if (!(limit > 0)) return [];
   return verdicts
     .filter((v) => v.shortlisted)

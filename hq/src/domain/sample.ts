@@ -15,3 +15,13 @@ export const SAMPLE_APPLICATIONS: { stage: Stage }[] = [
   { stage: 'interview' },
   { stage: 'rejected' },
 ];
+
+/** Simulation only: what the Scouting panel looks like after one finished review. Never shown as real. */
+export const SAMPLE_SCOUT_TASKS = [
+  { id: 's1', status: 'done' as const, claimedAt: '2026-11-18T06:10:00Z', createdAt: '2026-11-18T06:00:00Z', finishedAt: '2026-11-18T06:40:00Z' },
+];
+export const SAMPLE_SCOUT_ITEMS = [
+  { roleId: 'a', score: 91, reason: 'Junior consulting role in Zurich, no experience asked, fits the dual degree.', shortlisted: true, title: 'Business Analyst, Life Sciences', company: 'Example Advisory' },
+  { roleId: 'b', score: 84, reason: 'Venture fund associate in Basel, health focus, graduate friendly.', shortlisted: true, title: 'Investment Analyst Intern', company: 'Example Ventures' },
+  { roleId: 'c', score: 77, reason: 'Bioprocess strategy analyst in Copenhagen, matches the lab background.', shortlisted: true, title: 'Strategy Analyst, Biotech', company: 'Example Partners' },
+];

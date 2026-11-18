@@ -1,10 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import { buildReceptionView } from '../domain/reception';
-import { SAMPLE_APPLICATIONS, SAMPLE_PRIORITIES } from '../domain/sample';
+import { SAMPLE_APPLICATIONS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from '../domain/sample';
+import { scoutStatus } from '../domain/scouting';
 import { Scene } from '../scene/Scene';
 import { useHq } from '../state/useHq';
 import { Credits } from '../ui/Credits';
 import { ReceptionPanel } from '../ui/ReceptionPanel';
+import { ScoutPanel } from '../ui/ScoutPanel';
 
 /** Optional ?corner=0..3 picks which side of the office the camera looks from. */
 function cornerFromUrl(): number {
@@ -22,10 +24,13 @@ export function App() {
   const now = useMemo(() => new Date(), []);
   const view = useMemo(() => buildReceptionView(SAMPLE_PRIORITIES, SAMPLE_APPLICATIONS, now), [now]);
   const line = `${view.greeting}. ${view.headline}`;
+  // Simulation until milestone M1 signs HQ in to the database. The panel says so on screen.
+  const scout = useMemo(() => scoutStatus(SAMPLE_SCOUT_TASKS, now), [now]);
 
   // A link such as ?focus=reception opens that department straight away.
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('focus') === 'reception') openDepartment('reception');
+    const wanted = new URLSearchParams(window.location.search).get('focus');
+    if (wanted === 'reception' || wanted === 'scouting') openDepartment(wanted);
   }, [openDepartment]);
 
   useEffect(() => {
@@ -56,6 +61,13 @@ export function App() {
         <div className="pointer-events-auto absolute bottom-4 right-4 flex gap-2">
           <button
             type="button"
+            onClick={() => openDepartment('scouting')}
+            className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
+          >
+            Scouting
+          </button>
+          <button
+            type="button"
             onClick={() => setLowPower(!lowPower)}
             aria-pressed={lowPower}
             className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
@@ -72,6 +84,7 @@ export function App() {
         </div>
 
         {focus === 'reception' && <ReceptionPanel view={view} now={now} />}
+        {focus === 'scouting' && <ScoutPanel status={scout} items={SAMPLE_SCOUT_ITEMS} source="simulation" onClose={leave} />}
       </div>
       <Credits />
     </div>

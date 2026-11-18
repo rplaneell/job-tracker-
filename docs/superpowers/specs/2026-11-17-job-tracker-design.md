@@ -153,3 +153,12 @@ Then a generic reader for schema.org JobPosting markup (JSON-LD) on company care
 ### Out of scope here
 
 LinkedIn email alert reading, Adzuna and Jooble (need keys from the owner), Getro boards (unverified).
+
+## Addendum, 2026-11-18: owner profile filter
+
+The owner has R&D biotech and lab experience and no management experience. Roles that do not fit that profile are filtered out, using two editable rules in `rules.yaml`:
+
+- Management and senior titles are excluded (manager, lead, head, director, vp, vice president, chief, partner, principal, staff, senior).
+- `max_years_experience: 2`. A role whose description asks for more years of experience than that is excluded. For a range such as 3 to 5 years the lower number counts. Years only count when the word experience appears nearby, so "founded 10 years ago" is ignored. A role that states no requirement passes.
+
+Open items for the builder: a positive signal for roles that use a biotech or lab background (for example a tag), and a way to show why a role was filtered out so the owner can correct a wrong exclusion.

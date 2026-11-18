@@ -19,3 +19,7 @@ web/*.tsbuildinfo
 
 # Job HQ build output
 hq/dist/
+.env.*
+!.env.example
+*.pem
+*.key

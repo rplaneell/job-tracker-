@@ -369,6 +369,16 @@
    "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health). Fix: city_limits in rules.yaml (Spain: Barcelona only), applied both when storing and when matching, with an unknown city accepted only if the raw location text names Barcelona as a whole word. Added exclusions for social media, quality assurance, QA, retail, sales associate and part time titles. Tests failed first. The golden decision file changed in exactly one line (a Spanish role with no city given), read and accepted. 3 more deliberate breaks, all 42 caught.",
    "limit": "Fixed in rules.yaml and the rules code. The matched flag is still only a title keyword filter, so some weak fits remain (for example junior sales rep roles). Scouting scoring is the second filter. Roles already stored for Madrid close on the next collection run, which no longer reads them as in region.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 38,
+   "area": "Agent tools",
+   "check": "Daily Scouting schedule, first test run in a fresh session",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A fresh Claude Code session started from the scheduled task reviewed the remaining 3 tasks (107 roles) with no errors and no injection attempts, and stopped with nothing queued. Read back from the database: 157 verdicts in total, 6 shortlisted, all 4 tasks done, audit log 169 rows (4 claims, 4 reads, 157 submits, 4 finishes), matching the session's own report. Three setup snags were found and fixed in the instructions: add_repo was missing (git clone works), the package needs Python 3.12 (3.11 was the default), and the editable install rewrote tracked egg-info files (now untracked and ignored). The session also caught listings whose city did not match the text and said so in the reasons.",
+   "limit": "The schedule has run once, by hand. The first unattended run is tomorrow at 08:20 Madrid time. Each run uses Claude Code usage. The service key stays in the environment's network secrets until the owner removes it.",
+   "date": "2026-11-18"
   }
  ]
 }

@@ -29,3 +29,6 @@ hq/dist/
 coverage/
 .coverage
 .hypothesis/
+
+# Build output from pip install -e
+*.egg-info/

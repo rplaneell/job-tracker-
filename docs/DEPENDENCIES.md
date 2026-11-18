@@ -59,19 +59,24 @@ No project, database or credentials exist. See `.env.example`. Later, install th
 | @testing-library/react, dom, jest-dom, user-event | Test components the way a user uses them |
 | @playwright/test | Real browser end to end tests |
 
+## Optional packages (installed on request, not yet used)
+
+| Package | Purpose and caution |
+| --- | --- |
+| gsap | Timeline animation. Overlaps with react-spring, so use it only for complex multi step sequences, and say why |
+| @react-three/rapier | Physics and collisions (WebAssembly, adds weight). Import it only in scenes that need it so the main bundle stays small |
+| three-stdlib | Extra Three.js utilities. drei already uses it, so it is listed directly only to allow direct imports |
+
 ## Deliberately NOT installed
 
 | Package | Why not |
 | --- | --- |
-| gsap | Overlaps with react-spring. Add later only for a complex multi step timeline |
-| @react-three/rapier | Physics (WebAssembly, heavy). An office dashboard does not need collisions yet. Matching skill not installed either |
-| three-stdlib | drei already depends on it, so a direct install adds nothing |
 | react-router-dom | Version 7 merged it into `react-router` |
 | Husky or lint staged | Git hooks are easy to add later and not needed to start |
 
 ## Tools to install yourself
 
 * Node.js 22.12 or newer.
-* Playwright browser: `npm run e2e:install` (downloads Chromium).
+* Playwright browser: already downloaded in this environment. On a new computer run `npm run e2e:install`.
 * Later, for Supabase: the Supabase CLI and a free Supabase account.
 * Optional: Blender (free) for editing models, and a glTF viewer such as https://gltf.report.

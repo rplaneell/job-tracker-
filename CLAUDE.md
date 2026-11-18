@@ -63,7 +63,7 @@ docs/           DEPENDENCIES.md and ASSETS.md
 
 * Business logic stays independent of Three.js. ESLint enforces this: `src/models`, `services`, `state`, `lib`, `hooks` and `features/*/domain|logic` cannot import Three.js, and `src/ui` and `src/pages` cannot either. The 3D scene reads state from Zustand stores and never owns business data.
 * Keep the 3D scene and the conventional interface as separate trees. HTML controls must exist for every important 3D action (accessibility and tests).
-* Primary animation library: `@react-spring/three` for state driven 3D motion, plus drei helpers (`useAnimations`, `CameraControls`) for clips and camera moves. GSAP is not installed. Add it only if a complex timeline cannot be done otherwise, and say why.
+* Primary animation library: `@react-spring/three` for state driven 3D motion, plus drei helpers (`useAnimations`, `CameraControls`) for clips and camera moves. GSAP, Rapier and three-stdlib are installed but unused. Use GSAP only if a complex timeline cannot be done with react-spring, and say why. Import Rapier only inside scenes that need physics.
 * Use refs and `useFrame` for per frame motion, never React state.
 * Import with the `@/` alias (maps to `src/`).
 * Assets: check the licence before adding any model, texture or sound, and record it in `assets-src/LICENSES.md`. See `docs/ASSETS.md`.

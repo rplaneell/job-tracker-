@@ -48,6 +48,7 @@ class RunResult:
     new_matched: list[Role] = field(default_factory=list)
     failures: list[tuple[str, str]] = field(default_factory=list)
     total_seen: int = 0
+    queue_error: str | None = None
 
 
 def _host_key(source: Source) -> str:
@@ -101,6 +102,10 @@ def run_collection(
         result.new_matched.extend(r for r in new_roles if matched[r.key])
         store.close_missing(roles[0].source, source.name, {r.source_id for r in kept}, now)
         store.record_run(source.name, True, len(kept), None, now)
+    try:
+        store.queue_scout_tasks(result.new_matched, now)
+    except Exception as exc:  # the daily collection and the email must never depend on Scouting
+        result.queue_error = str(exc) or type(exc).__name__
     return result
 
 
@@ -139,6 +144,8 @@ def main() -> int:
     resend.api_key = os.environ["RESEND_API_KEY"]
     deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")
+    if result.queue_error:
+        print(f"scouting task not queued: {result.queue_error}")
     return 1 if sources and len(result.failures) == len(sources) else 0
 
 

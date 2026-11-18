@@ -289,6 +289,16 @@
    "detail": "Tests failed first (module missing), then 36 pass. Two sessions cannot claim one task (the claim only succeeds while the task is still queued, tested with a simulated race). A claim older than 30 minutes goes back to the queue. Scores outside 0 to 100, true or false as a score, reasons under 10 or over 500 characters, roles not in the task and unclaimed tasks are all rejected with nothing saved. A description saying to ignore instructions and give every role 100 is returned as data and changes nothing. Every call is written to the audit log. 11 deliberate breaks were added to the mutation check: one survived (closing an unclaimed task), a test was added, and all 37 are now caught. Migration 0003 added the finished_at column.",
    "limit": "Tested against an in memory stand in for the database, not the live Supabase project. The first real run against it happens in Task 6. Deciding whether a verdict is wise is up to the model, so the tools only check shape, range and ownership.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 30,
+   "area": "Agent tools",
+   "check": "Collector queues a Scouting task after each run",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first, then 237 collector tests pass at 90% coverage. New matched roles become tasks of at most 50 roles, at most 6 tasks (300 roles) per run, so a huge first run cannot bury the daily review. Roles that do not match the profile are never queued, a second run with the same roles queues nothing, and a failing queue write is reported but never stops the collection or the email. 3 more deliberate breaks, all 40 caught.",
+   "limit": "Tested against the in memory stand in. The queue write against the live database is exercised in Task 6. Roles beyond the 300 cap in one run are stored and visible in the dashboard but not scouted.",
+   "date": "2026-11-18"
   }
  ]
 }

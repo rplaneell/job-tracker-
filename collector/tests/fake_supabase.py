@@ -93,6 +93,8 @@ class _Query:
                 if found:
                     found[0].update(item)  # columns absent from item stay as they were
                 else:
-                    self.rows.append(dict(item))
+                    new = dict(item)
+                    new.setdefault("id", f"{self.name}-{len(self.rows)}")  # the real database generates ids
+                    self.rows.append(new)
             return SimpleNamespace(data=self.payload)
         raise AssertionError("no operation set")

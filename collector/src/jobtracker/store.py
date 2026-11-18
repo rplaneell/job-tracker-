@@ -7,6 +7,9 @@ from jobtracker.models import Role
 
 Key = tuple[str, str]
 
+SCOUT_TASK_SIZE = 50  # roles in one Scouting task
+SCOUT_MAX_TASKS = 6  # per collection run, so one huge first run cannot bury the daily review
+
 
 class Store:
     """Reads and writes roles. Never touches the applications table."""
@@ -96,3 +99,33 @@ class Store:
                 "error": error,
             }
         ).execute()
+
+    def queue_scout_tasks(self, roles: list[Role], now: datetime) -> int:
+        """Queues Scouting work for new matched roles. Returns how many roles were queued."""
+        roles = roles[: SCOUT_TASK_SIZE * SCOUT_MAX_TASKS]
+        ids: list[str] = []
+        for source in sorted({r.source for r in roles}):
+            wanted = [r.source_id for r in roles if r.source == source]
+            for start in range(0, len(wanted), 100):
+                rows = (
+                    self.client.table("roles")
+                    .select("id,source_id")
+                    .eq("source", source)
+                    .in_("source_id", wanted[start : start + 100])
+                    .execute()
+                    .data
+                )
+                ids.extend(r["id"] for r in rows)
+        tasks = [
+            {
+                "agent_id": "scout",
+                "kind": "review_new_roles",
+                "status": "queued",
+                "payload": {"role_ids": ids[start : start + SCOUT_TASK_SIZE]},
+                "created_at": now.isoformat(),
+            }
+            for start in range(0, len(ids), SCOUT_TASK_SIZE)
+        ]
+        if tasks:
+            self.client.table("agent_tasks").insert(tasks).execute()
+        return len(ids)

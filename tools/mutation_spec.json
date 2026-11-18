@@ -223,6 +223,24 @@
    "file": "collector/src/jobtracker/scout.py",
    "old": "[\"status\"] != \"claimed\":",
    "new": "[\"status\"] == \"never\":"
+  },
+  {
+   "name": "queue: a failing queue write stops the run",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "result.queue_error = str(exc) or type(exc).__name__",
+   "new": "raise"
+  },
+  {
+   "name": "queue: tasks hold 51 roles",
+   "file": "collector/src/jobtracker/store.py",
+   "old": "SCOUT_TASK_SIZE = 50",
+   "new": "SCOUT_TASK_SIZE = 51"
+  },
+  {
+   "name": "queue: seven tasks allowed per run",
+   "file": "collector/src/jobtracker/store.py",
+   "old": "SCOUT_MAX_TASKS = 6",
+   "new": "SCOUT_MAX_TASKS = 7"
   }
  ]
 }

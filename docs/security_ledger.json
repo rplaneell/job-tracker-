@@ -409,6 +409,16 @@
    "detail": "Tests failed first (module missing), then 29 pass; the whole collector suite stays above the coverage floor. A tailored CV can only select, reorder and reword the master: the program copies employers, schools, degrees, dates and contact details, and refuses extra fields, unknown or reused ids, bullets from another entry, any number not in the original bullet, any new name not in the master CV, the company or the role title, over long or non text, and empty versions. A hostile instruction such as adding 10 years of Python experience is refused. Hypothesis properties: no number absent from the source ever gets through, and any text is either accepted or refused with a clear error. Two sessions cannot claim one task, stale claims are requeued, the audit log holds ids, counts and rule codes only (a test searches it for the CV text). 13 deliberate breaks, all caught (55 of 55 overall).",
    "limit": "The validator cannot tell whether a reworded sentence is still true in meaning, only that it adds no new number or name. Spelled out numbers (twelve) and non capitalised new skills can pass, so the owner must read each draft before using it. Tested against the in memory stand in, not yet the live database.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 42,
+   "area": "Hostile input",
+   "check": "CV dashboard pages (editor, draft viewer, tailor button)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Built and checked: 61 web tests pass with coverage above the floors, the production build is clean, and a logged out visitor to /cv, /cv/ID and a role page is redirected to the login page. All CV and role text is rendered as plain text by React (no raw HTML anywhere), links in a CV are shown as text and are not clickable, the editor refuses anything but http and https links, and the button state logic is tested (queued, working, stale claim, unreadable date). Writes use only what the database policies allow: save the master CV, approve or delete a draft, queue one tailor_cv task. Checked by screenshots of the three screens with a fictional CV.",
+   "limit": "No browser click tests and no check of the print output beyond the styles. Screens were checked against a local stand in for the database, not the live project, because no CV is saved yet.",
+   "date": "2026-11-18"
   }
  ]
 }

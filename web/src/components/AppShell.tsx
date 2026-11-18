@@ -26,6 +26,12 @@ const icons = {
       <path d="M10 3v2.5M10 14.5V17M3 10h2.5M14.5 10H17" />
     </svg>
   ),
+  cv: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 2.5h7l3 3v12H5z" />
+      <path d="M8 9h5M8 12h5M8 15h3" />
+    </svg>
+  ),
   practice: (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M10 3 3 7l7 4 7-4-7-4Z" />
@@ -89,6 +95,7 @@ export default function AppShell({ counts, children }: { counts: Counts; childre
           {item("/", "Roles", icons.roles, <span className="count">{counts.roles}</span>)}
           {item("/pipeline", "Pipeline", icons.pipeline, counts.pipeline ? <span className="count">{counts.pipeline}</span> : null)}
           {item("/sources", "Sources", icons.sources, <span className="count">{counts.sources}</span>)}
+          {item("/cv", "Your CV", icons.cv, null)}
           {item("/practice", "Practice", icons.practice, <span className="soon">soon</span>)}
         </nav>
         <div className="side-foot">

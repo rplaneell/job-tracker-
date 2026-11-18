@@ -11,3 +11,4 @@ src/scene/**/generated/**
 
 # Markdown keeps its hand written style (no automatic bullet changes)
 *.md
+assets-src/polyhaven-sources.json

@@ -1,0 +1,318 @@
+[
+  {
+    "id": "metal_office_desk",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Metal Office Desk",
+    "authors": [
+      "Ulan Cabanilla"
+    ],
+    "source": "https://polyhaven.com/a/metal_office_desk",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 6898,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "modern_arm_chair_01",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Modern Arm Chair 01",
+    "authors": [
+      "Vibrant Nordic"
+    ],
+    "source": "https://polyhaven.com/a/modern_arm_chair_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 8916,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "modern_wooden_cabinet",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Modern Wooden Cabinet",
+    "authors": [
+      "Patrik Pangerl"
+    ],
+    "source": "https://polyhaven.com/a/modern_wooden_cabinet",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 24976,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "modern_coffee_table_01",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Modern Coffee Table 01",
+    "authors": [
+      "Amin"
+    ],
+    "source": "https://polyhaven.com/a/modern_coffee_table_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 4504,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "sofa_03",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Sofa 03",
+    "authors": [
+      "Fran Calvente"
+    ],
+    "source": "https://polyhaven.com/a/sofa_03",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 8004,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "steel_frame_shelves_03",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Steel Frame Shelves 03",
+    "authors": [
+      "Ulan Cabanilla"
+    ],
+    "source": "https://polyhaven.com/a/steel_frame_shelves_03",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 8396,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "round_wooden_table_01",
+    "kind": "model",
+    "category": "furniture",
+    "name": "Round Wooden Table 01",
+    "authors": [
+      "Ulan Cabanilla"
+    ],
+    "source": "https://polyhaven.com/a/round_wooden_table_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 8640,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "potted_plant_01",
+    "kind": "model",
+    "category": "decorations",
+    "name": "Potted Plant 01",
+    "authors": [
+      "Rico Cilliers"
+    ],
+    "source": "https://polyhaven.com/a/potted_plant_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 96030,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "potted_plant_02",
+    "kind": "model",
+    "category": "decorations",
+    "name": "Potted Plant 02",
+    "authors": [
+      "Rico Cilliers"
+    ],
+    "source": "https://polyhaven.com/a/potted_plant_02",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 69806,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "potted_plant_04",
+    "kind": "model",
+    "category": "decorations",
+    "name": "Potted Plant 04",
+    "authors": [
+      "James Ray Cock"
+    ],
+    "source": "https://polyhaven.com/a/potted_plant_04",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 6097,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "desk_lamp_arm_01",
+    "kind": "model",
+    "category": "decorations",
+    "name": "Desk Lamp Arm 01",
+    "authors": [
+      "Yann Kervran",
+      "Kuutti Siitonen"
+    ],
+    "source": "https://polyhaven.com/a/desk_lamp_arm_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 25710,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "modern_ceiling_lamp_01",
+    "kind": "model",
+    "category": "decorations",
+    "name": "Modern Ceiling Lamp 01",
+    "authors": [
+      "James Ray Cock"
+    ],
+    "source": "https://polyhaven.com/a/modern_ceiling_lamp_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 5602,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "classic_laptop",
+    "kind": "model",
+    "category": "props",
+    "name": "Classic Laptop",
+    "authors": [
+      "Arrangemonk"
+    ],
+    "source": "https://polyhaven.com/a/classic_laptop",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 14450,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "clipboard",
+    "kind": "model",
+    "category": "props",
+    "name": "Clipboard",
+    "authors": [
+      "ProgrammerOnCoffee"
+    ],
+    "source": "https://polyhaven.com/a/clipboard",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 6176,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "office_notepads",
+    "kind": "model",
+    "category": "props",
+    "name": "Office Notepads",
+    "authors": [
+      "Ulan Cabanilla"
+    ],
+    "source": "https://polyhaven.com/a/office_notepads",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 666,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "stationery_supplies",
+    "kind": "model",
+    "category": "props",
+    "name": "Stationery Supplies",
+    "authors": [
+      "Mateusz Sadek"
+    ],
+    "source": "https://polyhaven.com/a/stationery_supplies",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 4412,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "television_02",
+    "kind": "model",
+    "category": "props",
+    "name": "Television 02",
+    "authors": [
+      "Benny Weimer"
+    ],
+    "source": "https://polyhaven.com/a/television_02",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 2310,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "projector_screen",
+    "kind": "model",
+    "category": "props",
+    "name": "Projector Screen",
+    "authors": [
+      "PeterM"
+    ],
+    "source": "https://polyhaven.com/a/projector_screen",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 8727,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "CoffeeCart_01",
+    "kind": "model",
+    "category": "props",
+    "name": "Coffee Cart 01",
+    "authors": [
+      "Joe Seabuhr"
+    ],
+    "source": "https://polyhaven.com/a/CoffeeCart_01",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": 27659,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "beige_wall_001",
+    "kind": "texture",
+    "category": "textures",
+    "name": "Beige Wall 001",
+    "authors": [
+      "Dimitrios Savva",
+      "Rico Cilliers"
+    ],
+    "source": "https://polyhaven.com/a/beige_wall_001",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": null,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "brushed_concrete",
+    "kind": "texture",
+    "category": "textures",
+    "name": "Brushed Concrete ",
+    "authors": [
+      "Dario Barresi",
+      "Dimitrios Savva"
+    ],
+    "source": "https://polyhaven.com/a/brushed_concrete",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": null,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "brick_wall_001",
+    "kind": "texture",
+    "category": "textures",
+    "name": "Brick Wall 001",
+    "authors": [
+      "Rob Tuytel",
+      "Dimitrios Savva"
+    ],
+    "source": "https://polyhaven.com/a/brick_wall_001",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": null,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "blocky_photo_studio",
+    "kind": "hdri",
+    "category": "environments",
+    "name": "Blocky Photo Studio",
+    "authors": [
+      "Sergej Majboroda"
+    ],
+    "source": "https://polyhaven.com/a/blocky_photo_studio",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": null,
+    "date": "2026-11-18"
+  },
+  {
+    "id": "brown_photostudio_02",
+    "kind": "hdri",
+    "category": "environments",
+    "name": "Brown Photostudio 02",
+    "authors": [
+      "Sergej Majboroda"
+    ],
+    "source": "https://polyhaven.com/a/brown_photostudio_02",
+    "licence": "CC0 1.0 (public domain), https://polyhaven.com/license",
+    "polycount": null,
+    "date": "2026-11-18"
+  }
+]

@@ -23,7 +23,9 @@
     "e2e:install": "playwright install chromium",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build",
     "gltf": "gltfjsx",
-    "assets:optimize": "gltf-transform optimize"
+    "assets:optimize": "gltf-transform optimize",
+    "assets:fetch": "node scripts/fetch-polyhaven.mjs",
+    "assets:build": "bash scripts/build-assets.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.7",

@@ -54,7 +54,7 @@ src/
   lib/        Small utilities (cn, env)
 tests/        Test setup. Unit tests sit beside their code as *.test.ts(x)
 e2e/          Playwright browser tests
-public/assets/  Runtime assets: characters, buildings, furniture, decorations, textures, environments, animations, ui
+public/assets/  Runtime assets: characters, buildings, furniture, decorations, props, textures, environments, animations, ui (46 optimised models already in place, see docs/ASSETS.md)
 assets-src/     Source and raw files before optimisation (not served)
 docs/           DEPENDENCIES.md and ASSETS.md
 ```
@@ -66,7 +66,7 @@ docs/           DEPENDENCIES.md and ASSETS.md
 * Primary animation library: `@react-spring/three` for state driven 3D motion, plus drei helpers (`useAnimations`, `CameraControls`) for clips and camera moves. GSAP, Rapier and three-stdlib are installed but unused. Use GSAP only if a complex timeline cannot be done with react-spring, and say why. Import Rapier only inside scenes that need physics.
 * Use refs and `useFrame` for per frame motion, never React state.
 * Import with the `@/` alias (maps to `src/`).
-* Assets: check the licence before adding any model, texture or sound, and record it in `assets-src/LICENSES.md`. See `docs/ASSETS.md`.
+* Assets: check the licence before adding any model, texture or sound, and record it in `assets-src/LICENSES.md`. See `docs/ASSETS.md`. NEVER copy anything from `assets-src/models/ikea-personal-use/` into `public/assets` or Git (IKEA personal planning only). Several models are CC BY and need visible credits before launch.
 * Env variables go through `src/lib/env.ts` (Zod validated). Only `VITE_` names reach the browser.
 * TypeScript is strict with `noUncheckedIndexedAccess`. Fix types, do not silence them.
 * Write a failing test first for logic (superpowers test driven development), then the code.

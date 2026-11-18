@@ -15,3 +15,13 @@ coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+
+# Asset sources that are NOT committed
+# IKEA models: licensed for personal planning only, never publish them.
+assets-src/models/ikea-personal-use/
+# Re-downloadable with: npm run assets:fetch
+assets-src/models/polyhaven/
+assets-src/textures/polyhaven/
+assets-src/environments/polyhaven/
+# Khronos raw originals (copies live in the render-master repository and upstream)
+assets-src/models/khronos/*.glb

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
@@ -20,6 +20,8 @@ class Rules:
     level_keywords: dict[str, list[str]]
     # Profile limit: roles that ask for more years of experience than this are filtered out.
     max_years_experience: int | None = None
+    # Countries where only some cities count, for example {Spain: [Barcelona]}. A country not listed here is taken whole.
+    city_limits: dict[str, list[str]] = field(default_factory=dict)
 
 
 def load_rules(path: Path) -> Rules:
@@ -27,7 +29,11 @@ def load_rules(path: Path) -> Rules:
     for key in REQUIRED:
         if key not in data:
             raise ValueError(f"rules file is missing {key}")
-    return Rules(**{key: data[key] for key in REQUIRED}, max_years_experience=data.get("max_years_experience"))
+    return Rules(
+        **{key: data[key] for key in REQUIRED},
+        max_years_experience=data.get("max_years_experience"),
+        city_limits=data.get("city_limits") or {},
+    )
 
 
 _YEARS = re.compile(r"(\d{1,2})\s*(?:\+|plus)?\s*(?:(?:to|-|–|—)\s*\d{1,2}\s*\+?\s*)?years?", re.IGNORECASE)
@@ -55,8 +61,24 @@ def _any(text: str, keywords: list[str]) -> bool:
     return any(_has(text, k) for k in keywords)
 
 
-def matches(role: Role, rules: Rules) -> bool:
+def in_region(role: Role, rules: Rules) -> bool:
+    """Is the role somewhere the owner wants to work? A country with a city limit needs a listed city.
+
+    An unknown city is not trusted unless the raw location text names a listed city as a whole word.
+    """
     if role.country not in rules.countries:
+        return False
+    cities = rules.city_limits.get(role.country)
+    if not cities:
+        return True
+    city = (role.city or "").strip().lower()
+    if any(city == c.lower() for c in cities):
+        return True
+    return any(_has(role.location_raw or "", c) for c in cities)
+
+
+def matches(role: Role, rules: Rules) -> bool:
+    if not in_region(role, rules):
         return False
     if _any(role.title, rules.exclude_keywords):
         return False

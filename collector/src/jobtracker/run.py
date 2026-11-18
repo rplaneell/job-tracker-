@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 import time
 from dataclasses import dataclass, field, replace
@@ -21,7 +22,7 @@ from jobtracker.adapters.teamtailor import fetch_teamtailor
 from jobtracker.compliance import PoliteClient
 from jobtracker.models import Role
 from jobtracker.registry import Source, load_sources
-from jobtracker.rules import Rules, load_rules, matches, tag_field, tag_level
+from jobtracker.rules import Rules, in_region, load_rules, matches, tag_field, tag_level
 from jobtracker.store import Store
 
 ADAPTERS: dict[str, Callable[[httpx.Client, Source], list[Role]]] = {
@@ -95,7 +96,7 @@ def run_collection(
             store.record_run(source.name, True, 0, "empty list returned, roles not closed", now)
             continue
         # Only roles in the owner's regions are stored, so a long source list cannot flood the database.
-        kept = [r for r in roles if r.country in rules.countries]
+        kept = [r for r in roles if in_region(r, rules)]
         matched = {r.key: matches(r, rules) for r in kept}
         tags = {r.key: (tag_field(r, rules), tag_level(r, rules)) for r in kept}
         new_roles = store.upsert_roles(kept, matched, tags, now)
@@ -122,6 +123,31 @@ def load_all_sources(root: Path) -> list[Source]:
     return sources
 
 
+def check_supabase_url(raw: str) -> str:
+    """The secret must be the project's API address. A dashboard link or a path on the end gives web pages, not data."""
+    url = raw.strip().rstrip("/")
+    if not re.fullmatch(r"https://[a-z0-9]+\.supabase\.co", url):
+        raise SystemExit(
+            "SUPABASE_URL must look like https://YOUR-PROJECT-ID.supabase.co with nothing after .co "
+            "(Supabase, Project Settings, Data API, Project URL). It is not the dashboard link."
+        )
+    return url
+
+
+_ADDRESS = r"[^\s<>@\"',;]+@[^\s<>@\"',;]+\.[^\s<>@\"',;]+"
+
+
+def check_email_setting(name: str, raw: str) -> str:
+    """An email setting must be one address, or Name <address>. A wrong one is caught now, not after a long run."""
+    value = raw.strip()
+    if not re.fullmatch(rf"{_ADDRESS}|[^<>]+ <{_ADDRESS}>", value):
+        raise SystemExit(
+            f"{name} must be a single address like email@example.com (or Name <email@example.com>), "
+            "with no quotes and no spaces. Check the secret in GitHub, Settings, Secrets and variables, Actions."
+        )
+    return value
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -132,20 +158,26 @@ def main() -> int:
 
     from jobtracker.notify import deliver
 
+    check_email_setting("ALERT_EMAIL_TO", os.environ.get("ALERT_EMAIL_TO", ""))
+    check_email_setting("ALERT_EMAIL_FROM", os.environ.get("ALERT_EMAIL_FROM", ""))
     root = repo_root()
     sources = load_all_sources(root)
     rules = load_rules(root / "rules.yaml")
-    db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
+    db = create_client(check_supabase_url(os.environ["SUPABASE_URL"]), os.environ["SUPABASE_SERVICE_ROLE_KEY"])
     http = make_client()
     try:
         result = run_collection(sources, rules, Store(db), http, datetime.now(timezone.utc), time.sleep)
     finally:
         http.client.close()
     resend.api_key = os.environ["RESEND_API_KEY"]
-    deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")
     if result.queue_error:
         print(f"scouting task not queued: {result.queue_error}")
+    try:
+        deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
+    except Exception as exc:  # the roles are already saved, so say so plainly instead of dumping a traceback
+        print(f"roles were saved, but the email was not sent: {exc}")
+        return 1
     return 1 if sources and len(result.failures) == len(sources) else 0
 
 

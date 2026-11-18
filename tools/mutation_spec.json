@@ -89,7 +89,7 @@
   {
    "name": "roles outside regions are stored",
    "file": "collector/src/jobtracker/run.py",
-   "old": "kept = [r for r in roles if r.country in rules.countries]",
+   "old": "kept = [r for r in roles if in_region(r, rules)]",
    "new": "kept = roles"
   },
   {
@@ -235,6 +235,24 @@
    "file": "collector/src/jobtracker/store.py",
    "old": "SCOUT_TASK_SIZE = 50",
    "new": "SCOUT_TASK_SIZE = 51"
+  },
+  {
+   "name": "region: any city counts as Barcelona",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "if any(city == c.lower() for c in cities):",
+   "new": "if True:"
+  },
+  {
+   "name": "region: raw location text no longer rescues an unknown city",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "return any(_has(role.location_raw or \"\", c) for c in cities)",
+   "new": "return False"
+  },
+  {
+   "name": "region: city limits ignored",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "cities = rules.city_limits.get(role.country)",
+   "new": "cities = None"
   }
  ]
 }

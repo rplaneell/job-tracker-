@@ -309,6 +309,66 @@
    "detail": "Tests failed first (modules missing), then 55 HQ tests pass with coverage above the floors. The panel shows idle, waiting, working, completed or failed in plain words, lists the top five shortlisted roles best first, and shows a Simulation badge whenever the data is not real. Text written by companies or by the agent is escaped (a script tag and an image with an onerror handler render as plain text). The reader drops malformed rows and scores outside 0 to 100, and a failed read throws instead of showing an empty office as if it were real.",
    "limit": "The panel shows sample data, labelled Simulation. Job HQ has no sign in yet, so it cannot read your real database until milestone M1. There is no Scouting character or desk in the 3D scene yet, so nothing in the scene lights up for it. The panel layout was checked by screenshot only, not by browser click tests.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 32,
+   "area": "Live run",
+   "check": "First real collection run on GitHub",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Run 1 failed after 2 seconds with a type error. Run 2, with clearer error reporting, showed the database answered with an HTML web page from a Vercel host, so the SUPABASE_URL secret holds a website address, not the project API address. Added tests first, then a clear reply check on every read and a start up check of the address shape that explains the fix in plain words. 247 collector tests pass. The secret itself can only be corrected by the owner in GitHub settings.",
+   "limit": "Still open until the owner corrects the secret and a run completes. The mock based tests could not have found this: it took a real run.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 33,
+   "area": "Agent honesty",
+   "check": "Goblin pose rules and model credit check",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Both started red (module missing, goblin file with no credit), then pass: 73 HQ tests. Every pose maps to exactly one real Scouting status (idle sleeping, waiting waiting, working working, completed cheering, failed slumped), so the office shows nothing the task rows do not say. Three deliberate breaks of the rules were caught. A test now fails if any model file lacks a credit entry or a line in LICENSES.md. The goblin model (Low Poly Goblin (Rigged), Yanez Designs, CC BY 4.0, 64 KB) was inspected as data only, its sword removed and noted as a change.",
+   "limit": "The crew size of four is decoration and is not tied to any real count. How the goblins look in the scene is checked by screenshot only.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 34,
+   "area": "Agent honesty",
+   "check": "Scouting goblins in the glass office",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Four goblins stand in the glass office, and their pose comes only from the real Scouting status through the tested pose rules. Spot positions are guarded by tests (inside the room, clear of desk, chair and armchairs, 0.5 m apart, and out of the strip a solid door hides from the default camera). A test for the door blind zone failed first and led to two spots being moved. If the model fails to load, a safety wrapper shows nothing and the office stays up. Motion stops when the browser asks for reduced motion. All five poses were checked by screenshot. 93 HQ tests pass with coverage above the floors, type check and build clean.",
+   "limit": "Poses are checked by screenshot, not by browser click tests. Only the goblin model has one animation clip, so sleeping and slumped are procedural tilts. The crew size of four is decoration. Status is sample data labelled Simulation until HQ can sign in (milestone M1). Floor positions were measured from a plan view, so a goblin could still clip a prop by a few centimetres.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 35,
+   "area": "Live run",
+   "check": "First complete collection on the live database",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "After the database address was corrected the real run read all 245 sources without a failure and stored 2223 roles in the five regions, 157 of them matching the profile, and queued 4 Scouting tasks covering those 157 roles (read back from the database). It then failed at the last step: Resend refused the ALERT_EMAIL_TO secret as not an email address. Added tests first, then a start up check of both email settings that explains the problem before any collection starts, and a plain message if sending fails after the roles are saved. The message never repeats the value. 261 collector tests pass.",
+   "limit": "The ALERT_EMAIL_TO secret can only be corrected by the owner. The first digest of the 157 matching roles was not sent, and later runs only email roles that are new. Only a repeat run after the fix proves the email works.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 36,
+   "area": "Agent tools",
+   "check": "First real Scouting run on the live database, through the real tools",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Claude Code claimed task 1 (50 roles), read the roles as untrusted text, saved 50 verdicts and finished the task, all through the command line tools with the service key injected by the network proxy (never visible in chat, files or logs). Read back from the database: 50 verdicts (3 shortlisted, scores 5 to 82), tasks 1 done and 3 queued, audit log 53 rows (1 claim, 1 read, 50 submits, 1 finish). A second finish was refused. The 50 descriptions contained no instructions aimed at the agent. A first attempt to save the key under the Authorization header failed because the newer sb_secret key belongs in the apikey header; the wrong entry was removed by the owner and a new one saved correctly.",
+   "limit": "One task of four was run, so 107 matched roles are still queued. The service key now sits in the session environment's network secrets and stays there until the owner removes it. Verdicts are one model's judgement against the stated profile and can be wrong.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 37,
+   "area": "Profile filter",
+   "check": "Profile match quality seen by Scouting",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health). Fix: city_limits in rules.yaml (Spain: Barcelona only), applied both when storing and when matching, with an unknown city accepted only if the raw location text names Barcelona as a whole word. Added exclusions for social media, quality assurance, QA, retail, sales associate and part time titles. Tests failed first. The golden decision file changed in exactly one line (a Spanish role with no city given), read and accepted. 3 more deliberate breaks, all 42 caught.",
+   "limit": "Fixed in rules.yaml and the rules code. The matched flag is still only a title keyword filter, so some weak fits remain (for example junior sales rep roles). Scouting scoring is the second filter. Roles already stored for Madrid close on the next collection run, which no longer reads them as in region.",
+   "date": "2026-11-18"
   }
  ]
 }

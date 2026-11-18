@@ -181,7 +181,9 @@ def main(
     if client is None:  # pragma: no cover - needs the real database
         from supabase import create_client
 
-        client = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
+        from jobtracker.run import check_supabase_url
+
+        client = create_client(check_supabase_url(os.environ["SUPABASE_URL"]), os.environ["SUPABASE_SERVICE_ROLE_KEY"])
     try:
         if args.command == "claim":
             task = claim_task(client, now)

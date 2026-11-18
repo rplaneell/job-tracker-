@@ -74,14 +74,14 @@ def test_shipped_rules_reject_engineering_marketing_and_sales_support_roles():
     rules = _shipped()
     for title in ["Software Engineer Intern - Fullstack", "Marketing Associate - Netherlands",
                   "Associate Account Executive - Netherlands", "Data Engineer", "Product Designer"]:
-        assert not matches(role(title=title, country="Spain"), rules), title
+        assert not matches(role(title=title, country="Switzerland"), rules), title
 
 
 def test_shipped_rules_keep_target_roles():
     rules = _shipped()
     for title in ["Business Analyst Intern", "Strategy Associate, Life Sciences", "Investment Analyst",
                   "Graduate Consultant", "Business Development Associate", "CDD Risk Analyst"]:
-        assert matches(role(title=title, country="Spain"), rules), title
+        assert matches(role(title=title, country="Switzerland"), rules), title
 
 
 # Profile filter: the owner has R&D biotech and lab experience, and no management experience.

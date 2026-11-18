@@ -48,3 +48,15 @@ describe('shortlist', () => {
     expect(input.map((x) => x.roleId)).toEqual(['a', 'b']);
   });
 });
+
+import { parseSimStatus } from './scouting';
+
+describe('parseSimStatus', () => {
+  it.each(['idle', 'waiting', 'working', 'completed', 'failed'])('accepts ?sim=%s', (s) => expect(parseSimStatus(`?sim=${s}`)).toBe(s));
+  it('ignores unknown values, missing values and other parameters', () => {
+    expect(parseSimStatus('?sim=exploded')).toBeNull();
+    expect(parseSimStatus('')).toBeNull();
+    expect(parseSimStatus('?focus=scouting')).toBeNull();
+    expect(parseSimStatus('?sim=')).toBeNull();
+  });
+});

@@ -45,3 +45,14 @@ Every line should say DONE. Paste the output to me and I will record it as seen.
 
 `git commit --no-verify` and `git push --no-verify` skip the local hooks. The CI checks are the second line, and they only
 notice after the push. A checker run proves only the computer it ran on.
+
+## Running Scouting (the first office agent)
+
+Scouting reviews the new roles that fit your profile and saves a score and a reason for each. In a Claude Code session on this
+repository, say: "Run scouting on the queued tasks." Claude Code then uses the tools in `collector/src/jobtracker/scout.py`
+(claim, read, submit, finish). Nothing is sent anywhere, and every call is written to the audit log.
+
+The tools need the Supabase secret key. In a Claude Code cloud session it is stored as a network secret for the `apikey` header
+on your project host, entered only in the secure form, never in chat. The newer `sb_secret_` keys belong in `apikey`, not in
+`Authorization`. To stop access, remove the entry under Network secrets in the cloud environment's settings, and create a new
+key in Supabase if you think it was exposed.

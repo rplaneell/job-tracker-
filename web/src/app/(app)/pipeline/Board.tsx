@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { where } from "@/lib/labels";
 import { STAGES, canMove, groupByStage, type Stage } from "@/lib/stages";
 import { browserClient } from "@/lib/supabase/client";
 
 export type Card = {
   role_id: string;
   stage: string;
-  roles: { title: string; company: string; city: string | null; url: string } | null;
+  roles: { title: string; company: string; city: string | null; country: string | null; url: string } | null;
 };
 
 export default function Board({ initial }: { initial: Card[] }) {
@@ -18,29 +19,32 @@ export default function Board({ initial }: { initial: Card[] }) {
   async function move(card: Card, to: Stage) {
     if (!canMove(card.stage as Stage, to)) return;
     setError("");
-    const patch: Record<string, string> = { stage: to, updated_at: new Date().toISOString() };
-    if (to === "applied") patch.applied_at = new Date().toISOString();
+    const now = new Date().toISOString();
+    const patch: Record<string, string> = { stage: to, updated_at: now };
+    if (to === "applied") patch.applied_at = now;
     const { error: err } = await browserClient().from("applications").update(patch).eq("role_id", card.role_id);
-    if (err) return setError("Could not move that card. Try again.");
+    if (err) return setError("That card did not move. Check your connection and try again.");
     setCards(cards.map((c) => (c.role_id === card.role_id ? { ...c, stage: to } : c)));
   }
 
   return (
     <>
-      {error && <p role="alert">{error}</p>}
+      {error && <p className="alert" role="alert">{error}</p>}
       <div className="board">
         {STAGES.map((stage) => (
-          <section className="col" key={stage}>
-            <h2>{stage} ({groups[stage].length})</h2>
+          <section className="col" key={stage} aria-label={stage}>
+            <h2>{stage}<span className="mono">{groups[stage].length}</span></h2>
             {groups[stage].map((c) => (
               <div className="card" key={c.role_id}>
                 <Link href={`/roles/${c.role_id}`}>{c.roles?.title ?? "Role"}</Link>
-                <div className="muted">{c.roles?.company} {c.roles?.city ? `, ${c.roles.city}` : ""}</div>
-                <select aria-label="Move to stage" value={c.stage} onChange={(e) => move(c, e.target.value as Stage)}>
-                  {STAGES.map((s) => <option key={s}>{s}</option>)}
+                <div className="c">{c.roles?.company} · {where(c.roles?.city ?? null, c.roles?.country ?? null)}</div>
+                <select aria-label={`Move ${c.roles?.title ?? "role"} to another stage`} value={c.stage}
+                  onChange={(e) => move(c, e.target.value as Stage)}>
+                  {STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
             ))}
+            {groups[stage].length === 0 && <div className="hint">Nothing here yet.</div>}
           </section>
         ))}
       </div>

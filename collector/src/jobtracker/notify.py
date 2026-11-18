@@ -4,6 +4,7 @@ import os
 from html import escape
 from typing import Callable
 
+from jobtracker.adapters import safe_url
 from jobtracker.run import RunResult
 
 
@@ -17,9 +18,9 @@ def build_digest(result: RunResult, dashboard_url: str) -> tuple[str, str] | Non
     for city, roles in by_city.items():
         parts.append(f"<h3>{escape(city)}</h3><ul>")
         for r in roles:
-            parts.append(
-                f'<li><a href="{escape(r.url, quote=True)}">{escape(r.title)}</a> at {escape(r.company)}</li>'
-            )
+            link = safe_url(r.url)
+            title = f'<a href="{escape(link, quote=True)}">{escape(r.title)}</a>' if link else escape(r.title)
+            parts.append(f"<li>{title} at {escape(r.company)}</li>")
         parts.append("</ul>")
     if result.failures:
         parts.append("<h3>Sources that failed</h3><ul>")

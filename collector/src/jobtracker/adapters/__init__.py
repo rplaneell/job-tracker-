@@ -59,3 +59,15 @@ def get_json(client: httpx.Client, url: str, what: str) -> object:
         return json.loads(text)
     except ValueError as exc:
         raise SourceError(f"{what}: invalid JSON") from exc
+
+
+_WEB_LINK = re.compile(r"^https?://[^\s<>\"'`]+$", re.IGNORECASE)
+MAX_URL_LENGTH = 2000
+
+
+def safe_url(url: str) -> str:
+    """A plain web link, or an empty string. Links come from outside, so javascript:, data: and relative links never pass."""
+    cleaned = (url or "").strip()
+    if len(cleaned) > MAX_URL_LENGTH or not _WEB_LINK.match(cleaned):
+        return ""
+    return cleaned

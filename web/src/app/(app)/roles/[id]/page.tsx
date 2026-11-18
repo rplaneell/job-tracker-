@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FIELD, LEVEL, ago, where } from "@/lib/labels";
+import { safeHref } from "@/lib/safeHref";
 import { serverClient } from "@/lib/supabase/server";
 import Notes from "./Notes";
 
@@ -26,7 +27,7 @@ export default async function RoleDetail({ params }: { params: Promise<{ id: str
             {role.level_tag && <span className="tag">{LEVEL[role.level_tag] ?? role.level_tag}</span>}
           </div>
         </div>
-        <a className="btn primary" href={role.url} target="_blank" rel="noopener noreferrer">Open the posting</a>
+        {safeHref(role.url) && <a className="btn primary" href={safeHref(role.url)} target="_blank" rel="noopener noreferrer">Open the posting</a>}
       </div>
       <div className="detail">
         <section className="panel">

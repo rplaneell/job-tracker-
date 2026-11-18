@@ -3,14 +3,14 @@ from __future__ import annotations
 import os
 import sys
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
 import httpx
 
-from jobtracker.adapters import SourceError
+from jobtracker.adapters import SourceError, safe_url
 from jobtracker.adapters.ashby import fetch_ashby
 from jobtracker.adapters.greenhouse import fetch_greenhouse
 from jobtracker.adapters.jsonld import fetch_jsonld
@@ -88,6 +88,7 @@ def run_collection(
             store.record_run(source.name, False, 0, message, now)
             result.failures.append((source.name, message))
             continue
+        roles = [replace(r, url=safe_url(r.url)) for r in roles]
         result.total_seen += len(roles)
         if not roles:
             store.record_run(source.name, True, 0, "empty list returned, roles not closed", now)

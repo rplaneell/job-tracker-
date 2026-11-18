@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { applyFilters, countByCountry, type RoleRow } from "@/lib/filters";
 import { COUNTRY_CODE, FIELD, LEVEL, ago, where } from "@/lib/labels";
+import { safeHref } from "@/lib/safeHref";
 import { STAGES, type Stage } from "@/lib/stages";
 import { browserClient } from "@/lib/supabase/client";
 
@@ -139,7 +140,7 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
             </div>
             {error && <p className="alert" role="alert">{error}</p>}
             <div className="actions">
-              <a className="btn primary" href={open.url} target="_blank" rel="noopener noreferrer">Open the posting</a>
+              {safeHref(open.url) && <a className="btn primary" href={safeHref(open.url)} target="_blank" rel="noopener noreferrer">Open the posting</a>}
               <Link className="btn" href={`/roles/${open.id}`}>Notes and details</Link>
               {stages[open.id] && <button className="btn" type="button" onClick={() => remove(open.id)}>Remove from pipeline</button>}
             </div>

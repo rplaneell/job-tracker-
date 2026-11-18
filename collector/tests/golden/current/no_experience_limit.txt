@@ -1,0 +1,194 @@
+Adyen | (Senior) Product Pricing Strategist | Netherlands | no | field=None | level=None
+Adyen | AML Compliance Officer Customer Risk | Netherlands | no | field=None | level=None
+Adyen | AML Compliance Officer Financial Products | Netherlands | no | field=finance | level=None
+Adyen | Account Manager | Netherlands | no | field=None | level=None
+Adyen | CDD Risk Analyst, Customer Onboarding | Netherlands | MATCH | field=business_analyst | level=entry_level
+Adyen | Content Writer, Global | Netherlands | no | field=None | level=None
+Adyen | Customer Onboarding Manager | Netherlands | no | field=None | level=None
+Adyen | Engineering Manager - Android | Netherlands | no | field=None | level=None
+Adyen | Engineering Manager – Identity & Verification Services  | Netherlands | no | field=None | level=None
+Adyen | Enterprise Account Manager | Netherlands | no | field=None | level=None
+Adyen | GTM Systems Manager | Netherlands | no | field=None | level=None
+Adyen | Global Emerging Verticals Manager | Netherlands | no | field=None | level=None
+Adyen | Group Financial Controller | Netherlands | no | field=finance | level=None
+Adyen | Group Product Manager – Fraud Intelligence | Netherlands | no | field=None | level=None
+Adyen | Head of CDD, EMEA | Netherlands | no | field=None | level=None
+Adyen | Head of Engineering - Financial Data Experience | Netherlands | no | field=finance | level=None
+Adyen | Head of Global Credit Risk  | Netherlands | no | field=None | level=None
+Adyen | Head of Operations Analytics | Netherlands | no | field=business_analyst | level=None
+Adyen | Head of Regulatory - EMEA | Netherlands | no | field=None | level=None
+Adyen | Head of Tech Support EMEA | Netherlands | no | field=None | level=None
+Adyen | India Tax Accountant | Netherlands | no | field=None | level=None
+Adyen | Internal Control Specialist - Finance | Netherlands | no | field=finance | level=None
+Adyen | Legal Innovation Specialist | Netherlands | no | field=None | level=None
+Adyen | Legal Team Lead for Deal Desk - Transactions | Netherlands | no | field=None | level=None
+Adyen | Manager, Commercial Systems (Salesforce) | Netherlands | no | field=None | level=None
+Adyen | Manager, Customer Support Technology | Netherlands | no | field=None | level=None
+Adyen | Manager, Salesforce Integration | Netherlands | no | field=None | level=None
+Adyen | Manager, Service Cloud | Netherlands | no | field=None | level=None
+Adyen | Manager, Support Tooling and Infrastructure | Netherlands | no | field=None | level=None
+Adyen | Manager,Salesforce Sales Cloud  | Netherlands | no | field=None | level=None
+Adyen | Partnerships Growth & Operations Lead | Netherlands | no | field=business_development | level=None
+Adyen | People Technology Application Engineer | Netherlands | no | field=None | level=None
+Adyen | Product Manager - Interface Foundations | Netherlands | no | field=None | level=None
+Adyen | Recruitment Business Partner - Commercial (RPO 6-month contract) | Netherlands | no | field=None | level=None
+Adyen | Senior AI Research Engineer | Netherlands | no | field=None | level=None
+Adyen | Senior AML Compliance Data Specialist | Netherlands | no | field=None | level=None
+Adyen | Senior B2B Content Marketing Manager, Global | Netherlands | no | field=None | level=None
+Adyen | Senior CDD Risk Analyst, Direct Customer Onboarding | Netherlands | no | field=business_analyst | level=entry_level
+Adyen | Senior CDD Risk Analyst, Reviews | Netherlands | no | field=business_analyst | level=entry_level
+Adyen | Senior Commercial Finance Business Partner | Netherlands | no | field=finance | level=None
+Adyen | Senior Compliance Officer - Brand Integrity | Netherlands | no | field=None | level=None
+Adyen | Senior Corporate Communications Manager | Netherlands | no | field=None | level=None
+Adyen | Senior Credit Risk Analyst | Netherlands | no | field=business_analyst | level=entry_level
+Adyen | Senior Data Engineer | Netherlands | no | field=None | level=None
+Adyen | Senior Digital Designer | Netherlands | no | field=None | level=None
+Adyen | Senior Fraud Risk Management Expert | Netherlands | no | field=None | level=None
+Adyen | Senior Internal Communications Business Partner, Tech | Netherlands | no | field=None | level=None
+Adyen | Senior Java Engineer in Java Application Core Components team | Netherlands | no | field=None | level=None
+Adyen | Senior Java Software Engineer - Payments | Netherlands | no | field=None | level=None
+Adyen | Senior Learning Experience Designer - Global L&D | Netherlands | no | field=None | level=None
+Adyen | Senior Machine Learning Engineer - AML Tech | Netherlands | no | field=None | level=None
+Adyen | Senior Manager, Application Engineering | Netherlands | no | field=None | level=None
+Adyen | Senior Manager, Commercial Strategy & Offering - Unified Commerce | Netherlands | no | field=consulting | level=None
+Adyen | Senior Manager, Digital Workplace  | Netherlands | no | field=None | level=None
+Adyen | Senior Partner Solution Engineer - Device Assurance | Netherlands | no | field=None | level=None
+Adyen | Senior Partner Solutions Engineer - Cellular Connectivity | Netherlands | no | field=None | level=None
+Adyen | Senior Platform Engineer - GenAI  | Netherlands | no | field=None | level=None
+Adyen | Senior Platform Engineer - Observability | Netherlands | no | field=None | level=None
+Adyen | Senior Product Manager - Banking Networks Global | Netherlands | no | field=finance | level=None
+Adyen | Senior Product Manager - Domestic Card Schemes | Netherlands | no | field=None | level=None
+Adyen | Senior Product Manager - FX | Netherlands | no | field=None | level=None
+Adyen | Senior Product Manager - Split Payments | Netherlands | no | field=None | level=None
+Adyen | Senior Product Manager, AML | Netherlands | no | field=None | level=None
+Adyen | Senior Software Engineer (Java) | Spain | no | field=None | level=None
+Adyen | Senior Software Engineer (Java) - Core Accounting | Netherlands | no | field=None | level=None
+Adyen | Senior Software Engineer (Java) - Unified Platform  | Netherlands | no | field=None | level=None
+Adyen | Senior/Lead, HR Business Partner, Operations | Netherlands | no | field=None | level=None
+Adyen | Software Engineer (Java) - Screening Team | Netherlands | no | field=None | level=None
+Adyen | Solution Architect - EPM (Pigment) | Netherlands | no | field=None | level=None
+Adyen | Staff Engineer - Banking Products | Netherlands | no | field=finance | level=None
+Adyen | Staff Engineer - Observability | Netherlands | no | field=None | level=None
+Adyen | Staff Software Engineer - Fraud Intelligence | Netherlands | no | field=None | level=None
+Adyen | Staff Software Engineer - Money Movement | Netherlands | no | field=None | level=None
+Adyen | Supply Chain Data Engineer & Integration Manager | Netherlands | no | field=None | level=None
+Adyen | Team Lead - Compliance Investigations (EU MLRO) | Netherlands | no | field=None | level=None
+Adyen | Team Lead - Product Financial Control | Netherlands | no | field=finance | level=None
+Adyen | Team Lead - Record to Report | Netherlands | no | field=None | level=None
+Adyen | Team Lead - Salesforce Commercial | Netherlands | no | field=None | level=None
+Adyen | Team Lead - Sub Customer Onboarding | Spain | no | field=None | level=None
+Adyen | Team Lead, Service Cloud | Netherlands | no | field=None | level=None
+Adyen | Vice President of Product Management, In Store Experience | Netherlands | no | field=None | level=None
+Alan | Account Executive - Spain 🇪🇸  | Spain | no | field=None | level=None
+Alan | Account Executive SMB  - Belgium 🇧🇪  | Belgium | no | field=None | level=None
+Alan | Analytics and Pricing Expert – Insurance 🇧🇪 | Belgium | no | field=business_analyst | level=None
+Alan | Care Expert - Belgium 🇧🇪 | Belgium | no | field=None | level=None
+Alan | Care Expert - Spain 🇪🇸 | Spain | no | field=None | level=None
+Alan | Corporate Legal Counsel | Belgium | no | field=None | level=None
+Alan | Data Engineer | Belgium | no | field=None | level=None
+Alan | Data Full Stack | Belgium | no | field=None | level=None
+Alan | Field Marketing Manager - Belgium | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) - Agentic Platform | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) - Care Expert Copilot | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) - Product Platform | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) - Tech Foundations | Belgium | no | field=None | level=None
+Alan | Fullstack Software Engineer (x/f/m) -Automated Resolution | Belgium | no | field=None | level=None
+Alan | General Manager Associate - Spain 🇪🇸   | Spain | no | field=None | level=entry_level
+Alan | General practitioner - Teleconsultation 🇪🇸 | Spain | no | field=None | level=None
+Alan | Inbound Sales - Belgium 🇧🇪  | Belgium | no | field=None | level=None
+Alan | Insurance Expert - Spanish Market | Spain | no | field=None | level=None
+Alan | Insurance graduate program - Belgian Market | Belgium | MATCH | field=None | level=entry_level
+Alan | Junior Compliance Counsel | Belgium | no | field=None | level=entry_level
+Alan | Marketing Operations | Spain | no | field=None | level=None
+Alan | Operations Expert | Spain | no | field=None | level=None
+Alan | Operations Expert - Belgian Market  | Belgium | no | field=None | level=None
+Alan | Ops & Product Builder – Health Services, Belgium | Belgium | no | field=health_science | level=None
+Alan | Partnership Activation Manager - Belgium | Belgium | no | field=None | level=None
+Alan | Platform Engineer (x/f/m) - Tech Foundations | Belgium | no | field=None | level=None
+Alan | Product Designer | Belgium | no | field=None | level=None
+Alan | Sales Planning & Strategy | Spain | MATCH | field=consulting | level=None
+Alan | Sales development representative  | Belgium | no | field=None | level=None
+Alan | Senior Actuary | Belgium | no | field=None | level=None
+Alan | Senior Fullstack Software Engineer - Work Environment (x/f/m) | Belgium | no | field=None | level=None
+Alan | Senior Revenue Ops | Spain | no | field=None | level=None
+Alan | Senior Software Engineer (Privacy) (x/f/m) - Tech Foundations | Belgium | no | field=None | level=None
+Alan | Senior User Researcher | Belgium | no | field=None | level=None
+Alan | Tender Manager/Bid Manager 🇧🇪 | Belgium | no | field=None | level=None
+Doctolib | Senior Fullstack Engineer - Java, React (x/f/m) | Netherlands | no | field=None | level=None
+Doctolib | Software Engineer Intern - Fullstack (x/f/m) - Amsterdam | Netherlands | no | field=None | level=internship
+Mollie | Analytics Engineer | Netherlands | no | field=business_analyst | level=None
+Mollie | Associate Customer Success Manager | Belgium | no | field=None | level=entry_level
+Mollie | Associate Partner Growth Manager - NL | Netherlands | no | field=None | level=entry_level
+Mollie | Creative Director | Netherlands | no | field=None | level=None
+Mollie | Engineering Manager | Netherlands | no | field=None | level=None
+Mollie | Head of Product - Cards | Netherlands | no | field=None | level=None
+Mollie | Model Risk Officer | Netherlands | no | field=None | level=None
+Mollie | Partner Manager Digital Agencies - Iberia | Spain | no | field=None | level=None
+Mollie | Partnerships Acquisition Manager SaaS - Benelux | Netherlands | no | field=business_development | level=None
+Mollie | Senior Internal Auditor | Netherlands | no | field=None | level=None
+Mollie | Senior Product Manager - Business Banking | Netherlands | no | field=finance | level=None
+Mollie | Senior Regulatory Compliance Officer | Netherlands | no | field=None | level=None
+Mollie | Senior Security Risk Officer | Netherlands | no | field=None | level=None
+Mollie | Senior Treasury Specialist | Netherlands | no | field=finance | level=None
+Mollie | Service Desk Technician | Netherlands | no | field=None | level=None
+Mollie | Solution Engineer I | Netherlands | no | field=None | level=None
+Mollie | Treasury Manager (ALM) | Netherlands | no | field=finance | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Hybrid / Region Basel (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Hybrid / Region Bern (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Hybrid / Region St. Gallen / Wil (40-100%)  | Switzerland | no | field=None | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Hybrid / Region Winterthur / Ostschweiz (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Hybrid / Region Zürich / Uster (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Eid. anerkannte:r Psychotherapeut:in (a) - Remote von der Schweiz aus (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Ernährungsberater*in BSc in Aargau 50-100% (a) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin Allgemeine Innere Medizin (Bern) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin Allgemeine Innere Medizin (Liestal) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin Allgemeine Innere Medizin (Luzern) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin Allgemeine Innere Medizin (Telemedizin) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin Allgemeine Innere Medizin (Zürich) | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin mit Fähigkeitsausweis Endokrinologie & Diabetologie | Switzerland | no | field=None | level=None
+Oviva | Facharzt/Fachärztin mit interdisziplinärem Schwerpunkt Sportmedizin (SEMS) | Switzerland | no | field=None | level=None
+Oviva | Fachärzt:in für Psychiatrie (a); 40-100% | Switzerland | no | field=None | level=None
+Oviva | Leitende Medizinische Praxisassistent*in (Zürich) | Switzerland | no | field=None | level=None
+Oviva | Medizinische*r Praxisassistent*in (Zürich) | Switzerland | no | field=None | level=None
+Oviva | Medizinstudent*in Praxisassistenz (Bern) | Switzerland | no | field=None | level=None
+Oviva | Psychotherapeut:in in Weiterbildung (a) - Hybrid / Region Bern (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Psychotherapeut:in in Weiterbildung (a) - Hybrid / Region Winterthur / Ostschweiz (40-100%) | Switzerland | no | field=None | level=None
+Oviva | Psychotherapeut:in in Weiterbildung (a) - Hybrid / Region Zürich / Uster (40-100%)  | Switzerland | no | field=None | level=None
+Oviva | Remote Ernährungsberater:in in Bsc (Schweiz) | Switzerland | no | field=None | level=None
+Oviva | ZMB Praktikum/Des. Ernährungsberater*in BSc (a) | Switzerland | no | field=None | level=None
+Pleo | Customer Onboarding Manager I (Dutch Speaking) | Netherlands | no | field=None | level=None
+Pleo | Customer Success Manager II (Nordics, Danish Speaking) | Denmark | no | field=None | level=None
+Pleo | Legal Counsel - Employment Law Leaning (Mat Cover) | Denmark | no | field=None | level=None
+Pleo | Sales Development Representative - Dutch Speaking | Netherlands | no | field=None | level=None
+Pleo | Senior Transaction Monitoring Framework Specialist | Spain | no | field=None | level=None
+Tandem Health | Associate Account Executive - Netherlands | Netherlands | no | field=None | level=entry_level
+Tandem Health | Customer Success Specialist - 6 month FTC (parental leave cover) | Netherlands | no | field=None | level=None
+Tandem Health | Customer Success Specialist - Netherlands | Netherlands | no | field=None | level=None
+Tandem Health | Customer Success Specialist - Netherlands | Netherlands | no | field=None | level=None
+Tandem Health | Marketing Associate - Netherlands | Netherlands | no | field=None | level=entry_level
+Tandem Health | Medical Operations - Netherlands | Netherlands | no | field=None | level=None
+Tandem Health | Medical Operations - Spain | Spain | no | field=None | level=None
+Tandem Health | Project Delivery Lead | Netherlands | no | field=None | level=None
+Tandem Health | Project Delivery Lead  | Netherlands | no | field=None | level=None
+Tandem Health | Project Delivery Lead, Spain | Spain | no | field=None | level=None
+Tandem Health | Senior Account Executive - Netherlands | Netherlands | no | field=None | level=None
+Typeform | AI Product Operations Lead | Netherlands | no | field=None | level=None
+Typeform | Senior IT Engineer | Netherlands | no | field=None | level=None
+Typeform | Senior Paid Marketing Strategist | Netherlands | no | field=None | level=None
+Edge Co | Business Analyst Intern | Spain | MATCH | field=business_analyst | level=internship
+Edge Co | Business Analyst | Spain | MATCH | field=consulting | level=entry_level
+Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
+Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
+Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
+Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
+Edge Co | Strategy Associate, Life Sciences | Switzerland | MATCH | field=consulting | level=entry_level
+Edge Co | Graduate Consultant | Denmark | MATCH | field=consulting | level=entry_level
+Edge Co | Senior Consultant | Netherlands | no | field=consulting | level=None
+Edge Co | Team Lead, Consulting | Netherlands | no | field=consulting | level=None
+Edge Co | Internal Auditor | Belgium | no | field=None | level=None
+Edge Co | INVESTMENT ANALYST | Switzerland | MATCH | field=vc | level=entry_level
+Edge Co | Analyst | France | no | field=business_analyst | level=entry_level
+Edge Co | Analyst | None | no | field=business_analyst | level=entry_level
+Edge Co | Zürich Analyst <b>Intern</b> | Switzerland | MATCH | field=business_analyst | level=internship
+Edge Co |  | Spain | no | field=None | level=None

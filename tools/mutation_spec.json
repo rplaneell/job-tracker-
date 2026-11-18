@@ -1,0 +1,240 @@
+{
+ "test_command": "cd collector && PYTHONPATH=src python3 -m pytest -q -x -p no:cacheprovider",
+ "timeout": 300,
+ "mutants": [
+  {
+   "name": "experience limit counts equal as too much",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "needed > rules.max_years_experience",
+   "new": "needed >= rules.max_years_experience"
+  },
+  {
+   "name": "country test inverted",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "role.country not in rules.countries",
+   "new": "role.country in rules.countries"
+  },
+  {
+   "name": "exclusions ignored",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "    if _any(role.title, rules.exclude_keywords):",
+   "new": "    if False:"
+  },
+  {
+   "name": "highest requirement becomes lowest",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "return max(found) if found else None",
+   "new": "return min(found) if found else None"
+  },
+  {
+   "name": "experience window shrinks",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "m.start() - 80",
+   "new": "m.start() - 8"
+  },
+  {
+   "name": "experience word no longer required",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "if \"experience\" in window:",
+   "new": "if True:"
+  },
+  {
+   "name": "whole word matching removed",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "rf\"(?<![\\w]){re.escape(keyword.lower())}(?![\\w])\"",
+   "new": "rf\"{re.escape(keyword.lower())}\""
+  },
+  {
+   "name": "any title now matches",
+   "file": "collector/src/jobtracker/rules.py",
+   "old": "return _any(role.title, rules.include_keywords)",
+   "new": "return True"
+  },
+  {
+   "name": "link length limit removed",
+   "file": "collector/src/jobtracker/adapters/__init__.py",
+   "old": "MAX_URL_LENGTH = 2000",
+   "new": "MAX_URL_LENGTH = 20000000"
+  },
+  {
+   "name": "not found becomes another status",
+   "file": "collector/src/jobtracker/adapters/__init__.py",
+   "old": "board not found\", 404)",
+   "new": "board not found\", 403)"
+  },
+  {
+   "name": "html is not unescaped first",
+   "file": "collector/src/jobtracker/adapters/__init__.py",
+   "old": "parser.feed(html.unescape(text))",
+   "new": "parser.feed(text)"
+  },
+  {
+   "name": "remote detection off",
+   "file": "collector/src/jobtracker/adapters/locations.py",
+   "old": "remote = bool(re.search(r\"\\bremote\\b\", text))",
+   "new": "remote = False"
+  },
+  {
+   "name": "retry never happens",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "if exc.status == 429 or exc.status is None or exc.status >= 500:",
+   "new": "if False:"
+  },
+  {
+   "name": "pause between calls removed",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "            sleep(PAUSE_SECONDS)",
+   "new": "            pass"
+  },
+  {
+   "name": "roles outside regions are stored",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "kept = [r for r in roles if r.country in rules.countries]",
+   "new": "kept = roles"
+  },
+  {
+   "name": "links are not made safe",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "roles = [replace(r, url=safe_url(r.url)) for r in roles]",
+   "new": "roles = roles"
+  },
+  {
+   "name": "closing a role marks it open",
+   "file": "collector/src/jobtracker/store.py",
+   "old": "{\"status\": \"closed\"}",
+   "new": "{\"status\": \"open\"}"
+  },
+  {
+   "name": "new roles lose their first seen date",
+   "file": "collector/src/jobtracker/store.py",
+   "old": "new_rows.append({**row, \"first_seen\": now.isoformat()})",
+   "new": "new_rows.append(row)"
+  },
+  {
+   "name": "any host may skip a missing robots file",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "response.status_code == 401 and host in DOCUMENTED_PUBLIC_API_HOSTS",
+   "new": "response.status_code == 401"
+  },
+  {
+   "name": "robots rules are ignored",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "if robots is None or not robots.can_fetch(self.agent_token, url):",
+   "new": "if False:"
+  },
+  {
+   "name": "pacing adds instead of subtracts",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "wait = PAUSE_SECONDS - (self.clock() - last)",
+   "new": "wait = PAUSE_SECONDS + (self.clock() - last)"
+  },
+  {
+   "name": "failed pages count as found",
+   "file": "collector/src/jobtracker/harvest.py",
+   "old": "if record.get(\"status\") == \"200\" and record.get(\"url\"):",
+   "new": "if record.get(\"url\"):"
+  },
+  {
+   "name": "boards without regional roles are kept",
+   "file": "collector/src/jobtracker/verify.py",
+   "old": "if check.in_regions >= 1:",
+   "new": "if check.in_regions >= 0:"
+  },
+  {
+   "name": "terms no entries are collected",
+   "file": "collector/src/jobtracker/registry.py",
+   "old": "        if terms == \"no\":",
+   "new": "        if False:"
+  },
+  {
+   "name": "email titles are not escaped",
+   "file": "collector/src/jobtracker/notify.py",
+   "old": "if link else escape(r.title)",
+   "new": "if link else r.title"
+  },
+  {
+   "name": "email links are not checked",
+   "file": "collector/src/jobtracker/notify.py",
+   "old": "link = safe_url(r.url)",
+   "new": "link = r.url"
+  },
+  {
+   "name": "scout: stale claim limit becomes zero",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "STALE_CLAIM_MINUTES = 30",
+   "new": "STALE_CLAIM_MINUTES = 0"
+  },
+  {
+   "name": "scout: claim no longer checks the task is still queued",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"id\", queued[0][\"id\"]).eq(\"status\", \"queued\")",
+   "new": ".eq(\"id\", queued[0][\"id\"])"
+  },
+  {
+   "name": "scout: score 101 allowed",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "not 0 <= score <= 100",
+   "new": "not 0 <= score <= 101"
+  },
+  {
+   "name": "scout: true accepted as a score",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "or isinstance(score, bool) ",
+   "new": ""
+  },
+  {
+   "name": "scout: role outside the task accepted",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "if role_id not in task.role_ids:",
+   "new": "if False:"
+  },
+  {
+   "name": "scout: description no longer cut",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "[:DESCRIPTION_LIMIT]",
+   "new": "[:DESCRIPTION_LIMIT + 1]"
+  },
+  {
+   "name": "scout: reason minimum drops to 9",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "REASON_MIN, REASON_MAX = 10, 500",
+   "new": "REASON_MIN, REASON_MAX = 9, 500"
+  },
+  {
+   "name": "scout: claims other agents tasks",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"agent_id\", AGENT_ID).eq(\"status\", \"queued\").order",
+   "new": ".eq(\"status\", \"queued\").order"
+  },
+  {
+   "name": "scout: claim not logged",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "    _audit(db, \"claim\", {\"task\": task.id, \"roles\": len(task.role_ids)})\n",
+   "new": ""
+  },
+  {
+   "name": "scout: finishing ignores the claimed check",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"id\", task.id).eq(\"status\", \"claimed\").execute().data",
+   "new": ".eq(\"id\", task.id).execute().data"
+  },
+  {
+   "name": "scout: unclaimed task can be read",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "[\"status\"] != \"claimed\":",
+   "new": "[\"status\"] == \"never\":"
+  },
+  {
+   "name": "queue: a failing queue write stops the run",
+   "file": "collector/src/jobtracker/run.py",
+   "old": "result.queue_error = str(exc) or type(exc).__name__",
+   "new": "raise"
+  },
+  {
+   "name": "queue: tasks hold 51 roles",
+   "file": "collector/src/jobtracker/store.py",
+   "old": "SCOUT_TASK_SIZE = 50",
+   "new": "SCOUT_TASK_SIZE = 51"
+  }
+ ]
+}

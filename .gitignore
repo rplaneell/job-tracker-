@@ -8,3 +8,24 @@ node_modules/
 venv/
 __pycache__/
 .DS_Store
+
+# Local execution scratch
+.superpowers/
+.pytest_cache/
+.next/
+
+web/next-env.d.ts
+web/*.tsbuildinfo
+
+# Job HQ build output
+hq/dist/
+.env.*
+!.env.example
+*.pem
+*.key
+.semgrep_work/
+
+# Generated test output
+coverage/
+.coverage
+.hypothesis/

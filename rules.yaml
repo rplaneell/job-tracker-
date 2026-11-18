@@ -1,0 +1,22 @@
+# Which roles count as relevant. All matching is case insensitive, whole words only.
+countries: [Spain, Switzerland, Belgium, Netherlands, Denmark]
+include_keywords:
+  [analyst, consultant, consulting, associate, intern, internship, graduate,
+   business development, strategy, investment, venture]
+# Your profile: R&D biotech and lab experience, no management experience. So management and
+# senior titles are out, and so is any role asking for more than max_years_experience years.
+max_years_experience: 2
+exclude_keywords:
+  [senior, director, principal, vice president, vp, head, chief, partner, manager, lead, staff,
+   engineer, engineering, developer, software, designer, recruiter, marketing, account executive,
+   customer success, support]
+field_keywords:
+  consulting: [consultant, consulting, strategy, advisory]
+  finance: [finance, financial, banking, investment banking, equity, m&a, treasury]
+  vc: [venture, vc, investment, portfolio, fund]
+  business_analyst: [business analyst, analyst, analytics]
+  business_development: [business development, partnerships, bd]
+  health_science: [health, healthcare, life sciences, biotech, pharma, medtech, clinical, biotechnology]
+level_keywords:
+  internship: [intern, internship, trainee, working student, stage]
+  entry_level: [graduate, junior, entry level, associate, analyst, early careers]

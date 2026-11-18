@@ -1,0 +1,314 @@
+{
+ "checks": [
+  {
+   "id": 1,
+   "area": "Secrets",
+   "check": "Ignore rules for secret files",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Added .env.*, !.env.example, *.pem and *.key to .gitignore. git check-ignore shows .env, .env.local and .env.prod ignored and .env.example not ignored.",
+   "limit": "Only protects the file names listed. A secret pasted into a normal file is not stopped by this rule.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 2,
+   "area": "Secrets",
+   "check": "History scan with gitleaks 8.30.1",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "36 commits scanned, no leaks found. The gitleaks download matched the official SHA 256 fingerprint.",
+   "limit": "Finds known secret formats only, and only in this checkout of the history. It tells us about the past, not the future.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 3,
+   "area": "Secrets",
+   "check": "Local secret blocker (pre commit hook)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "In a throwaway repository a made up fake token was REFUSED and a harmless commit was ACCEPTED. The config is committed as .pre-commit-config.yaml.",
+   "limit": "The hook only protects a computer where the owner ran pre-commit install. I did not install it on the owner's computer. git commit --no-verify skips it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 4,
+   "area": "CI hardening",
+   "check": "Actions pinned to exact commits",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "6 action uses across 3 workflows pinned to full commit hashes with version comments. The checker exited 1 on an unpinned scratch copy and 0 after pinning.",
+   "limit": "Protects against future changes to a tag. If a tag was already tampered with before pinning, the pinned code is the bad code.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 5,
+   "area": "CI hardening",
+   "check": "Least privilege permissions",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "All 3 workflows declare permissions: contents: read and use no secrets other than the collector's own.",
+   "limit": "A workflow that needs more later must be reviewed again.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 6,
+   "area": "CI hardening",
+   "check": "Dependabot update file",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": ".github/dependabot.yml parses and covers npm in web and hq, pip in collector, and GitHub Actions, weekly, 3 pull requests at most.",
+   "limit": "Dependabot ALERTS are a separate switch only the owner can turn on in the repository settings. Not confirmed on.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 7,
+   "area": "Secrets",
+   "check": "CI secret scan on every push",
+   "outcome": "clean",
+   "proof": "both",
+   "detail": "secret-scan workflow succeeded on commit 1ae12a9 (push and pull request). The same gitleaks command exited non zero on a throwaway repo holding a made up key, so it can fail.",
+   "limit": "It only notices after a secret already reached GitHub. Finds known formats only.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 8,
+   "area": "CI hardening",
+   "check": "Tests run on every push and pull request",
+   "outcome": "clean",
+   "proof": "github",
+   "detail": "tests workflow succeeded on commit 1ae12a9: collector tests, dashboard tests and build, Job HQ tests, type check and build.",
+   "limit": "Only as strong as the tests. Coverage and mutation checks are not done yet.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 9,
+   "area": "Repository controls",
+   "check": "Rules check: forbidden files, pinned actions, commit messages, hand edited built file",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "5 rule tests pass. On a throwaway clone with four deliberate breaks the checker reported six findings and exited 1. The real repository reports 0 problems across 128 files and 4 workflows.",
+   "limit": "Runs after the push, so it tells but cannot stop. Commits before the baseline (1ae12a9) are not checked because many earlier subjects exceed 72 characters. The rules are only as good as the list.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 10,
+   "area": "Repository controls",
+   "check": "Local push blocker (no direct push to main or master)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "Against a local fake remote: a push to main was refused and nothing reached the remote, a feature branch push was accepted, and the emergency override was accepted.",
+   "limit": "Only works where the owner ran pre-commit install, and git push --no-verify skips it. This repository's default branch has a generated name, not main, so it is not protected until the owner renames it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 11,
+   "area": "Repository controls",
+   "check": "Workflow commit range logic",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Using the workflow's own script text: a normal push checks before..head, a new branch, a force push and a pull request all check baseline..head.",
+   "limit": "Tested locally. The real workflow run on GitHub still has to be read.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 12,
+   "area": "Dependencies",
+   "check": "npm audit of what ships (dashboard and Job HQ)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "npm audit --omit=dev: 0 vulnerabilities in web and in hq (exit 0 in both).",
+   "limit": "Published flaws only, in the versions in the lock files. Says nothing about our own code.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 13,
+   "area": "Dependencies",
+   "check": "npm audit of development tools",
+   "outcome": "open",
+   "proof": "ran",
+   "detail": "6 high findings in web and hq, all one advisory: picomatch 4.0.7 ReDoS (GHSA-fc5q-39xc-vjpf), pulled in by vitest, vite and tinyglobby. 4.0.7 is the newest published version and is also affected, so no fix exists. The suggested fix is a major downgrade of vitest.",
+   "limit": "Review date 2026-12-16. Judged low practical risk: development only, not shipped, and only our own glob patterns reach it. This is my judgement, not a proof. My earlier quick check used --omit=dev and missed it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 14,
+   "area": "Dependencies",
+   "check": "pip audit of the collector",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "30 pinned packages in collector/requirements.txt, no known vulnerabilities (exit 0).",
+   "limit": "The pinned list was generated from the Python 3.13 test environment. CI uses 3.12, so versions could differ slightly.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 15,
+   "area": "Dependencies",
+   "check": "OSV Scanner over all lock files",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "366 packages scanned (152 web, 184 hq, 30 collector). One advisory, the picomatch one. Without osv-scanner.toml the scan exits 1, with it the scan exits 0, so it can fail. The exception expires on 2026-12-16.",
+   "limit": "No libraries are copied into the project, so there is no vendored list. Only flaws already published are known. Download checked against its published fingerprint.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 16,
+   "area": "Owner steps",
+   "check": "Owner setup checker (tools/check_setup.py)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "In a fresh clone it printed NOT DONE for both hooks and exited 1. After pre-commit install it printed DONE on every line and exited 0. docs/OWNER_STEPS.md gives the commands for Windows, macOS and Linux.",
+   "limit": "Proves the tool works, not that your computer is protected. It has not been run on your computer yet, and a run proves only the computer it ran on.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 17,
+   "area": "Code scanning",
+   "check": "Semgrep self test and scans of all three code folders",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Semgrep 1.186.0, 10 own rules. Self test: all 10 fire on planted bad code. Scans: dashboard 24 files, Job HQ 15 files, collector 21 files, 0 findings, and the scanned count equals the files present. A planted os.system line made the scan BLOCK with exit 1. The first dashboard scan was refused as blind (a parse error in layout.tsx and an invalid rules file), which is the guard working; both were fixed.",
+   "limit": "Own rules only, so it finds only the patterns I wrote. A clean scan means none of these patterns, not secure. One finding was reviewed and suppressed on purpose (a fixed theme script) and the suppressions are capped at 1.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 18,
+   "area": "Backtest",
+   "check": "Golden backtest of the collector's decisions",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "192 inputs (178 real job titles from a live run plus 14 hand written edge cases) through 7 scenarios: the shipped rules and every changeable setting. 16 golden tests. A deliberately broken experience rule was caught on the exact line. The first proof showed a gap (no input on the 2 year boundary), so boundary cases were added and the break is now caught in the default scenario too.",
+   "limit": "Protects the decisions only, not the adapters' parsing of live pages or the dashboard. No older trusted version exists, so there is no oracle. Golden files can encode a bug that existed when they were saved.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 19,
+   "area": "Hostile input",
+   "check": "Job links and posting text cannot run code",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Found: a posting link such as javascript:alert(1) was stored and linked. Fixed in three layers: the collector keeps only plain http and https links, the email never links an unsafe address, and the dashboard shows the Open button only for a safe link. 18 collector tests, 3 dashboard tests, plus properties over generated hostile text. Mutation checking then found an unescaped title branch in the email, now tested.",
+   "limit": "Covers the entry points I know (posting title, company, links, description in email and dashboard). React escapes text by default. No browser level injection test was run on the screens yet.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 20,
+   "area": "Property tests",
+   "check": "Rules that must hold for every input",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Collector: 12 properties with Hypothesis (never crashes on any text, only known places, a title with an excluded word never matches, fewer countries or a lower experience limit never add matches, safe links only). Job HQ: 5 and dashboard: 5 properties with fast-check. Broken copies failed with the smallest counterexample found automatically.",
+   "limit": "Properties describe what I thought of. Generated text is not real postings.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 21,
+   "area": "Coverage floor",
+   "check": "Minimum test coverage enforced in CI",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "Collector 89% (floor 88), measured twice, no wobble. Dashboard lib folder 100% lines and 97% branches, Job HQ domain folder 100%, floors 90/90/80. Each gate exited 1 when asked for more than we have.",
+   "limit": "Screens, 3D scenes and the real command line entry points (findboards.py, run.main) are not measured. Coverage shows lines that ran, not that they were checked well.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 22,
+   "area": "Mutation checks",
+   "check": "Deliberate breaks of the collector's core logic",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "26 breaks across the profile filter, link safety, robots gate, pacing, retries, store and board finder. First run caught 23 and 3 survived. Those three pointed at real missing tests (pacing arithmetic, error status, email escaping with no link) which were added, and all 26 are now caught.",
+   "limit": "Only the collector. TypeScript logic was break tested by hand on two functions, not with the runner. Some survivors can be harmless equivalents.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 23,
+   "area": "Repository controls",
+   "check": "Commit message rule false alarm on the test: prefix",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "The rule flagged every subject starting with the word test, including the normal 'test: add x' prefix. Found when it blocked two of my own commits. The new test failed on the old pattern and passes on the fixed one. A bare test, test 2, wip, tmp and fixup! are still flagged.",
+   "limit": "The rule is a list of patterns I can only extend when real commits show a false alarm.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 24,
+   "area": "CI on GitHub",
+   "check": "Repo rules, secret scan, audit, Semgrep and tests workflows on commit c6a1904",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "All five workflows finished with success on GitHub, read back through the GitHub tools, not assumed from local runs.",
+   "limit": "One commit only. Later commits need their own reading.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 25,
+   "area": "Database access",
+   "check": "Who can read the tables (Supabase row level security)",
+   "outcome": "open",
+   "proof": "ran",
+   "detail": "Policies say any signed in user may read and write. Proved inside a rolled back transaction that a second random signed in user could read a test row, then confirmed no test rows were left. Today there is 1 user, so nothing leaks, but that is only safe while public sign ups stay off.",
+   "limit": "Not fixed yet. An owner only migration (0002_owner_only.sql) is drafted but not applied, because a mistake could lock you out of your own data. Needs your yes.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 26,
+   "area": "Browser hardening",
+   "check": "Security headers on every page",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Added nosniff, no framing (X-Frame-Options and frame-ancestors), referrer limit, permissions lockdown and HTTPS only. The new test failed first (module missing), then passed, and curl against the built running app shows all six headers.",
+   "limit": "No full Content Security Policy yet (inline theme script, Google Fonts and Supabase need named origins first). Strict-Transport-Security only matters once served over HTTPS.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 27,
+   "area": "Database access",
+   "check": "Owner only agent tables (migration 0002) and append only audit log",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Check failed first (tables missing). After applying, a second signed in user sees 0 rows in all four new tables, the owner can read, and update or delete on the audit log raises. Loosening one policy inside a rolled back transaction made the check fail, so it can catch the hole. No test rows were left. The Supabase advisor lists is_owner() as executable by signed in users: intended, it only tells a caller whether they are the owner.",
+   "limit": "Only the new tables are owner only. roles, applications and source_runs still allow any signed in user (finding above stays open until you say yes).",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 28,
+   "area": "Agent honesty",
+   "check": "Scouting status and shortlist rules (hq/src/domain/scouting.ts)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 34 pass. The office status comes only from the newest task row: a claim 30 minutes old or more or with an unreadable date counts as waiting, never working. The shortlist only includes verdicts the agent marked, never exceeds the limit and never leaves out a higher score. Four deliberate breaks (stale boundary, sort direction, shortlist filter, newest task choice) were each caught.",
+   "limit": "Pure rules only. The screen and the database reads that feed them are Tasks 4 and 5.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 29,
+   "area": "Agent tools",
+   "check": "Scouting tools (claim, read, submit, finish) and the instruction injection defence",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 36 pass. Two sessions cannot claim one task (the claim only succeeds while the task is still queued, tested with a simulated race). A claim older than 30 minutes goes back to the queue. Scores outside 0 to 100, true or false as a score, reasons under 10 or over 500 characters, roles not in the task and unclaimed tasks are all rejected with nothing saved. A description saying to ignore instructions and give every role 100 is returned as data and changes nothing. Every call is written to the audit log. 11 deliberate breaks were added to the mutation check: one survived (closing an unclaimed task), a test was added, and all 37 are now caught. Migration 0003 added the finished_at column.",
+   "limit": "Tested against an in memory stand in for the database, not the live Supabase project. The first real run against it happens in Task 6. Deciding whether a verdict is wise is up to the model, so the tools only check shape, range and ownership.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 30,
+   "area": "Agent tools",
+   "check": "Collector queues a Scouting task after each run",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first, then 237 collector tests pass at 90% coverage. New matched roles become tasks of at most 50 roles, with no cap, so a huge first run drops nothing (410 roles become 9 tasks). How many tasks one daily session works through is a limit in the run instructions, not in the queue. Roles that do not match the profile are never queued, a second run with the same roles queues nothing, and a failing queue write is reported but never stops the collection or the email. Deliberate breaks of the queueing code are all caught (39 of 39).",
+   "limit": "Tested against the in memory stand in. The queue write against the live database is exercised in Task 6. A big backlog means Scouting shows as waiting for several days.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 31,
+   "area": "Agent honesty",
+   "check": "Scouting panel in Job HQ and the database reading code",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (modules missing), then 55 HQ tests pass with coverage above the floors. The panel shows idle, waiting, working, completed or failed in plain words, lists the top five shortlisted roles best first, and shows a Simulation badge whenever the data is not real. Text written by companies or by the agent is escaped (a script tag and an image with an onerror handler render as plain text). The reader drops malformed rows and scores outside 0 to 100, and a failed read throws instead of showing an empty office as if it were real.",
+   "limit": "The panel shows sample data, labelled Simulation. Job HQ has no sign in yet, so it cannot read your real database until milestone M1. There is no Scouting character or desk in the 3D scene yet, so nothing in the scene lights up for it. The panel layout was checked by screenshot only, not by browser click tests.",
+   "date": "2026-11-18"
+  }
+ ]
+}

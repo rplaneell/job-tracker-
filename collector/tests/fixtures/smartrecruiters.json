@@ -1,0 +1,9 @@
+{"offset":0,"limit":100,"totalFound":2,"content":[
+ {"id":"744000158320111","name":"Strategy Associate, Life Sciences","uuid":"a6f4c077","company":{"identifier":"acme","name":"Acme"},
+  "releasedDate":"2026-10-28T15:14:43.941Z",
+  "location":{"city":"Zurich","country":"ch","remote":false,"hybrid":false,"fullLocation":"Zurich, Switzerland"},
+  "department":{"id":"1","label":"Strategy"},"function":{"id":"consulting","label":"Consulting"},
+  "experienceLevel":{"id":"entry_level","label":"Entry Level"}},
+ {"id":"744000158320222","name":"Remote Analyst","company":{"identifier":"acme","name":"Acme"},
+  "location":{"city":"Poland","country":"pl","remote":true,"hybrid":false,"fullLocation":"Poland, Remote"}}
+]}

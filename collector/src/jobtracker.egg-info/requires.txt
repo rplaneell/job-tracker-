@@ -1,0 +1,8 @@
+httpx
+pyyaml
+supabase
+resend
+
+[dev]
+pytest
+respx

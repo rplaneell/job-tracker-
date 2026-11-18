@@ -1,0 +1,79 @@
+rules:
+  - id: pg_html_injection_sink
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: >-
+      HTML is built from a value. If any part can come from a job posting, a company name or a file, hostile text could
+      run as code (XSS). Escape it, use text content, or show why the value is fixed.
+    pattern-either:
+      - pattern: $EL.innerHTML = $X
+      - pattern: $EL.insertAdjacentHTML($POS, $X)
+      - pattern: document.write(...)
+      - pattern: '<$T dangerouslySetInnerHTML={{ __html: $X }} />'
+  - id: pg_dynamic_code
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Code is built from text at run time (eval, new Function, string timers). Never allowed here.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+      - pattern: setTimeout("...", ...)
+      - pattern: setInterval("...", ...)
+  - id: pg_service_key_in_browser_code
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: The Supabase service role key is a master key. It must only ever be used by the server side collector, never in dashboard or Job HQ code.
+    pattern-either:
+      - pattern: $X.SUPABASE_SERVICE_ROLE_KEY
+      - pattern: $X["SUPABASE_SERVICE_ROLE_KEY"]
+  - id: pg_link_new_tab_without_rel
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: A link opens a new tab without rel="noopener noreferrer". The opened page could reach back to this one.
+    patterns:
+      - pattern: <a ... target="_blank" ... />
+      - pattern-not: <a ... rel="noopener noreferrer" ... />
+  - id: pg_window_open_or_message
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: A window is opened or a cross window message is sent. Check where the value and the target origin come from.
+    pattern-either:
+      - pattern: window.open(...)
+      - pattern: $W.postMessage(...)
+  - id: pg_py_dynamic_code
+    languages: [python]
+    severity: ERROR
+    message: Code is built from text at run time (eval, exec). Never allowed in the collector.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+  - id: pg_py_shell
+    languages: [python]
+    severity: ERROR
+    message: A shell command is run from Python. Hostile text in an argument could run other commands.
+    pattern-either:
+      - pattern: os.system(...)
+      - pattern: subprocess.$F(..., shell=True, ...)
+  - id: pg_py_unsafe_deserialise
+    languages: [python]
+    severity: ERROR
+    message: Unsafe loading of data (pickle, yaml.load). Hostile data can run code. Use yaml.safe_load or JSON.
+    pattern-either:
+      - pattern: pickle.load(...)
+      - pattern: pickle.loads(...)
+      - pattern: yaml.load(...)
+  - id: pg_py_tls_check_off
+    languages: [python]
+    severity: ERROR
+    message: Certificate checking is switched off for a web request. A fake server could answer.
+    pattern-either:
+      - pattern: $M.$F(..., verify=False, ...)
+      - pattern: httpx.Client(..., verify=False, ...)
+  - id: pg_py_unsafe_xml
+    languages: [python]
+    severity: ERROR
+    message: The standard XML reader is open to entity expansion attacks. Use defusedxml, as the adapters do.
+    pattern-either:
+      - pattern: import xml.etree.ElementTree
+      - pattern: from xml.etree import ElementTree
+      - pattern: from xml.etree.ElementTree import $X

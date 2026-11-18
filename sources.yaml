@@ -1,0 +1,129 @@
+# One entry per company. kind: greenhouse | lever | ashby.
+# For Lever companies on the EU host, write board as eu:<name>.
+# PROPOSAL: found automatically by the discovery helper, waiting for the owner to review.
+- name: Adyen
+  kind: greenhouse
+  board: adyen
+  city: Amsterdam
+  field: finance
+- name: Mollie
+  kind: ashby
+  board: mollie
+  city: Amsterdam
+  field: finance
+- name: Wise
+  kind: greenhouse
+  board: wise
+  city: Brussels
+  field: finance
+- name: Pleo
+  kind: ashby
+  board: pleo
+  city: Copenhagen
+  field: finance
+- name: Lunar
+  kind: ashby
+  board: lunar
+  city: Copenhagen
+  field: finance
+- name: Typeform
+  kind: greenhouse
+  board: typeform
+  city: Barcelona
+  field: business_development
+- name: Doctolib
+  kind: ashby
+  board: doctolib
+  city: Amsterdam
+  field: health_science
+- name: Alan
+  kind: ashby
+  board: alan
+  city: Barcelona
+  field: health_science
+- name: Oviva
+  kind: ashby
+  board: oviva
+  city: Zurich
+  field: health_science
+- name: Sword Health
+  kind: greenhouse
+  board: swordhealth
+  city: Zurich
+  field: health_science
+- name: Flo Health
+  kind: greenhouse
+  board: flohealth
+  city: Amsterdam
+  field: health_science
+- name: Oliver Wyman
+  kind: lever
+  board: oliverwyman
+  city: Zurich
+  field: consulting
+- name: Tandem Health
+  kind: ashby
+  board: tandem-health
+  city: Barcelona
+  field: health_science
+
+# Not found on Greenhouse, Lever or Ashby (Stage 3 candidates: they use other hiring systems or their own sites):
+# bunq
+# Backbase
+# Pitch
+# Travelperk
+# Factorial
+# Glovo
+# Holded
+# Wallbox
+# Fintonic
+# Sallen
+# Kry
+# Ada Health
+# Cera
+# Sophia Genetics
+# Molecular Partners
+# CRISPR Therapeutics
+# Idorsia
+# Alcon
+# Lonza
+# Bavarian Nordic
+# Genmab
+# Zealand Pharma
+# Ascendis Pharma
+# Evotec
+# Galapagos
+# argenx
+# UCB
+# Ablynx
+# Mithra
+# Lakestar
+# Atomico
+# Index Ventures
+# Northzone
+# Creandum
+# Cherry Ventures
+# HV Capital
+# Speedinvest
+# Seaya
+# Samaipata
+# Kfund
+# Nauta
+# Founders Fund
+# Balderton
+# Eight Roads
+# Heartcore
+# Boston Consulting Group
+# Bain
+# Roland Berger
+# Simon-Kucher
+# Arthur D Little
+# LEK Consulting
+# Putnam
+# Trinity Life Sciences
+# Clarivate
+# IQVIA
+# Alira Health
+# Sidekick Health
+# Cardior
+# Zava

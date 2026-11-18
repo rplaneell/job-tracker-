@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #f6f4ee;
+  --color-ink: #1f2a27;
+  --color-ink-soft: #55635e;
+  --color-line: #d9ddd3;
+  --color-sage-100: #e3ebe1;
+  --color-sage-300: #b4c8b4;
+  --color-sage-500: #6f9680;
+  --color-sage-700: #3f6552;
+  --color-sky-soft: #9ec1df;
+  --color-sky-deep: #3f6f99;
+  --color-amber-soft: #f0a65e;
+  --color-amber-deep: #b86a1f;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: radial-gradient(120% 95% at 50% 38%, #fcfbf7 0%, #eff3ed 55%, #dde6dc 100%) fixed;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
+
+/* Speech bubble that floats above a character */
+.speech {
+  display: grid;
+  gap: 2px;
+  width: 210px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(31, 42, 39, 0.08);
+  box-shadow: 0 6px 22px rgba(31, 42, 39, 0.16);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--color-ink);
+  transform: translateY(-4px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.speech strong {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-sage-700);
+}
+.speech-on {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 28px rgba(31, 42, 39, 0.22);
+}
+.speech::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  background: rgba(255, 255, 255, 0.92);
+  border-right: 1px solid rgba(31, 42, 39, 0.08);
+  border-bottom: 1px solid rgba(31, 42, 39, 0.08);
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speech {
+    transition: none;
+  }
+}

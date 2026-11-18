@@ -229,6 +229,36 @@
    "detail": "The rule flagged every subject starting with the word test, including the normal 'test: add x' prefix. Found when it blocked two of my own commits. The new test failed on the old pattern and passes on the fixed one. A bare test, test 2, wip, tmp and fixup! are still flagged.",
    "limit": "The rule is a list of patterns I can only extend when real commits show a false alarm.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 24,
+   "area": "CI on GitHub",
+   "check": "Repo rules, secret scan, audit, Semgrep and tests workflows on commit c6a1904",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "All five workflows finished with success on GitHub, read back through the GitHub tools, not assumed from local runs.",
+   "limit": "One commit only. Later commits need their own reading.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 25,
+   "area": "Database access",
+   "check": "Who can read the tables (Supabase row level security)",
+   "outcome": "open",
+   "proof": "ran",
+   "detail": "Policies say any signed in user may read and write. Proved inside a rolled back transaction that a second random signed in user could read a test row, then confirmed no test rows were left. Today there is 1 user, so nothing leaks, but that is only safe while public sign ups stay off.",
+   "limit": "Not fixed yet. An owner only migration (0002_owner_only.sql) is drafted but not applied, because a mistake could lock you out of your own data. Needs your yes.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 26,
+   "area": "Browser hardening",
+   "check": "Security headers on every page",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Added nosniff, no framing (X-Frame-Options and frame-ancestors), referrer limit, permissions lockdown and HTTPS only. The new test failed first (module missing), then passed, and curl against the built running app shows all six headers.",
+   "limit": "No full Content Security Policy yet (inline theme script, Google Fonts and Supabase need named origins first). Strict-Transport-Security only matters once served over HTTPS.",
+   "date": "2026-11-18"
   }
  ]
 }

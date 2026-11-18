@@ -364,10 +364,10 @@
    "id": 37,
    "area": "Profile filter",
    "check": "Profile match quality seen by Scouting",
-   "outcome": "open",
+   "outcome": "fixed",
    "proof": "ran",
-   "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health).",
-   "limit": "Not fixed yet. A proposed fix: accept Spain only for Barcelona, and tighten the matched flag so retail and testing titles are excluded. Needs the owner's yes because it changes what gets stored and emailed.",
+   "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health). Fix: city_limits in rules.yaml (Spain: Barcelona only), applied both when storing and when matching, with an unknown city accepted only if the raw location text names Barcelona as a whole word. Added exclusions for social media, quality assurance, QA, retail, sales associate and part time titles. Tests failed first. The golden decision file changed in exactly one line (a Spanish role with no city given), read and accepted. 3 more deliberate breaks, all 42 caught.",
+   "limit": "Fixed in rules.yaml and the rules code. The matched flag is still only a title keyword filter, so some weak fits remain (for example junior sales rep roles). Scouting scoring is the second filter. Roles already stored for Madrid close on the next collection run, which no longer reads them as in region.",
    "date": "2026-11-18"
   }
  ]

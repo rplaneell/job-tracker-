@@ -163,3 +163,17 @@ def test_load_all_sources_works_without_a_generated_file(tmp_path):
 
     (tmp_path / "sources.yaml").write_text("- {name: Acme, kind: lever, board: acme, city: Basel, field: vc}\n")
     assert len(load_all_sources(tmp_path)) == 1
+
+
+def test_roles_in_spanish_cities_other_than_barcelona_are_not_stored():
+    from dataclasses import replace
+
+    limited = replace(RULES, countries=["Switzerland", "Spain"], city_limits={"Spain": ["Barcelona"]})
+    roles = [
+        Role("greenhouse", "1", "Acme", "Analyst", "https://x", "Barcelona, Spain", "Barcelona", "Spain", False, "", None),
+        Role("greenhouse", "2", "Acme", "Analyst", "https://x", "Madrid, Spain", "Madrid", "Spain", False, "", None),
+        Role("greenhouse", "3", "Acme", "Analyst", "https://x", "Zurich", "Zurich", "Switzerland", False, "", None),
+    ]
+    client = FakeClient()
+    run_collection([src("Acme")], limited, Store(client), httpx.Client(), NOW, lambda _s: None, adapters={"greenhouse": lambda _c, _s: roles})
+    assert sorted(r["source_id"] for r in client.tables["roles"]) == ["1", "3"]

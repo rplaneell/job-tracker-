@@ -94,7 +94,7 @@ Alan | Fullstack Software Engineer (x/f/m) - Care Expert Copilot | Belgium | no 
 Alan | Fullstack Software Engineer (x/f/m) - Product Platform | Belgium | no | field=None | level=None
 Alan | Fullstack Software Engineer (x/f/m) - Tech Foundations | Belgium | no | field=None | level=None
 Alan | Fullstack Software Engineer (x/f/m) -Automated Resolution | Belgium | no | field=None | level=None
-Alan | General Manager Associate - Spain 🇪🇸   | Spain | MATCH | field=None | level=entry_level
+Alan | General Manager Associate - Spain 🇪🇸   | Spain | no | field=None | level=entry_level
 Alan | General practitioner - Teleconsultation 🇪🇸 | Spain | no | field=None | level=None
 Alan | Inbound Sales - Belgium 🇧🇪  | Belgium | no | field=None | level=None
 Alan | Insurance Expert - Spanish Market | Spain | no | field=None | level=None

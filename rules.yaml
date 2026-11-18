@@ -1,5 +1,8 @@
 # Which roles count as relevant. All matching is case insensitive, whole words only.
 countries: [Spain, Switzerland, Belgium, Netherlands, Denmark]
+# In Spain only Barcelona counts. A country that is not listed here is taken whole.
+city_limits:
+  Spain: [Barcelona]
 include_keywords:
   [analyst, consultant, consulting, associate, intern, internship, graduate,
    business development, strategy, investment, venture]
@@ -9,7 +12,7 @@ max_years_experience: 2
 exclude_keywords:
   [senior, director, principal, vice president, vp, head, chief, partner, manager, lead, staff,
    engineer, engineering, developer, software, designer, recruiter, marketing, account executive,
-   customer success, support]
+   customer success, support, social media, quality assurance, qa, retail, sales associate, part-time, part time]
 field_keywords:
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]

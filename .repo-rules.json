@@ -1,0 +1,8 @@
+{
+  "max_bytes": 5242880,
+  "big_file_ok": ["hq/public/models/"],
+  "built_file": null,
+  "source_prefixes": ["collector/src/", "web/src/", "hq/src/"],
+  "subject_limit": 72,
+  "extra_forbidden": []
+}

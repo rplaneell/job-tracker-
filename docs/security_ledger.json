@@ -59,6 +59,56 @@
    "detail": ".github/dependabot.yml parses and covers npm in web and hq, pip in collector, and GitHub Actions, weekly, 3 pull requests at most.",
    "limit": "Dependabot ALERTS are a separate switch only the owner can turn on in the repository settings. Not confirmed on.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 7,
+   "area": "Secrets",
+   "check": "CI secret scan on every push",
+   "outcome": "clean",
+   "proof": "both",
+   "detail": "secret-scan workflow succeeded on commit 1ae12a9 (push and pull request). The same gitleaks command exited non zero on a throwaway repo holding a made up key, so it can fail.",
+   "limit": "It only notices after a secret already reached GitHub. Finds known formats only.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 8,
+   "area": "CI hardening",
+   "check": "Tests run on every push and pull request",
+   "outcome": "clean",
+   "proof": "github",
+   "detail": "tests workflow succeeded on commit 1ae12a9: collector tests, dashboard tests and build, Job HQ tests, type check and build.",
+   "limit": "Only as strong as the tests. Coverage and mutation checks are not done yet.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 9,
+   "area": "Repository controls",
+   "check": "Rules check: forbidden files, pinned actions, commit messages, hand edited built file",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "5 rule tests pass. On a throwaway clone with four deliberate breaks the checker reported six findings and exited 1. The real repository reports 0 problems across 128 files and 4 workflows.",
+   "limit": "Runs after the push, so it tells but cannot stop. Commits before the baseline (1ae12a9) are not checked because many earlier subjects exceed 72 characters. The rules are only as good as the list.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 10,
+   "area": "Repository controls",
+   "check": "Local push blocker (no direct push to main or master)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "Against a local fake remote: a push to main was refused and nothing reached the remote, a feature branch push was accepted, and the emergency override was accepted.",
+   "limit": "Only works where the owner ran pre-commit install, and git push --no-verify skips it. This repository's default branch has a generated name, not main, so it is not protected until the owner renames it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 11,
+   "area": "Repository controls",
+   "check": "Workflow commit range logic",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Using the workflow's own script text: a normal push checks before..head, a new branch, a force push and a pull request all check baseline..head.",
+   "limit": "Tested locally. The real workflow run on GitHub still has to be read.",
+   "date": "2026-11-18"
   }
  ]
 }

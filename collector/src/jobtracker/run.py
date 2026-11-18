@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 import time
 from dataclasses import dataclass, field, replace
@@ -122,6 +123,17 @@ def load_all_sources(root: Path) -> list[Source]:
     return sources
 
 
+def check_supabase_url(raw: str) -> str:
+    """The secret must be the project's API address. A dashboard link or a path on the end gives web pages, not data."""
+    url = raw.strip().rstrip("/")
+    if not re.fullmatch(r"https://[a-z0-9]+\.supabase\.co", url):
+        raise SystemExit(
+            "SUPABASE_URL must look like https://YOUR-PROJECT-ID.supabase.co with nothing after .co "
+            "(Supabase, Project Settings, Data API, Project URL). It is not the dashboard link."
+        )
+    return url
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -135,7 +147,7 @@ def main() -> int:
     root = repo_root()
     sources = load_all_sources(root)
     rules = load_rules(root / "rules.yaml")
-    db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
+    db = create_client(check_supabase_url(os.environ["SUPABASE_URL"]), os.environ["SUPABASE_SERVICE_ROLE_KEY"])
     http = make_client()
     try:
         result = run_collection(sources, rules, Store(db), http, datetime.now(timezone.utc), time.sleep)

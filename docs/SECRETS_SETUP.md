@@ -33,3 +33,10 @@ check the provider's logs for any use of the old one. Cleaning the history is op
 
 GitHub's own push protection is a paid feature for private repositories, so it is not relied on. Scanners miss secrets with
 unusual formats. Never paste a real secret anywhere to test it.
+
+## The database address is not a secret, but it must be exact
+
+`SUPABASE_URL` (a GitHub secret, and in `.env`) is your project's API address, found in Supabase under Project Settings,
+Data API, Project URL. It looks like `https://YOUR-PROJECT-ID.supabase.co` with nothing after `.co`. It is not the
+dashboard link (`supabase.com/dashboard/...`) and has no `/rest/v1` on the end. A wrong address makes the collector read a
+web page instead of data. The collector now checks this first and says so in plain words.

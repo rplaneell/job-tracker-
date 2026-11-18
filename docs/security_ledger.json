@@ -309,6 +309,16 @@
    "detail": "Tests failed first (modules missing), then 55 HQ tests pass with coverage above the floors. The panel shows idle, waiting, working, completed or failed in plain words, lists the top five shortlisted roles best first, and shows a Simulation badge whenever the data is not real. Text written by companies or by the agent is escaped (a script tag and an image with an onerror handler render as plain text). The reader drops malformed rows and scores outside 0 to 100, and a failed read throws instead of showing an empty office as if it were real.",
    "limit": "The panel shows sample data, labelled Simulation. Job HQ has no sign in yet, so it cannot read your real database until milestone M1. There is no Scouting character or desk in the 3D scene yet, so nothing in the scene lights up for it. The panel layout was checked by screenshot only, not by browser click tests.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 32,
+   "area": "Live run",
+   "check": "First real collection run on GitHub",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Run 1 failed after 2 seconds with a type error. Run 2, with clearer error reporting, showed the database answered with an HTML web page from a Vercel host, so the SUPABASE_URL secret holds a website address, not the project API address. Added tests first, then a clear reply check on every read and a start up check of the address shape that explains the fix in plain words. 247 collector tests pass. The secret itself can only be corrected by the owner in GitHub settings.",
+   "limit": "Still open until the owner corrects the secret and a run completes. The mock based tests could not have found this: it took a real run.",
+   "date": "2026-11-18"
   }
  ]
 }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from typing import Any
 
@@ -8,6 +9,14 @@ from jobtracker.models import Role
 Key = tuple[str, str]
 
 SCOUT_TASK_SIZE = 50  # roles in one Scouting task
+
+
+def _rows(data: Any) -> list[dict]:
+    """A read must come back as a list of rows. Anything else (such as an error payload) is reported in plain words."""
+    if not isinstance(data, list):
+        shown = json.dumps(data, default=str)[:300]
+        raise RuntimeError(f"unexpected reply from the database (expected a list of rows): {shown}")
+    return data
 
 
 class Store:
@@ -68,6 +77,7 @@ class Store:
                     .execute()
                     .data
                 )
+                rows = _rows(rows)
                 found.update((r["source"], r["source_id"]) for r in rows)
         return found
 
@@ -81,6 +91,7 @@ class Store:
             .execute()
             .data
         )
+        open_rows = _rows(open_rows)
         missing = [r["source_id"] for r in open_rows if r["source_id"] not in seen_ids]
         if missing:
             self.client.table("roles").update({"status": "closed"}).eq("source", source).eq(
@@ -113,7 +124,7 @@ class Store:
                     .execute()
                     .data
                 )
-                ids.extend(r["id"] for r in rows)
+                ids.extend(r["id"] for r in _rows(rows))
         tasks = [
             {
                 "agent_id": "scout",

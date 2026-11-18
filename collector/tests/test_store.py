@@ -76,3 +76,42 @@ def test_record_run_stores_error_text():
     Store(client).record_run("Acme", False, 0, "HTTP 500", T1)
     assert client.tables["source_runs"][0]["error"] == "HTTP 500"
     assert client.tables["source_runs"][0]["ok"] is False
+
+
+class OddReply:
+    """A stand in whose reads return something that is not a list of rows, like an error payload."""
+
+    def __init__(self, data):
+        self.data = data
+
+    def table(self, _name):
+        return self
+
+    def select(self, *_a, **_k):
+        return self
+
+    def eq(self, *_a, **_k):
+        return self
+
+    def in_(self, *_a, **_k):
+        return self
+
+    def execute(self):
+        from types import SimpleNamespace
+        return SimpleNamespace(data=self.data)
+
+
+def test_an_unexpected_database_reply_is_reported_clearly_not_as_a_type_error():
+    import pytest
+    store = Store(OddReply({"message": "Invalid API key", "hint": "check the key"}))
+    with pytest.raises(RuntimeError) as info:
+        upsert(store, [role("1")], T1)
+    assert "unexpected reply" in str(info.value) and "Invalid API key" in str(info.value)
+
+
+def test_the_error_reply_never_includes_more_than_300_characters():
+    import pytest
+    store = Store(OddReply({"message": "x" * 5000}))
+    with pytest.raises(RuntimeError) as info:
+        upsert(store, [role("1")], T1)
+    assert len(str(info.value)) < 400

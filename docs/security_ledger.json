@@ -259,6 +259,16 @@
    "detail": "Added nosniff, no framing (X-Frame-Options and frame-ancestors), referrer limit, permissions lockdown and HTTPS only. The new test failed first (module missing), then passed, and curl against the built running app shows all six headers.",
    "limit": "No full Content Security Policy yet (inline theme script, Google Fonts and Supabase need named origins first). Strict-Transport-Security only matters once served over HTTPS.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 27,
+   "area": "Database access",
+   "check": "Owner only agent tables (migration 0002) and append only audit log",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Check failed first (tables missing). After applying, a second signed in user sees 0 rows in all four new tables, the owner can read, and update or delete on the audit log raises. Loosening one policy inside a rolled back transaction made the check fail, so it can catch the hole. No test rows were left. The Supabase advisor lists is_owner() as executable by signed in users: intended, it only tells a caller whether they are the owner.",
+   "limit": "Only the new tables are owner only. roles, applications and source_runs still allow any signed in user (finding above stays open until you say yes).",
+   "date": "2026-11-18"
   }
  ]
 }

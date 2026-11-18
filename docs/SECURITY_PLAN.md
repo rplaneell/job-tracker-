@@ -44,6 +44,8 @@ As we understand it today. GitHub changes plans, so please confirm on your own S
 | picomatch flaw in the test tools (GHSA-fc5q-39xc-vjpf) | No fixed version is published. Development only | Review on 2026-12-16 |
 | Browser clicking tests (UI) and browser level injection tests on the screens | Not written yet. Needs a test browser in CI | Me |
 | Mutation checks for the TypeScript code | Only two functions were break tested by hand | Me |
+| Database rows readable by any signed in user (proved). Fix is an owner only migration, waiting for your yes | A mistake could lock you out | You decide, I apply |
+| Full Content Security Policy | Needs a hash for the inline theme script and named origins | Me |
 | Security checklist for the agent design | Planned before any agent is built | Me |
 
 ## What this cannot promise

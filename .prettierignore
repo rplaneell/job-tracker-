@@ -1,0 +1,13 @@
+dist
+coverage
+node_modules
+playwright-report
+test-results
+package-lock.json
+public/assets/**/*.glb
+public/assets/**/*.gltf
+src/scene/**/generated/**
+.claude
+
+# Markdown keeps its hand written style (no automatic bullet changes)
+*.md

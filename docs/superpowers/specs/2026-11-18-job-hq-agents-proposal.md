@@ -44,6 +44,36 @@ generate(messages, tools, options) -> { text, toolCalls, usage }
 - Each agent names a provider and model in its definition. A `provider_configs` table holds the choice and settings, never the key.
 - A fake provider returns scripted responses for tests, so the whole runner is tested without spending money or needing a key.
 
+## 3b. Free by design (owner requirement, 2026-11-18)
+
+The whole system must cost nothing to run: no card, no paid plan, no spending cap to raise. The spending limit is therefore zero, and the design enforces it.
+
+**What is free today** (figures come from third party summaries and change often, so each one is verified in the provider's own console before we rely on it):
+
+| Part | Free option | What to know |
+|---|---|---|
+| Server, queue, database | Supabase free plan | About 500,000 Edge Function calls a month, 256 MB memory, 200 live connections. A free project pauses after 7 days with no activity. The daily job collection already touches the database every day, which keeps it awake. |
+| Models | Groq free tier (no card) | Roughly 30 requests a minute and 1,000 or more a day, per account. Reports of the exact numbers conflict. Open models such as Llama. Supports tool calling. |
+| Models | Google Gemini free tier | Generous, but Google's terms say free tier prompts may be used to improve its products and may be read by humans. Do not send CV or contact details through it. |
+| Models | OpenRouter free models | About 20 requests a minute and only 50 a day without buying credits, and tool calling on free models is reported unreliable. Not suitable as the main provider. |
+| Models | Local models (Ollama) on your own computer | Free and fully private. Needs a computer that stays on while agents work, and weaker models. |
+| Email | Resend free plan | About 100 emails a day. Already used by the collector. |
+| Web hosting | A free static host such as Cloudflare Pages or Vercel Hobby | To be confirmed when we deploy. |
+
+**How the design enforces free:**
+
+1. **Free only providers.** Each provider config has a `cost: free` flag. The system refuses to call a provider that is not marked free. Keys come only from accounts with no billing attached, so an overrun cannot charge you.
+2. **A quota guard.** The runner counts requests and tokens per provider against its free limits and stops before the limit. An agent that hits the limit shows a new status, "Waiting for quota", and its task resumes automatically when the limit resets. Agents work in the background, so waiting is acceptable.
+3. **A provider fallback chain.** If one free provider is exhausted, the task moves to the next allowed one.
+4. **Few model calls per task.** One call to plan, one to three per specialist, short chains, and delegation depth limits. Rate limits make long conversations between agents impractical on free tiers, so agents hand over structured briefs, not chat.
+5. **A data protection tag on every provider** (`trains_on_data: yes, no or unknown`) and on every kind of data. CV text, contact details and notes are private data. Private data only goes to providers marked `no`, or to a local model. Agents are given only the fields a task needs.
+
+**Honest consequences of free:**
+
+- Free open models are weaker and less reliable at tool calling than paid ones. An agent only goes Live after it passes its tests with the model it will actually use. If a free model cannot do a job reliably, that agent stays Simulated or becomes a drafting helper that always asks for review.
+- Free limits can shrink or change without notice. The provider layer exists so a change costs one adapter, not a rewrite.
+- Busy days will show agents waiting. That is the real state and the office will show it.
+
 ## 4. Approval and permissions (mandatory, enforced in the database)
 
 | Action class | Examples | Rule |
@@ -67,6 +97,7 @@ Status comes from the database and is pushed to the browser live with Supabase R
 | Status | Source | What you see |
 |---|---|---|
 | Idle | no active task | Character at desk, screen dim |
+| Waiting for quota | a free provider limit was reached | Screen dim with a small clock, task resumes by itself |
 | Working | a step is running | Screen lit, typing animation |
 | Researching | a read tool such as search or fetch is running | Screen shows search results, papers on desk |
 | Collaborating | a message or handoff between two agents | A document visibly moves between the two desks, a link line is shown, both face each other |
@@ -87,12 +118,12 @@ The scene receives plain status values and never calls agents itself. Every visu
 - **M0 Visual proof.** Done in code, waiting for you to approve the look.
 - **M1 Foundation.** App skeleton, sign in, core data tables, Reception on real jobs and applications.
 - **M2 Agent core, no real AI.** Agent definitions, tool registry, task queue, messages, approvals with enforcement, audit log, provider interface with a fake provider, simulation runtime, and live status in the 3D office. All tested without any AI.
-- **M3 First live agents.** Office Manager and Talent Scout on one real provider, with read tools and internal writes only (search the jobs database, summarise, save, create tasks). Real tests and budget limits. Nothing external.
+- **M3 First live agents.** Office Manager and Talent Scout on one free provider (with a local model as the private option), with read tools and internal writes only (search the jobs database, summarise, save, create tasks). Real tests and budget limits. Nothing external.
 - **M4 and later: one department at a time.** Each adds its agent, its tools and its 3D behaviour together: HR Specialist (applications and document versions), Interview Coach (question bank, case and numerical practice, feedback), Messenger (reminders and drafted messages, all sending behind approval), Learning Coach, Executive (offers and negotiation notes).
 
 ## 8. Honest limits and risks
 
-- **Models cost money and are not predictable.** Hard per task and monthly caps, step limits and the pause switch are part of the design from the start.
+- **Free models are less predictable and rate limited.** Quota guard, step limits, tests before going Live and the pause switch are part of the design from the start. Nothing is allowed to spend money.
 - **Prompt injection.** Job posts and web pages are untrusted text and can try to steer an agent. Fetched content is passed as data, tools have narrow inputs, and external actions need your approval, which is the last line of defence.
 - **Submitting applications automatically is not realistic.** Most hiring forms need accounts, block bots and often forbid automation. The Application agent will prepare the materials and open the posting for you. Where an application is by email, it can draft and send that email after your approval.
 - **LinkedIn and similar sites forbid automated messaging.** Recruiter outreach there is drafted for you to send yourself.
@@ -102,7 +133,7 @@ The scene receives plain status values and never calls agents itself. Every visu
 ## Decisions needed from the owner
 
 1. Run the agents on Supabase Edge Functions with a Postgres queue (recommended), or elsewhere?
-2. Which provider should the first adapter use? The layer supports all; pick the one you already have an account and key for.
+2. Which free provider should the first adapter use? My recommendation is Groq for ordinary tasks, plus a local model for anything involving your CV or contacts. Avoid the Gemini free tier for private data.
 3. Are the approval rules above right? Anything that should need approval and does not, or the reverse?
-4. A monthly spending cap for model calls, for example 10 euros, as a hard stop.
+4. Answered: it must be free. The spending cap is zero and section 3b describes how it is enforced.
 5. Do you approve the M0 look, so I can finish its last checks and move to M1?

@@ -331,6 +331,30 @@
    "file": "collector/src/jobtracker/cv.py",
    "old": "[\"status\"] != \"claimed\":",
    "new": "[\"status\"] == \"never\":"
+  },
+  {
+   "name": "redirect: any target is followed",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "if not self._safe_redirect(target):",
+   "new": "if False:"
+  },
+  {
+   "name": "redirect: plain http is followed",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "if parts.scheme != \"https\" or not host or host == \"localhost\"",
+   "new": "if not host or host == \"localhost\""
+  },
+  {
+   "name": "redirect: IP addresses are followed",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "            return True\n        return False",
+   "new": "            return True\n        return True"
+  },
+  {
+   "name": "redirect: no limit on the number of steps",
+   "file": "collector/src/jobtracker/compliance.py",
+   "old": "MAX_REDIRECTS = 3",
+   "new": "MAX_REDIRECTS = 300"
   }
  ]
 }

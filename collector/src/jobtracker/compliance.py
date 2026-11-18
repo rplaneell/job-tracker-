@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import ipaddress
 import time
 from typing import Callable
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 import httpx
@@ -10,6 +11,8 @@ import httpx
 from jobtracker.adapters import SourceError
 
 PAUSE_SECONDS = 1.0
+MAX_REDIRECTS = 3
+REDIRECT_STATUSES = (301, 302, 303, 307, 308)
 
 # Hosts whose vendor documents the API as public for programs to read, but which do not serve a
 # robots.txt file (the request answers 401). RFC 9309 treats an unavailable robots file as
@@ -44,9 +47,9 @@ class PoliteClient:
                 self.sleep(wait)
         self._last[host] = self.clock()
 
-    def _raw_get(self, url: str, **kwargs) -> httpx.Response:
+    def _raw_get(self, url: str, follow_redirects: bool = False, **kwargs) -> httpx.Response:
         headers = {"User-Agent": self.user_agent, **kwargs.pop("headers", {})}
-        return self.client.get(url, headers=headers, **kwargs)
+        return self.client.get(url, headers=headers, follow_redirects=follow_redirects, **kwargs)
 
     def _load_robots(self, scheme: str, host: str) -> RobotFileParser | None:
         """None means: treat the whole site as disallowed for this run."""
@@ -54,7 +57,7 @@ class PoliteClient:
             return self._robots[host]
         parser: RobotFileParser | None
         try:
-            response = self._raw_get(f"{scheme}://{host}/robots.txt", timeout=20)
+            response = self._raw_get(f"{scheme}://{host}/robots.txt", follow_redirects=True, timeout=20)
             if response.status_code == 200:
                 parser = RobotFileParser()
                 parser.parse(response.text.splitlines())
@@ -71,11 +74,34 @@ class PoliteClient:
         self._robots[host] = parser
         return parser
 
+    @staticmethod
+    def _safe_redirect(target: str) -> bool:
+        """Only https to a named host. Plain http, IP addresses and localhost are never followed."""
+        parts = urlsplit(target)
+        host = (parts.hostname or "").lower()
+        if parts.scheme != "https" or not host or host == "localhost" or host.endswith(".localhost"):
+            return False
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            return True
+        return False
+
     def get(self, url: str, **kwargs) -> httpx.Response:
-        parts = urlsplit(url)
-        host = parts.netloc
-        robots = self._load_robots(parts.scheme, host)
-        if robots is None or not robots.can_fetch(self.agent_token, url):
-            raise SourceError(f"disallowed by robots.txt: {url}")
-        self._pace(host)
-        return self._raw_get(url, **kwargs)
+        """Fetches a page. A redirect is followed here, one step at a time, so every host it leads to passes robots.txt and pacing."""
+        for _ in range(MAX_REDIRECTS + 1):
+            parts = urlsplit(url)
+            host = parts.netloc
+            robots = self._load_robots(parts.scheme, host)
+            if robots is None or not robots.can_fetch(self.agent_token, url):
+                raise SourceError(f"disallowed by robots.txt: {url}")
+            self._pace(host)
+            response = self._raw_get(url, **kwargs)
+            location = response.headers.get("location")
+            if response.status_code not in REDIRECT_STATUSES or not location:
+                return response
+            target = urljoin(url, location)
+            if not self._safe_redirect(target):
+                raise SourceError(f"redirect refused (only https to a named host is followed): {url}")
+            url = target
+        raise SourceError(f"too many redirects: {url}")

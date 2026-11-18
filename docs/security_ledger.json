@@ -419,6 +419,36 @@
    "detail": "Built and checked: 61 web tests pass with coverage above the floors, the production build is clean, and a logged out visitor to /cv, /cv/ID and a role page is redirected to the login page. All CV and role text is rendered as plain text by React (no raw HTML anywhere), links in a CV are shown as text and are not clickable, the editor refuses anything but http and https links, and the button state logic is tested (queued, working, stale claim, unreadable date). Writes use only what the database policies allow: save the master CV, approve or delete a draft, queue one tailor_cv task. Checked by screenshots of the three screens with a fictional CV.",
    "limit": "No browser click tests and no check of the print output beyond the styles. Screens were checked against a local stand in for the database, not the live project, because no CV is saved yet.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 43,
+   "area": "Collector requests",
+   "check": "Redirects are checked step by step (independent security review, low item 1)",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "A separate reviewer read the whole repository and found nothing above its confidence bar. It listed two low items. The first was real as a politeness and safety gap: the collector's web client followed redirects by itself, so a redirect target was never checked against robots.txt or paced. Tests failed first. Now the gate follows each redirect itself, up to 3 steps, and every new host passes its own robots.txt and pacing. Redirects to plain http, IP addresses, localhost, other schemes, or loops are refused. 336 collector tests pass at 91% coverage and 4 new deliberate breaks are caught (59 of 59).",
+   "limit": "The robots.txt request itself may still follow redirects (the standard allows it) and its reply is only read as rules. A vendor can still redirect to another named https host that allows robots, which is then read like any board.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 44,
+   "area": "Collector requests",
+   "check": "Hostile role ids in database filters (independent security review, low item 2)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The reviewer could not confirm how the database library quotes odd characters in an in filter. I checked the real library: it quotes values with commas, brackets, quotes or backslashes and escapes embedded quotes and backslashes, and URL encodes the rest, so a hostile id such as x\"),(source_id.eq.\"y or a)&select=* stays one item inside one filter and cannot add filters. A newline is left unquoted but stays an ordinary character in the one value. A regression test now pins this for 9 hostile values, so a library update that changed it would fail the tests.",
+   "limit": "This relies on the library's behavior, which the test guards but does not control.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 45,
+   "area": "Independent review",
+   "check": "Full repository security review by a fresh reviewer",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A fresh read only reviewer went through the whole tracked tree (collector, migrations, web proxy and pages, hq data mapper, workflows, tools) against injection, XSS, XML, YAML, SSRF, authorization, secrets and workflow risks. No finding reached the 80 percent confidence bar. It also named the controls it verified as sound: link safety, escaped digest, safe XML and YAML, the Supabase address check, the Ashby exception, the scout tool limits, the owner only policies, the audit log triggers, the login redirect and workflow permissions.",
+   "limit": "One reviewer, one pass, read only. It saw the repository as of the CV tables migration and tools, not the CV dashboard pages written afterwards, which were checked by my own tests and screenshots. Not a penetration test.",
+   "date": "2026-11-18"
   }
  ]
 }

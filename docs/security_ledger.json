@@ -269,6 +269,16 @@
    "detail": "Check failed first (tables missing). After applying, a second signed in user sees 0 rows in all four new tables, the owner can read, and update or delete on the audit log raises. Loosening one policy inside a rolled back transaction made the check fail, so it can catch the hole. No test rows were left. The Supabase advisor lists is_owner() as executable by signed in users: intended, it only tells a caller whether they are the owner.",
    "limit": "Only the new tables are owner only. roles, applications and source_runs still allow any signed in user (finding above stays open until you say yes).",
    "date": "2026-11-18"
+  },
+  {
+   "id": 28,
+   "area": "Agent honesty",
+   "check": "Scouting status and shortlist rules (hq/src/domain/scouting.ts)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 34 pass. The office status comes only from the newest task row: a claim 30 minutes old or more or with an unreadable date counts as waiting, never working. The shortlist only includes verdicts the agent marked, never exceeds the limit and never leaves out a higher score. Four deliberate breaks (stale boundary, sort direction, shortlist filter, newest task choice) were each caught.",
+   "limit": "Pure rules only. The screen and the database reads that feed them are Tasks 4 and 5.",
+   "date": "2026-11-18"
   }
  ]
 }

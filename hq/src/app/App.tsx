@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { buildReceptionView } from '../domain/reception';
 import { SAMPLE_APPLICATIONS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from '../domain/sample';
-import { scoutStatus } from '../domain/scouting';
+import { parseSimStatus, scoutStatus } from '../domain/scouting';
 import { Scene } from '../scene/Scene';
 import { useHq } from '../state/useHq';
 import { Credits } from '../ui/Credits';
@@ -25,7 +25,7 @@ export function App() {
   const view = useMemo(() => buildReceptionView(SAMPLE_PRIORITIES, SAMPLE_APPLICATIONS, now), [now]);
   const line = `${view.greeting}. ${view.headline}`;
   // Simulation until milestone M1 signs HQ in to the database. The panel says so on screen.
-  const scout = useMemo(() => scoutStatus(SAMPLE_SCOUT_TASKS, now), [now]);
+  const scout = useMemo(() => parseSimStatus(window.location.search) ?? scoutStatus(SAMPLE_SCOUT_TASKS, now), [now]);
 
   // A link such as ?focus=reception opens that department straight away.
   useEffect(() => {
@@ -41,7 +41,7 @@ export function App() {
 
   return (
     <div className="relative h-full w-full">
-      <Scene managerLine={line} corner={cornerFromUrl()} />
+      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} simulated />
 
       <div className="pointer-events-none absolute inset-0">
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">

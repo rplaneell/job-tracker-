@@ -17,6 +17,15 @@ export interface Verdict {
 
 export type ScoutStatus = 'idle' | 'waiting' | 'working' | 'completed' | 'failed';
 
+/** The words shown for each status, in the panel and above the goblins, so both always agree. */
+export const STATUS_LABEL: Record<ScoutStatus, string> = {
+  idle: 'Idle',
+  waiting: 'Waiting for Claude Code',
+  working: 'Working with Claude Code',
+  completed: 'Finished its latest review',
+  failed: 'Failed',
+};
+
 /** A claim older than this is treated as abandoned: the task goes back in the queue. */
 export const STALE_CLAIM_MINUTES = 30;
 /** How long a finished run is still shown as "completed" before the office goes back to idle. */
@@ -53,4 +62,12 @@ export function shortlist<T extends Verdict>(verdicts: T[], limit: number): T[] 
     .filter((v) => v.shortlisted)
     .sort((a, b) => b.score - a.score || b.reason.length - a.reason.length)
     .slice(0, Math.floor(limit));
+}
+
+const SCOUT_STATUSES: readonly string[] = ['idle', 'waiting', 'working', 'completed', 'failed'];
+
+/** Lets a link such as ?sim=working preview a status in simulation mode. Anything unknown is ignored. */
+export function parseSimStatus(search: string): ScoutStatus | null {
+  const value = new URLSearchParams(search).get('sim');
+  return value !== null && SCOUT_STATUSES.includes(value) ? (value as ScoutStatus) : null;
 }

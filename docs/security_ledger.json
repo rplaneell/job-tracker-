@@ -329,6 +329,16 @@
    "detail": "Both started red (module missing, goblin file with no credit), then pass: 73 HQ tests. Every pose maps to exactly one real Scouting status (idle sleeping, waiting waiting, working working, completed cheering, failed slumped), so the office shows nothing the task rows do not say. Three deliberate breaks of the rules were caught. A test now fails if any model file lacks a credit entry or a line in LICENSES.md. The goblin model (Low Poly Goblin (Rigged), Yanez Designs, CC BY 4.0, 64 KB) was inspected as data only, its sword removed and noted as a change.",
    "limit": "The crew size of four is decoration and is not tied to any real count. How the goblins look in the scene is checked by screenshot only.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 34,
+   "area": "Agent honesty",
+   "check": "Scouting goblins in the glass office",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Four goblins stand in the glass office, and their pose comes only from the real Scouting status through the tested pose rules. Spot positions are guarded by tests (inside the room, clear of desk, chair and armchairs, 0.5 m apart, and out of the strip a solid door hides from the default camera). A test for the door blind zone failed first and led to two spots being moved. If the model fails to load, a safety wrapper shows nothing and the office stays up. Motion stops when the browser asks for reduced motion. All five poses were checked by screenshot. 93 HQ tests pass with coverage above the floors, type check and build clean.",
+   "limit": "Poses are checked by screenshot, not by browser click tests. Only the goblin model has one animation clip, so sleeping and slumped are procedural tilts. The crew size of four is decoration. Status is sample data labelled Simulation until HQ can sign in (milestone M1). Floor positions were measured from a plan view, so a goblin could still clip a prop by a few centimetres.",
+   "date": "2026-11-18"
   }
  ]
 }

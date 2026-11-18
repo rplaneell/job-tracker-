@@ -1,13 +1,6 @@
 import type { ScoutItem } from '../data/scoutData';
-import { shortlist, type ScoutStatus } from '../domain/scouting';
+import { STATUS_LABEL, shortlist, type ScoutStatus } from '../domain/scouting';
 
-const STATUS_LABEL: Record<ScoutStatus, string> = {
-  idle: 'Idle',
-  waiting: 'Waiting for Claude Code',
-  working: 'Working with Claude Code',
-  completed: 'Finished its latest review',
-  failed: 'Failed',
-};
 const STATUS_TONE: Record<ScoutStatus, string> = {
   idle: 'bg-paper text-ink-soft',
   waiting: 'bg-amber-soft/35 text-amber-deep',

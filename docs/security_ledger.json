@@ -389,6 +389,16 @@
    "detail": "The check failed first (tables missing). After applying, a second signed in user sees and changes nothing in cv_master and cv_versions and cannot queue a tailoring task. The owner can read and edit the master CV, read, approve and delete versions, and queue only a queued tailor_cv task (a scout task, a finished task and a claimed task are all refused). Versions can only be written by the service role. Loosening the task policy in a rolled back transaction made the check fail. No test rows were left. The advisor shows no new warnings.",
    "limit": "The tables are empty until the owner saves a CV. The old tables (roles, applications, source_runs) still allow any signed in user.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 40,
+   "area": "Hostile input",
+   "check": "CV text format (web/src/lib/cvText.ts)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 53 web tests pass with coverage above the floors. The parser keeps everything as plain text (a script tag and a bold tag stay as text), refuses entries with the wrong number of parts, links that are not http or https (javascript, ftp and file addresses), unknown sections, over long lines and over long CVs, reports every problem with its line number, and never throws on any input (property test). parse(format(cv)) returns the same CV (property test). Four deliberate breaks: three first survived and pointed at missing tests (entry with too many parts, non web links, multi line summary), which were added, and all four are now caught.",
+   "limit": "Format checks only. Whether the content is true is checked by the tailoring tool in Task 3, and the dashboard pages come in Task 4.",
+   "date": "2026-11-18"
   }
  ]
 }

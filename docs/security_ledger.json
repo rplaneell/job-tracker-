@@ -339,6 +339,16 @@
    "detail": "Four goblins stand in the glass office, and their pose comes only from the real Scouting status through the tested pose rules. Spot positions are guarded by tests (inside the room, clear of desk, chair and armchairs, 0.5 m apart, and out of the strip a solid door hides from the default camera). A test for the door blind zone failed first and led to two spots being moved. If the model fails to load, a safety wrapper shows nothing and the office stays up. Motion stops when the browser asks for reduced motion. All five poses were checked by screenshot. 93 HQ tests pass with coverage above the floors, type check and build clean.",
    "limit": "Poses are checked by screenshot, not by browser click tests. Only the goblin model has one animation clip, so sleeping and slumped are procedural tilts. The crew size of four is decoration. Status is sample data labelled Simulation until HQ can sign in (milestone M1). Floor positions were measured from a plan view, so a goblin could still clip a prop by a few centimetres.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 35,
+   "area": "Live run",
+   "check": "First complete collection on the live database",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "After the database address was corrected the real run read all 245 sources without a failure and stored 2223 roles in the five regions, 157 of them matching the profile, and queued 4 Scouting tasks covering those 157 roles (read back from the database). It then failed at the last step: Resend refused the ALERT_EMAIL_TO secret as not an email address. Added tests first, then a start up check of both email settings that explains the problem before any collection starts, and a plain message if sending fails after the roles are saved. The message never repeats the value. 261 collector tests pass.",
+   "limit": "The ALERT_EMAIL_TO secret can only be corrected by the owner. The first digest of the 157 matching roles was not sent, and later runs only email roles that are new. Only a repeat run after the fix proves the email works.",
+   "date": "2026-11-18"
   }
  ]
 }

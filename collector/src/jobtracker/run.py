@@ -134,6 +134,20 @@ def check_supabase_url(raw: str) -> str:
     return url
 
 
+_ADDRESS = r"[^\s<>@\"',;]+@[^\s<>@\"',;]+\.[^\s<>@\"',;]+"
+
+
+def check_email_setting(name: str, raw: str) -> str:
+    """An email setting must be one address, or Name <address>. A wrong one is caught now, not after a long run."""
+    value = raw.strip()
+    if not re.fullmatch(rf"{_ADDRESS}|[^<>]+ <{_ADDRESS}>", value):
+        raise SystemExit(
+            f"{name} must be a single address like email@example.com (or Name <email@example.com>), "
+            "with no quotes and no spaces. Check the secret in GitHub, Settings, Secrets and variables, Actions."
+        )
+    return value
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -144,6 +158,8 @@ def main() -> int:
 
     from jobtracker.notify import deliver
 
+    check_email_setting("ALERT_EMAIL_TO", os.environ.get("ALERT_EMAIL_TO", ""))
+    check_email_setting("ALERT_EMAIL_FROM", os.environ.get("ALERT_EMAIL_FROM", ""))
     root = repo_root()
     sources = load_all_sources(root)
     rules = load_rules(root / "rules.yaml")
@@ -154,10 +170,14 @@ def main() -> int:
     finally:
         http.client.close()
     resend.api_key = os.environ["RESEND_API_KEY"]
-    deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")
     if result.queue_error:
         print(f"scouting task not queued: {result.queue_error}")
+    try:
+        deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
+    except Exception as exc:  # the roles are already saved, so say so plainly instead of dumping a traceback
+        print(f"roles were saved, but the email was not sent: {exc}")
+        return 1
     return 1 if sources and len(result.failures) == len(sources) else 0
 
 

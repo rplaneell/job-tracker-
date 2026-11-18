@@ -399,6 +399,16 @@
    "detail": "Tests failed first (module missing), then 53 web tests pass with coverage above the floors. The parser keeps everything as plain text (a script tag and a bold tag stay as text), refuses entries with the wrong number of parts, links that are not http or https (javascript, ftp and file addresses), unknown sections, over long lines and over long CVs, reports every problem with its line number, and never throws on any input (property test). parse(format(cv)) returns the same CV (property test). Four deliberate breaks: three first survived and pointed at missing tests (entry with too many parts, non web links, multi line summary), which were added, and all four are now caught.",
    "limit": "Format checks only. Whether the content is true is checked by the tailoring tool in Task 3, and the dashboard pages come in Task 4.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 41,
+   "area": "Agent tools",
+   "check": "CV tailoring tool and truthfulness validator (collector/src/jobtracker/cv.py)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 29 pass; the whole collector suite stays above the coverage floor. A tailored CV can only select, reorder and reword the master: the program copies employers, schools, degrees, dates and contact details, and refuses extra fields, unknown or reused ids, bullets from another entry, any number not in the original bullet, any new name not in the master CV, the company or the role title, over long or non text, and empty versions. A hostile instruction such as adding 10 years of Python experience is refused. Hypothesis properties: no number absent from the source ever gets through, and any text is either accepted or refused with a clear error. Two sessions cannot claim one task, stale claims are requeued, the audit log holds ids, counts and rule codes only (a test searches it for the CV text). 13 deliberate breaks, all caught (55 of 55 overall).",
+   "limit": "The validator cannot tell whether a reworded sentence is still true in meaning, only that it adds no new number or name. Spelled out numbers (twelve) and non capitalised new skills can pass, so the owner must read each draft before using it. Tested against the in memory stand in, not yet the live database.",
+   "date": "2026-11-18"
   }
  ]
 }

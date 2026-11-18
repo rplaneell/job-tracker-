@@ -253,6 +253,84 @@
    "file": "collector/src/jobtracker/rules.py",
    "old": "cities = rules.city_limits.get(role.country)",
    "new": "cities = None"
+  },
+  {
+   "name": "cv: new numbers allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "new_numbers = _numbers(text) - _numbers(source_text)",
+   "new": "new_numbers = set()"
+  },
+  {
+   "name": "cv: new names allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if word.lower() not in known_words:",
+   "new": "if False:"
+  },
+  {
+   "name": "cv: every capital counts as a sentence start",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if not before or before[-1] in \".!?:;\":",
+   "new": "if True:"
+  },
+  {
+   "name": "cv: unknown top level field allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "    if unknown:\n",
+   "new": "    if False:\n"
+  },
+  {
+   "name": "cv: extra entry fields allowed (model could set employer)",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "            if extra:\n",
+   "new": "            if False:\n"
+  },
+  {
+   "name": "cv: a bullet of another entry is accepted",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if bid not in source_bullets:",
+   "new": "if False:"
+  },
+  {
+   "name": "cv: duplicate ids allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if eid in seen:",
+   "new": "if False:"
+  },
+  {
+   "name": "cv: empty versions allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if not merged[\"education\"] and not merged[\"experience\"]:",
+   "new": "if False:"
+  },
+  {
+   "name": "cv: the role's own words not allowed",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "known = _words(master_text) | _words(role_company or \"\") | _words(role_title or \"\")",
+   "new": "known = _words(master_text)"
+  },
+  {
+   "name": "cv: audit log keeps the refusal text",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "_audit(db, \"rejected\", {\"task\": task.id, \"code\": exc.code})",
+   "new": "_audit(db, \"rejected\", {\"task\": task.id, \"code\": exc.code, \"why\": str(exc)})"
+  },
+  {
+   "name": "cv: claim no longer checks the task is still queued",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": ".eq(\"id\", queued[0][\"id\"]).eq(\"status\", \"queued\").execute().data",
+   "new": ".eq(\"id\", queued[0][\"id\"]).execute().data"
+  },
+  {
+   "name": "cv: finishing ignores the claimed check",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": ".eq(\"id\", task.id).eq(\"status\", \"claimed\").execute().data",
+   "new": ".eq(\"id\", task.id).execute().data"
+  },
+  {
+   "name": "cv: an unclaimed task can be read",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "[\"status\"] != \"claimed\":",
+   "new": "[\"status\"] == \"never\":"
   }
  ]
 }

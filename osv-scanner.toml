@@ -1,0 +1,5 @@
+# A time limited, visible exception. It expires, so the finding comes back on its own if nobody looks again.
+[[IgnoredVulns]]
+id = "GHSA-fc5q-39xc-vjpf"
+ignoreUntil = 2026-12-16
+reason = "picomatch 4.0.7 ReDoS in the development test tools (vitest, vite). Newest published version is also affected, so no fix exists yet. Not shipped, and only our own patterns reach it. Review when a fixed version appears or on the expiry date."

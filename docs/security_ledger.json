@@ -109,6 +109,46 @@
    "detail": "Using the workflow's own script text: a normal push checks before..head, a new branch, a force push and a pull request all check baseline..head.",
    "limit": "Tested locally. The real workflow run on GitHub still has to be read.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 12,
+   "area": "Dependencies",
+   "check": "npm audit of what ships (dashboard and Job HQ)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "npm audit --omit=dev: 0 vulnerabilities in web and in hq (exit 0 in both).",
+   "limit": "Published flaws only, in the versions in the lock files. Says nothing about our own code.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 13,
+   "area": "Dependencies",
+   "check": "npm audit of development tools",
+   "outcome": "open",
+   "proof": "ran",
+   "detail": "6 high findings in web and hq, all one advisory: picomatch 4.0.7 ReDoS (GHSA-fc5q-39xc-vjpf), pulled in by vitest, vite and tinyglobby. 4.0.7 is the newest published version and is also affected, so no fix exists. The suggested fix is a major downgrade of vitest.",
+   "limit": "Review date 2026-12-16. Judged low practical risk: development only, not shipped, and only our own glob patterns reach it. This is my judgement, not a proof. My earlier quick check used --omit=dev and missed it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 14,
+   "area": "Dependencies",
+   "check": "pip audit of the collector",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "30 pinned packages in collector/requirements.txt, no known vulnerabilities (exit 0).",
+   "limit": "The pinned list was generated from the Python 3.13 test environment. CI uses 3.12, so versions could differ slightly.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 15,
+   "area": "Dependencies",
+   "check": "OSV Scanner over all lock files",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "366 packages scanned (152 web, 184 hq, 30 collector). One advisory, the picomatch one. Without osv-scanner.toml the scan exits 1, with it the scan exits 0, so it can fail. The exception expires on 2026-12-16.",
+   "limit": "No libraries are copied into the project, so there is no vendored list. Only flaws already published are known. Download checked against its published fingerprint.",
+   "date": "2026-11-18"
   }
  ]
 }

@@ -1,0 +1,64 @@
+{
+ "checks": [
+  {
+   "id": 1,
+   "area": "Secrets",
+   "check": "Ignore rules for secret files",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Added .env.*, !.env.example, *.pem and *.key to .gitignore. git check-ignore shows .env, .env.local and .env.prod ignored and .env.example not ignored.",
+   "limit": "Only protects the file names listed. A secret pasted into a normal file is not stopped by this rule.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 2,
+   "area": "Secrets",
+   "check": "History scan with gitleaks 8.30.1",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "36 commits scanned, no leaks found. The gitleaks download matched the official SHA 256 fingerprint.",
+   "limit": "Finds known secret formats only, and only in this checkout of the history. It tells us about the past, not the future.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 3,
+   "area": "Secrets",
+   "check": "Local secret blocker (pre commit hook)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "In a throwaway repository a made up fake token was REFUSED and a harmless commit was ACCEPTED. The config is committed as .pre-commit-config.yaml.",
+   "limit": "The hook only protects a computer where the owner ran pre-commit install. I did not install it on the owner's computer. git commit --no-verify skips it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 4,
+   "area": "CI hardening",
+   "check": "Actions pinned to exact commits",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "6 action uses across 3 workflows pinned to full commit hashes with version comments. The checker exited 1 on an unpinned scratch copy and 0 after pinning.",
+   "limit": "Protects against future changes to a tag. If a tag was already tampered with before pinning, the pinned code is the bad code.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 5,
+   "area": "CI hardening",
+   "check": "Least privilege permissions",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "All 3 workflows declare permissions: contents: read and use no secrets other than the collector's own.",
+   "limit": "A workflow that needs more later must be reviewed again.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 6,
+   "area": "CI hardening",
+   "check": "Dependabot update file",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": ".github/dependabot.yml parses and covers npm in web and hq, pip in collector, and GitHub Actions, weekly, 3 pull requests at most.",
+   "limit": "Dependabot ALERTS are a separate switch only the owner can turn on in the repository settings. Not confirmed on.",
+   "date": "2026-11-18"
+  }
+ ]
+}

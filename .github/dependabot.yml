@@ -1,0 +1,26 @@
+# Dependabot opens update pull requests for outdated or vulnerable dependencies. It never merges anything:
+# you review each pull request and the checks must be green first.
+version: 2
+updates:
+  - package-ecosystem: "npm"            # the dashboard, package.json in web
+    directory: "/web"
+    schedule: { interval: "weekly", day: "monday" }
+    open-pull-requests-limit: 3
+    commit-message: { prefix: "chore(deps)" }
+  - package-ecosystem: "npm"            # Job HQ, package.json in hq
+    directory: "/hq"
+    schedule: { interval: "weekly", day: "monday" }
+    open-pull-requests-limit: 3
+    commit-message: { prefix: "chore(deps)" }
+  - package-ecosystem: "pip"            # the collector, pyproject.toml in collector
+    directory: "/collector"
+    schedule: { interval: "weekly", day: "monday" }
+    open-pull-requests-limit: 3
+    commit-message: { prefix: "chore(deps)" }
+  - package-ecosystem: "github-actions" # the pinned actions in .github/workflows (commit plus version comment)
+    directory: "/"
+    schedule: { interval: "weekly", day: "monday" }
+    open-pull-requests-limit: 3
+    commit-message: { prefix: "chore(ci)" }
+# Dependabot ALERTS (warnings about known vulnerable versions) are a separate switch the owner turns on:
+# Settings, Code security, Dependabot alerts.

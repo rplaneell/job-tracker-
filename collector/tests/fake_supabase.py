@@ -6,8 +6,9 @@ from types import SimpleNamespace
 
 class FakeClient:
     def __init__(self) -> None:
-        self.tables: dict[str, list[dict]] = {"roles": [], "applications": [], "source_runs": []}
+        self.tables: dict[str, list[dict]] = {"roles": [], "applications": [], "source_runs": [], "agent_tasks": [], "scout_verdicts": [], "audit_log": []}
         self.touched: list[str] = []
+        self.after_select = None  # optional hook: simulates another session acting right after a read
 
     def table(self, name: str) -> "_Query":
         self.touched.append(name)
@@ -21,6 +22,8 @@ class _Query:
         self.payload = None
         self.filters: list = []
         self.on_conflict = None
+        self.order_by = None
+        self.max_rows = None
 
     @property
     def rows(self) -> list[dict]:
@@ -39,6 +42,18 @@ class _Query:
         self.filters.append(lambda r: r.get(col) in values)
         return self
 
+    def lt(self, col, value):
+        self.filters.append(lambda r: r.get(col) is not None and r.get(col) < value)
+        return self
+
+    def order(self, col, desc=False):
+        self.order_by = (col, desc)
+        return self
+
+    def limit(self, n):
+        self.max_rows = n
+        return self
+
     def update(self, payload):
         self.op, self.payload = "update", payload
         return self
@@ -54,7 +69,15 @@ class _Query:
     def execute(self):
         match = [r for r in self.rows if all(f(r) for f in self.filters)]
         if self.op == "select":
-            return SimpleNamespace(data=[dict(r) for r in match])
+            if self.order_by:
+                col, desc = self.order_by
+                match = sorted(match, key=lambda r: r.get(col), reverse=desc)
+            if self.max_rows is not None:
+                match = match[: self.max_rows]
+            data = [dict(r) for r in match]
+            if self.client.after_select:
+                self.client.after_select()
+            return SimpleNamespace(data=data)
         if self.op == "update":
             for r in match:
                 r.update(self.payload)

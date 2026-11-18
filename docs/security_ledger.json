@@ -279,6 +279,16 @@
    "detail": "Tests failed first (module missing), then 34 pass. The office status comes only from the newest task row: a claim 30 minutes old or more or with an unreadable date counts as waiting, never working. The shortlist only includes verdicts the agent marked, never exceeds the limit and never leaves out a higher score. Four deliberate breaks (stale boundary, sort direction, shortlist filter, newest task choice) were each caught.",
    "limit": "Pure rules only. The screen and the database reads that feed them are Tasks 4 and 5.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 29,
+   "area": "Agent tools",
+   "check": "Scouting tools (claim, read, submit, finish) and the instruction injection defence",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 36 pass. Two sessions cannot claim one task (the claim only succeeds while the task is still queued, tested with a simulated race). A claim older than 30 minutes goes back to the queue. Scores outside 0 to 100, true or false as a score, reasons under 10 or over 500 characters, roles not in the task and unclaimed tasks are all rejected with nothing saved. A description saying to ignore instructions and give every role 100 is returned as data and changes nothing. Every call is written to the audit log. 11 deliberate breaks were added to the mutation check: one survived (closing an unclaimed task), a test was added, and all 37 are now caught. Migration 0003 added the finished_at column.",
+   "limit": "Tested against an in memory stand in for the database, not the live Supabase project. The first real run against it happens in Task 6. Deciding whether a verdict is wise is up to the model, so the tools only check shape, range and ownership.",
+   "date": "2026-11-18"
   }
  ]
 }

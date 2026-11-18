@@ -157,6 +157,72 @@
    "file": "collector/src/jobtracker/notify.py",
    "old": "link = safe_url(r.url)",
    "new": "link = r.url"
+  },
+  {
+   "name": "scout: stale claim limit becomes zero",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "STALE_CLAIM_MINUTES = 30",
+   "new": "STALE_CLAIM_MINUTES = 0"
+  },
+  {
+   "name": "scout: claim no longer checks the task is still queued",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"id\", queued[0][\"id\"]).eq(\"status\", \"queued\")",
+   "new": ".eq(\"id\", queued[0][\"id\"])"
+  },
+  {
+   "name": "scout: score 101 allowed",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "not 0 <= score <= 100",
+   "new": "not 0 <= score <= 101"
+  },
+  {
+   "name": "scout: true accepted as a score",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "or isinstance(score, bool) ",
+   "new": ""
+  },
+  {
+   "name": "scout: role outside the task accepted",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "if role_id not in task.role_ids:",
+   "new": "if False:"
+  },
+  {
+   "name": "scout: description no longer cut",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "[:DESCRIPTION_LIMIT]",
+   "new": "[:DESCRIPTION_LIMIT + 1]"
+  },
+  {
+   "name": "scout: reason minimum drops to 9",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "REASON_MIN, REASON_MAX = 10, 500",
+   "new": "REASON_MIN, REASON_MAX = 9, 500"
+  },
+  {
+   "name": "scout: claims other agents tasks",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"agent_id\", AGENT_ID).eq(\"status\", \"queued\").order",
+   "new": ".eq(\"status\", \"queued\").order"
+  },
+  {
+   "name": "scout: claim not logged",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "    _audit(db, \"claim\", {\"task\": task.id, \"roles\": len(task.role_ids)})\n",
+   "new": ""
+  },
+  {
+   "name": "scout: finishing ignores the claimed check",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": ".eq(\"id\", task.id).eq(\"status\", \"claimed\").execute().data",
+   "new": ".eq(\"id\", task.id).execute().data"
+  },
+  {
+   "name": "scout: unclaimed task can be read",
+   "file": "collector/src/jobtracker/scout.py",
+   "old": "[\"status\"] != \"claimed\":",
+   "new": "[\"status\"] == \"never\":"
   }
  ]
 }

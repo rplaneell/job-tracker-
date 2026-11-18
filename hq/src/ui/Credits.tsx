@@ -1,19 +1,5 @@
+import { CREDITS } from '../data/credits';
 import { useHq } from '../state/useHq';
-
-const CREDITS = [
-  {
-    title: 'Isometric office',
-    author: 'Companion_Cube',
-    url: 'https://sketchfab.com/3d-models/isometric-office-d31464eed8044190911b221648aca432',
-    use: 'The office building',
-  },
-  {
-    title: 'Business Female_3_ Low Poly Style',
-    author: 'POLYTRICITY',
-    url: 'https://sketchfab.com/3d-models/business-female-3--low-poly-style-187cc3d5af4341d58615d7201f49ecab',
-    use: 'The Office Manager',
-  },
-];
 
 /** CC BY needs the artist credited, the licence named and any changes stated. */
 export function Credits() {
@@ -46,7 +32,7 @@ export function Credits() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-ink-soft">Changes made: meshes merged, textures resized and compressed, and the character placed in the scene. Licence: creativecommons.org/licenses/by/4.0</p>
+        <p className="mt-4 text-xs text-ink-soft">Changes made: meshes merged, textures resized and compressed, the characters placed in the scene, and the sword removed from the goblin. Licence: creativecommons.org/licenses/by/4.0</p>
       </section>
     </div>
   );

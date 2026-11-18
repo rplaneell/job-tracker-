@@ -149,6 +149,26 @@
    "detail": "366 packages scanned (152 web, 184 hq, 30 collector). One advisory, the picomatch one. Without osv-scanner.toml the scan exits 1, with it the scan exits 0, so it can fail. The exception expires on 2026-12-16.",
    "limit": "No libraries are copied into the project, so there is no vendored list. Only flaws already published are known. Download checked against its published fingerprint.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 16,
+   "area": "Owner steps",
+   "check": "Owner setup checker (tools/check_setup.py)",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "In a fresh clone it printed NOT DONE for both hooks and exited 1. After pre-commit install it printed DONE on every line and exited 0. docs/OWNER_STEPS.md gives the commands for Windows, macOS and Linux.",
+   "limit": "Proves the tool works, not that your computer is protected. It has not been run on your computer yet, and a run proves only the computer it ran on.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 17,
+   "area": "Code scanning",
+   "check": "Semgrep self test and scans of all three code folders",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Semgrep 1.186.0, 10 own rules. Self test: all 10 fire on planted bad code. Scans: dashboard 24 files, Job HQ 15 files, collector 21 files, 0 findings, and the scanned count equals the files present. A planted os.system line made the scan BLOCK with exit 1. The first dashboard scan was refused as blind (a parse error in layout.tsx and an invalid rules file), which is the guard working; both were fixed.",
+   "limit": "Own rules only, so it finds only the patterns I wrote. A clean scan means none of these patterns, not secure. One finding was reviewed and suppressed on purpose (a fixed theme script) and the suppressions are capped at 1.",
+   "date": "2026-11-18"
   }
  ]
 }

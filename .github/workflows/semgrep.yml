@@ -1,0 +1,26 @@
+name: semgrep
+# Code scan with the free command line Semgrep: no account, nothing uploaded (metrics off).
+# Each run starts with a self test (every rule must fire on planted bad code) and counts the files it scanned,
+# so a scanner that went blind fails the run instead of reporting a false zero. ERROR findings block, WARNING ones are listed.
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with: { python-version: "3.12" }
+      - run: pip install semgrep==1.186.0
+      - name: Dashboard
+        run: python3 tools/semgrep_check.py --target web/src --glob '*.ts*' --block-errors
+      - name: Job HQ
+        run: python3 tools/semgrep_check.py --target hq/src --glob '*.ts*' --block-errors
+      - name: Collector
+        run: python3 tools/semgrep_check.py --target collector/src --glob '*.py' --block-errors
+      - name: Reviewed suppressions must not grow without review (ceiling 1)
+        run: |
+          n=$(grep -rn "nosemgrep" web/src hq/src collector/src | wc -l)
+          echo "nosemgrep comments: $n"
+          test "$n" -le 1

@@ -1,0 +1,861 @@
+{
+"ashby:0g": {
+"board": "0g",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 6
+},
+"ashby:0x": {
+"board": "0x",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 4
+},
+"ashby:115ventures": {
+"board": "115ventures",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 2
+},
+"ashby:1password": {
+"board": "1password",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 76
+},
+"ashby:1x": {
+"board": "1x",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 102
+},
+"ashby:3e": {
+"board": "3e",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 12
+},
+"ashby:9-mothers": {
+"board": "9-mothers",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 9
+},
+"ashby:9fin": {
+"board": "9fin",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 35
+},
+"ashby:a-team": {
+"board": "a-team",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 1
+},
+"ashby:a37": {
+"board": "a37",
+"error": "could not be read",
+"kind": "ashby"
+},
+"ashby:aboon": {
+"board": "aboon",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 7
+},
+"ashby:abound": {
+"board": "abound",
+"city": "Madrid",
+"in_regions": 1,
+"kind": "ashby",
+"total": 14
+},
+"ashby:abridge": {
+"board": "Abridge",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 25
+},
+"ashby:absentia-labs": {
+"board": "absentia-labs",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 4
+},
+"ashby:acorns": {
+"board": "acorns",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 9
+},
+"ashby:acquisition": {
+"board": "acquisition",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 10
+},
+"ashby:adaption": {
+"board": "adaption",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 11
+},
+"ashby:adaptive": {
+"board": "Adaptive",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 8
+},
+"ashby:adaptive-innovations": {
+"board": "adaptive-innovations",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 4
+},
+"ashby:adapty-io": {
+"board": "adapty-io",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 7
+},
+"ashby:addi": {
+"board": "Addi",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 33
+},
+"ashby:adjoe": {
+"board": "adjoe",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 45
+},
+"ashby:adonis": {
+"board": "adonis",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 9
+},
+"ashby:aerovect": {
+"board": "AeroVect",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 43
+},
+"ashby:agent": {
+"board": "agent",
+"city": "",
+"in_regions": 0,
+"kind": "ashby",
+"total": 18
+},
+"greenhouse:0verwatch": {
+"board": "0verwatch",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 0
+},
+"greenhouse:103644278": {
+"board": "103644278",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 11
+},
+"greenhouse:10alabs": {
+"board": "10alabs",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 19
+},
+"greenhouse:10beauty": {
+"board": "10beauty",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 6
+},
+"greenhouse:12twenty": {
+"board": "12twenty",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 4
+},
+"greenhouse:1800contacts": {
+"board": "1800contacts",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 9
+},
+"greenhouse:1800gotjunk": {
+"board": "1800gotjunk",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 51
+},
+"greenhouse:1stavenuepower": {
+"board": "1stavenuepower",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 12
+},
+"greenhouse:1uphealth": {
+"board": "1uphealth",
+"error": "could not be read",
+"kind": "greenhouse"
+},
+"greenhouse:24hourhomecare": {
+"board": "24hourhomecare",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 24
+},
+"greenhouse:2k": {
+"board": "2k",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 83
+},
+"greenhouse:2kearlycareers": {
+"board": "2kearlycareers",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 0
+},
+"greenhouse:2kmadrid": {
+"board": "2kmadrid",
+"city": "Madrid",
+"in_regions": 1,
+"kind": "greenhouse",
+"total": 1
+},
+"greenhouse:2u": {
+"board": "2u",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 1
+},
+"greenhouse:31stunion": {
+"board": "31stunion",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 13
+},
+"greenhouse:3cloud": {
+"board": "3cloud",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 36
+},
+"greenhouse:3dayblindssales": {
+"board": "3dayblindssales",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 79
+},
+"greenhouse:3mgroofing": {
+"board": "3mgroofing",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 27
+},
+"greenhouse:3redpartners": {
+"board": "3redpartners",
+"city": "Amsterdam",
+"in_regions": 2,
+"kind": "greenhouse",
+"total": 5
+},
+"greenhouse:42northdental": {
+"board": "42northdental",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 142
+},
+"greenhouse:4lu44n1n37w012k": {
+"board": "4lu44n1n37w012k",
+"city": "Amsterdam",
+"in_regions": 3,
+"kind": "greenhouse",
+"total": 8
+},
+"greenhouse:540": {
+"board": "540",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 3
+},
+"greenhouse:541": {
+"board": "541",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 4
+},
+"greenhouse:55564patriot334567software868575745": {
+"board": "55564patriot334567software868575745",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 5
+},
+"greenhouse:5minlab": {
+"board": "5minlab",
+"city": "",
+"in_regions": 0,
+"kind": "greenhouse",
+"total": 2
+},
+"lever:eu:abzena": {
+"board": "eu:abzena",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 31
+},
+"lever:eu:aevi": {
+"board": "eu:aevi",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 3
+},
+"lever:eu:asobostudio": {
+"board": "eu:asobostudio",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 5
+},
+"lever:eu:blackshark": {
+"board": "eu:blackshark",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 5
+},
+"lever:eu:cirrus": {
+"board": "eu:cirrus",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 125
+},
+"lever:eu:coinspaid": {
+"board": "eu:coinspaid",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 33
+},
+"lever:eu:controlai": {
+"board": "eu:controlai",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 3
+},
+"lever:eu:coretechsecurity": {
+"board": "eu:coretechsecurity",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 13
+},
+"lever:eu:csmcy": {
+"board": "eu:csmcy",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 208
+},
+"lever:eu:diabolocom": {
+"board": "eu:diabolocom",
+"city": "Barcelona",
+"in_regions": 3,
+"kind": "lever",
+"total": 14
+},
+"lever:eu:efficioconsulting": {
+"board": "eu:efficioconsulting",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 42
+},
+"lever:eu:evolved-aerospace": {
+"board": "eu:evolved-aerospace",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 8
+},
+"lever:eu:frontier": {
+"board": "eu:frontier",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 7
+},
+"lever:eu:genomines": {
+"board": "eu:genomines",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 5
+},
+"lever:eu:hkr": {
+"board": "eu:hkr",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 12
+},
+"lever:eu:infinitygroup": {
+"board": "eu:infinitygroup",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 9
+},
+"lever:eu:innogames": {
+"board": "eu:innogames",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 6
+},
+"lever:eu:ivcevidensia": {
+"board": "eu:ivcevidensia",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 569
+},
+"lever:eu:karllagerfeld": {
+"board": "eu:karllagerfeld",
+"city": "Amsterdam",
+"in_regions": 28,
+"kind": "lever",
+"total": 54
+},
+"lever:eu:kwalee": {
+"board": "eu:kwalee",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 19
+},
+"lever:eu:lionbridge": {
+"board": "eu:lionbridge",
+"city": "",
+"in_regions": 4,
+"kind": "lever",
+"total": 47
+},
+"lever:eu:lovehoneygroup": {
+"board": "eu:lovehoneygroup",
+"city": "Zurich",
+"in_regions": 1,
+"kind": "lever",
+"total": 35
+},
+"lever:eu:markt-pilot": {
+"board": "eu:markt-pilot",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 11
+},
+"lever:eu:mobileye": {
+"board": "eu:mobileye",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 175
+},
+"lever:eu:numan": {
+"board": "eu:numan",
+"city": "",
+"in_regions": 0,
+"kind": "lever",
+"total": 16
+},
+"personio:1komma5grad": {
+"board": "1komma5grad",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 326
+},
+"personio:21dx-gmbh": {
+"board": "21dx-gmbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 19
+},
+"personio:360t": {
+"board": "360t",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 22
+},
+"personio:420pharma": {
+"board": "420pharma",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 4
+},
+"personio:4401": {
+"board": "4401",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 0
+},
+"personio:7learnings": {
+"board": "7learnings",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 5
+},
+"personio:8mylez-gmbh": {
+"board": "8mylez-gmbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 3
+},
+"personio:9elements": {
+"board": "9elements",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 0
+},
+"personio:a-eins-digital-innovation-gmbh": {
+"board": "a-eins-digital-innovation-gmbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 1
+},
+"personio:a4i-leipzig": {
+"board": "a4i-leipzig",
+"error": "could not be read",
+"kind": "personio"
+},
+"personio:aab": {
+"board": "aab",
+"error": "could not be read",
+"kind": "personio"
+},
+"personio:aampere": {
+"board": "aampere",
+"city": "",
+"in_regions": 1,
+"kind": "personio",
+"total": 17
+},
+"personio:abcfinlab": {
+"board": "abcfinlab",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 1
+},
+"personio:academia-holding-gmbh": {
+"board": "academia-holding-gmbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 37
+},
+"personio:acarius-steuerberatungsgesellschaft-mbh": {
+"board": "acarius-steuerberatungsgesellschaft-mbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 4
+},
+"personio:accantec-group": {
+"board": "accantec-group",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 1
+},
+"personio:achtung": {
+"board": "achtung",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 4
+},
+"personio:achtzig20": {
+"board": "achtzig20",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 0
+},
+"personio:ackermann-gruppe": {
+"board": "ackermann-gruppe",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 0
+},
+"personio:action-light-veranstaltungstechnik-gmbh": {
+"board": "action-light-veranstaltungstechnik-gmbh",
+"error": "could not be read",
+"kind": "personio"
+},
+"personio:adbaker-gmbh": {
+"board": "adbaker-gmbh",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 19
+},
+"personio:adidasfoundation": {
+"board": "adidasfoundation",
+"city": "",
+"in_regions": 0,
+"kind": "personio",
+"total": 1
+},
+"personio:adler-smart-solutions": {
+"board": "adler-smart-solutions",
+"error": "could not be read",
+"kind": "personio"
+},
+"personio:admeritia": {
+"board": "admeritia",
+"error": "could not be read",
+"kind": "personio"
+},
+"personio:advalyze": {
+"board": "advalyze",
+"error": "could not be read",
+"kind": "personio"
+},
+"teamtailor:123pousse": {
+"board": "123pousse",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 5
+},
+"teamtailor:2ho": {
+"board": "2ho",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 1
+},
+"teamtailor:aaboevensen": {
+"board": "aaboevensen",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 0
+},
+"teamtailor:abeillerush": {
+"board": "abeillerush",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 1
+},
+"teamtailor:above": {
+"board": "above",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 2
+},
+"teamtailor:accessiway": {
+"board": "accessiway",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 4
+},
+"teamtailor:adventus": {
+"board": "adventus",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 20
+},
+"teamtailor:advisensedenmark": {
+"board": "advisensedenmark",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 0
+},
+"teamtailor:aebr": {
+"board": "aebr",
+"city": "",
+"in_regions": 1,
+"kind": "teamtailor",
+"total": 10
+},
+"teamtailor:again": {
+"board": "again",
+"city": "",
+"in_regions": 1,
+"kind": "teamtailor",
+"total": 3
+},
+"teamtailor:agileretail": {
+"board": "agileretail",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 10
+},
+"teamtailor:airtificial": {
+"board": "airtificial",
+"city": "Barcelona",
+"in_regions": 12,
+"kind": "teamtailor",
+"total": 20
+},
+"teamtailor:alfaecare": {
+"board": "alfaecare",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 0
+},
+"teamtailor:allenmotorgroup": {
+"board": "allenmotorgroup",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 47
+},
+"teamtailor:almond-board-of-cyber": {
+"board": "almond-board-of-cyber",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 2
+},
+"teamtailor:amorefantasia-1743500586": {
+"board": "amorefantasia-1743500586",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 4
+},
+"teamtailor:anthonynolan": {
+"board": "anthonynolan",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 0
+},
+"teamtailor:anzet": {
+"board": "anzet",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 0
+},
+"teamtailor:aowallmansgroup": {
+"board": "aowallmansgroup",
+"city": "Copenhagen",
+"in_regions": 3,
+"kind": "teamtailor",
+"total": 14
+},
+"teamtailor:apirestauration-languedoc-restauration": {
+"board": "apirestauration-languedoc-restauration",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 15
+},
+"teamtailor:appliedcomputing": {
+"board": "appliedcomputing",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 6
+},
+"teamtailor:appsfactory": {
+"board": "appsfactory",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 19
+},
+"teamtailor:appsilon-1739358905": {
+"board": "appsilon-1739358905",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 10
+},
+"teamtailor:ardentpubgroup": {
+"board": "ardentpubgroup",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 9
+},
+"teamtailor:asapwork": {
+"board": "asapwork",
+"city": "",
+"in_regions": 0,
+"kind": "teamtailor",
+"total": 5
+}
+}

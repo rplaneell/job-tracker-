@@ -92,13 +92,28 @@ def run_collection(
         if not roles:
             store.record_run(source.name, True, 0, "empty list returned, roles not closed", now)
             continue
-        matched = {r.key: matches(r, rules) for r in roles}
-        tags = {r.key: (tag_field(r, rules), tag_level(r, rules)) for r in roles}
-        new_roles = store.upsert_roles(roles, matched, tags, now)
+        # Only roles in the owner's regions are stored, so a long source list cannot flood the database.
+        kept = [r for r in roles if r.country in rules.countries]
+        matched = {r.key: matches(r, rules) for r in kept}
+        tags = {r.key: (tag_field(r, rules), tag_level(r, rules)) for r in kept}
+        new_roles = store.upsert_roles(kept, matched, tags, now)
         result.new_matched.extend(r for r in new_roles if matched[r.key])
-        store.close_missing(roles[0].source, source.name, {r.source_id for r in roles}, now)
-        store.record_run(source.name, True, len(roles), None, now)
+        store.close_missing(roles[0].source, source.name, {r.source_id for r in kept}, now)
+        store.record_run(source.name, True, len(kept), None, now)
     return result
+
+
+def load_all_sources(root: Path) -> list[Source]:
+    """The hand made list first, then the board finder's list. A board in both is read once."""
+    sources = load_sources(root / "sources.yaml")
+    generated = root / "sources.generated.yaml"
+    if generated.exists():
+        seen = {(s.kind, s.board.lower()) for s in sources}
+        for s in load_sources(generated):
+            if (s.kind, s.board.lower()) not in seen:
+                sources.append(s)
+                seen.add((s.kind, s.board.lower()))
+    return sources
 
 
 def repo_root() -> Path:
@@ -112,7 +127,7 @@ def main() -> int:
     from jobtracker.notify import deliver
 
     root = repo_root()
-    sources = load_sources(root / "sources.yaml")
+    sources = load_all_sources(root)
     rules = load_rules(root / "rules.yaml")
     db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
     http = make_client()

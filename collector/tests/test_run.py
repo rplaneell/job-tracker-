@@ -88,7 +88,7 @@ def test_only_new_matched_roles_returned_for_email():
     adapter = lambda _c, s: [role("1"), role("2", title="Senior Analyst"), role("3", country="France")]
     first, client, _ = go([src("Acme")], {"greenhouse": adapter})
     assert [r.source_id for r in first.new_matched] == ["1"]
-    assert first.total_seen == 3 and len(client.tables["roles"]) == 3
+    assert first.total_seen == 3 and len(client.tables["roles"]) == 2  # the French role is read but not stored
     second, _, _ = go([src("Acme")], {"greenhouse": adapter}, client=client)
     assert second.new_matched == []
 
@@ -129,3 +129,37 @@ def test_make_client_is_the_polite_client():
     client = make_client()
     assert isinstance(client, PoliteClient)
     client.client.close()
+
+
+def test_only_roles_in_the_target_countries_are_stored():
+    client = FakeClient()
+    result, _, _ = go([src("Acme")], {"greenhouse": lambda _c, s: [role("1"), role("2", country="France"), role("3", country=None)]}, client=client)
+    assert [r["source_id"] for r in client.tables["roles"]] == ["1"]
+    assert result.total_seen == 3
+
+
+def test_board_with_roles_only_outside_the_regions_is_ok_and_closes_old_ones():
+    client = FakeClient()
+    go([src("Acme")], {"greenhouse": lambda _c, s: [role("1")]}, client=client)
+    result, _, _ = go([src("Acme")], {"greenhouse": lambda _c, s: [role("9", country="France")]}, client=client)
+    assert result.failures == []
+    assert client.tables["roles"][0]["status"] == "closed"
+    assert client.tables["source_runs"][-1]["ok"] is True and client.tables["source_runs"][-1]["role_count"] == 0
+
+
+def test_load_all_sources_merges_curated_and_generated_without_duplicates(tmp_path):
+    from jobtracker.run import load_all_sources
+
+    (tmp_path / "sources.yaml").write_text("- {name: Acme, kind: lever, board: acme, city: Basel, field: vc}\n")
+    (tmp_path / "sources.generated.yaml").write_text(
+        "- {name: Acme Dup, kind: lever, board: Acme, city: '', field: '', terms: ok}\n"
+        "- {name: Beta, kind: ashby, board: beta, city: Zurich, field: '', terms: ok}\n"
+    )
+    assert [(s.name, s.kind) for s in load_all_sources(tmp_path)] == [("Acme", "lever"), ("Beta", "ashby")]
+
+
+def test_load_all_sources_works_without_a_generated_file(tmp_path):
+    from jobtracker.run import load_all_sources
+
+    (tmp_path / "sources.yaml").write_text("- {name: Acme, kind: lever, board: acme, city: Basel, field: vc}\n")
+    assert len(load_all_sources(tmp_path)) == 1

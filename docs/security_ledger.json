@@ -349,6 +349,26 @@
    "detail": "After the database address was corrected the real run read all 245 sources without a failure and stored 2223 roles in the five regions, 157 of them matching the profile, and queued 4 Scouting tasks covering those 157 roles (read back from the database). It then failed at the last step: Resend refused the ALERT_EMAIL_TO secret as not an email address. Added tests first, then a start up check of both email settings that explains the problem before any collection starts, and a plain message if sending fails after the roles are saved. The message never repeats the value. 261 collector tests pass.",
    "limit": "The ALERT_EMAIL_TO secret can only be corrected by the owner. The first digest of the 157 matching roles was not sent, and later runs only email roles that are new. Only a repeat run after the fix proves the email works.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 36,
+   "area": "Agent tools",
+   "check": "First real Scouting run on the live database, through the real tools",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Claude Code claimed task 1 (50 roles), read the roles as untrusted text, saved 50 verdicts and finished the task, all through the command line tools with the service key injected by the network proxy (never visible in chat, files or logs). Read back from the database: 50 verdicts (3 shortlisted, scores 5 to 82), tasks 1 done and 3 queued, audit log 53 rows (1 claim, 1 read, 50 submits, 1 finish). A second finish was refused. The 50 descriptions contained no instructions aimed at the agent. A first attempt to save the key under the Authorization header failed because the newer sb_secret key belongs in the apikey header; the wrong entry was removed by the owner and a new one saved correctly.",
+   "limit": "One task of four was run, so 107 matched roles are still queued. The service key now sits in the session environment's network secrets and stays there until the owner removes it. Verdicts are one model's judgement against the stated profile and can be wrong.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 37,
+   "area": "Profile filter",
+   "check": "Profile match quality seen by Scouting",
+   "outcome": "open",
+   "proof": "ran",
+   "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health).",
+   "limit": "Not fixed yet. A proposed fix: accept Spain only for Barcelona, and tighten the matched flag so retail and testing titles are excluded. Needs the owner's yes because it changes what gets stored and emailed.",
+   "date": "2026-11-18"
   }
  ]
 }

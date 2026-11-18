@@ -102,3 +102,41 @@ def test_sends_user_agent_header():
     client, _ = polite()
     client.get("https://a.example/jobs")
     assert route.calls[0].request.headers["user-agent"] == UA
+
+
+ASHBY = "https://api.ashbyhq.com"
+
+
+@respx.mock
+def test_documented_public_api_host_with_unserved_robots_is_allowed():
+    respx.get(f"{ASHBY}/robots.txt").mock(return_value=httpx.Response(401, text="Unauthorized"))
+    respx.get(f"{ASHBY}/posting-api/job-board/acme").mock(return_value=httpx.Response(200, text="ok"))
+    client, _ = polite()
+    assert client.get(f"{ASHBY}/posting-api/job-board/acme").text == "ok"
+
+
+@respx.mock
+def test_documented_public_api_host_explicit_disallow_still_blocks():
+    respx.get(f"{ASHBY}/robots.txt").mock(return_value=httpx.Response(200, text="User-agent: *\nDisallow: /posting-api\n"))
+    page = respx.get(f"{ASHBY}/posting-api/job-board/acme").mock(return_value=httpx.Response(200, text="ok"))
+    client, _ = polite()
+    with pytest.raises(SourceError, match="robots"):
+        client.get(f"{ASHBY}/posting-api/job-board/acme")
+    assert not page.called
+
+
+@respx.mock
+@pytest.mark.parametrize("status", [403, 500])
+def test_documented_public_api_host_server_errors_and_403_still_block(status):
+    respx.get(f"{ASHBY}/robots.txt").mock(return_value=httpx.Response(status))
+    client, _ = polite()
+    with pytest.raises(SourceError, match="robots"):
+        client.get(f"{ASHBY}/posting-api/job-board/acme")
+
+
+@respx.mock
+def test_a_401_robots_file_on_any_other_host_still_blocks():
+    respx.get("https://other.example/robots.txt").mock(return_value=httpx.Response(401))
+    client, _ = polite()
+    with pytest.raises(SourceError, match="robots"):
+        client.get("https://other.example/jobs")

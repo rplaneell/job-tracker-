@@ -11,6 +11,12 @@ from jobtracker.adapters import SourceError
 
 PAUSE_SECONDS = 1.0
 
+# Hosts whose vendor documents the API as public for programs to read, but which do not serve a
+# robots.txt file (the request answers 401). RFC 9309 treats an unavailable robots file as
+# "allowed". An explicit Disallow, a 403 or a server error on these hosts still blocks.
+# Owner approved this exception on 2026-11-18. Add a host only after reading its documentation.
+DOCUMENTED_PUBLIC_API_HOSTS = frozenset({"api.ashbyhq.com"})
+
 
 class PoliteClient:
     """Wraps httpx.Client: obeys robots.txt and waits between calls to the same host."""
@@ -52,7 +58,9 @@ class PoliteClient:
             if response.status_code == 200:
                 parser = RobotFileParser()
                 parser.parse(response.text.splitlines())
-            elif response.status_code in (404, 410):
+            elif response.status_code in (404, 410) or (
+                response.status_code == 401 and host in DOCUMENTED_PUBLIC_API_HOSTS
+            ):
                 parser = RobotFileParser()
                 parser.parse([])  # no rules means everything is allowed
             else:

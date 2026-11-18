@@ -16,6 +16,11 @@ This page says what protects the project, what it costs, and what is still open.
 | Dependency audits | npm audit, pip audit and OSV Scanner, weekly and on every push | `audit.yml`, `osv-scanner.toml` |
 | Code scan | Semgrep with ten own rules, a self test and a blind scan guard | `semgrep.yml`, `.semgrep/` |
 | Dependabot | Weekly update pull requests (never merged automatically) | `.github/dependabot.yml` |
+| Backtest | 192 real and edge inputs through 7 scenarios, golden decisions | `collector/tests/golden/`, `test_golden.py` |
+| Property tests | Rules that must hold for every generated input | `test_properties.py`, `*.properties.test.ts` |
+| Hostile input | Unsafe links and hostile text cannot run code | `adapters/safe_url`, `safeHref.ts`, `test_run_hostile.py` |
+| Coverage floor | Minimum coverage, enforced on every push | `tests.yml` |
+| Mutation checks | 26 deliberate breaks, all caught. Run before releases | `tools/mutate.py`, `tools/mutation_spec.json` |
 
 ## Free versus paid on a free private repository
 
@@ -37,7 +42,8 @@ As we understand it today. GitHub changes plans, so please confirm on your own S
 | Turn on Dependabot alerts | A repository setting | You |
 | Rename the default branch to `main` | Its generated name means the push blocker cannot protect it | You |
 | picomatch flaw in the test tools (GHSA-fc5q-39xc-vjpf) | No fixed version is published. Development only | Review on 2026-12-16 |
-| Hostile input tests, coverage floor, mutation checks | Planned in the robustness step | Me |
+| Browser clicking tests (UI) and browser level injection tests on the screens | Not written yet. Needs a test browser in CI | Me |
+| Mutation checks for the TypeScript code | Only two functions were break tested by hand | Me |
 | Security checklist for the agent design | Planned before any agent is built | Me |
 
 ## What this cannot promise

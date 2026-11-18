@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e "collector[dev]"
-      - run: cd collector && pytest -q
+      - run: cd collector && pytest -q --cov=jobtracker --cov-fail-under=88
       - run: python3 -m pytest tools/test_repo_rules.py -q
   dashboard:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: "22"
       - run: cd web && npm ci
-      - run: cd web && npx vitest run
+      - run: cd web && npx vitest run --coverage
       - run: cd web && npx next build
   hq:
     runs-on: ubuntu-latest
@@ -37,6 +37,6 @@ jobs:
         with:
           node-version: "22"
       - run: cd hq && npm ci
-      - run: cd hq && npx vitest run
+      - run: cd hq && npx vitest run --coverage
       - run: cd hq && npx tsc --noEmit
       - run: cd hq && npx vite build

@@ -24,3 +24,8 @@ hq/dist/
 *.pem
 *.key
 .semgrep_work/
+
+# Generated test output
+coverage/
+.coverage
+.hypothesis/

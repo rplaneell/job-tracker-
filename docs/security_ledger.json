@@ -169,6 +169,56 @@
    "detail": "Semgrep 1.186.0, 10 own rules. Self test: all 10 fire on planted bad code. Scans: dashboard 24 files, Job HQ 15 files, collector 21 files, 0 findings, and the scanned count equals the files present. A planted os.system line made the scan BLOCK with exit 1. The first dashboard scan was refused as blind (a parse error in layout.tsx and an invalid rules file), which is the guard working; both were fixed.",
    "limit": "Own rules only, so it finds only the patterns I wrote. A clean scan means none of these patterns, not secure. One finding was reviewed and suppressed on purpose (a fixed theme script) and the suppressions are capped at 1.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 18,
+   "area": "Backtest",
+   "check": "Golden backtest of the collector's decisions",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "192 inputs (178 real job titles from a live run plus 14 hand written edge cases) through 7 scenarios: the shipped rules and every changeable setting. 16 golden tests. A deliberately broken experience rule was caught on the exact line. The first proof showed a gap (no input on the 2 year boundary), so boundary cases were added and the break is now caught in the default scenario too.",
+   "limit": "Protects the decisions only, not the adapters' parsing of live pages or the dashboard. No older trusted version exists, so there is no oracle. Golden files can encode a bug that existed when they were saved.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 19,
+   "area": "Hostile input",
+   "check": "Job links and posting text cannot run code",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "Found: a posting link such as javascript:alert(1) was stored and linked. Fixed in three layers: the collector keeps only plain http and https links, the email never links an unsafe address, and the dashboard shows the Open button only for a safe link. 18 collector tests, 3 dashboard tests, plus properties over generated hostile text. Mutation checking then found an unescaped title branch in the email, now tested.",
+   "limit": "Covers the entry points I know (posting title, company, links, description in email and dashboard). React escapes text by default. No browser level injection test was run on the screens yet.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 20,
+   "area": "Property tests",
+   "check": "Rules that must hold for every input",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Collector: 12 properties with Hypothesis (never crashes on any text, only known places, a title with an excluded word never matches, fewer countries or a lower experience limit never add matches, safe links only). Job HQ: 5 and dashboard: 5 properties with fast-check. Broken copies failed with the smallest counterexample found automatically.",
+   "limit": "Properties describe what I thought of. Generated text is not real postings.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 21,
+   "area": "Coverage floor",
+   "check": "Minimum test coverage enforced in CI",
+   "outcome": "partial",
+   "proof": "ran",
+   "detail": "Collector 89% (floor 88), measured twice, no wobble. Dashboard lib folder 100% lines and 97% branches, Job HQ domain folder 100%, floors 90/90/80. Each gate exited 1 when asked for more than we have.",
+   "limit": "Screens, 3D scenes and the real command line entry points (findboards.py, run.main) are not measured. Coverage shows lines that ran, not that they were checked well.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 22,
+   "area": "Mutation checks",
+   "check": "Deliberate breaks of the collector's core logic",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "26 breaks across the profile filter, link safety, robots gate, pacing, retries, store and board finder. First run caught 23 and 3 survived. Those three pointed at real missing tests (pacing arithmetic, error status, email escaping with no link) which were added, and all 26 are now caught.",
+   "limit": "Only the collector. TypeScript logic was break tested by hand on two functions, not with the runner. Some survivors can be harmless equivalents.",
+   "date": "2026-11-18"
   }
  ]
 }

@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 dependencies = ["httpx", "pyyaml", "supabase", "resend", "defusedxml"]
 
 [project.optional-dependencies]
-dev = ["pytest", "respx"]
+dev = ["pytest", "respx", "hypothesis", "pytest-cov"]
 
 [build-system]
 requires = ["setuptools>=68"]

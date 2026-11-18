@@ -140,3 +140,20 @@ def test_a_401_robots_file_on_any_other_host_still_blocks():
     client, _ = polite()
     with pytest.raises(SourceError, match="robots"):
         client.get("https://other.example/jobs")
+
+
+@respx.mock
+def test_waits_only_the_time_that_is_still_missing():
+    """Found by mutation checking: the pause is one second minus what already passed, never plus."""
+    respx.get("https://a.example/robots.txt").mock(return_value=httpx.Response(404))
+    respx.get(url__regex=r"https://a.example/p.*").mock(return_value=httpx.Response(200, text="ok"))
+    client, clock = polite()
+    client.get("https://a.example/p1")
+    clock.slept.clear()
+    clock.now += 0.4  # 0.4 seconds pass by themselves
+    client.get("https://a.example/p2")
+    assert clock.slept == [pytest.approx(0.6)]
+    clock.slept.clear()
+    clock.now += 5.0  # long enough ago: no wait at all
+    client.get("https://a.example/p3")
+    assert clock.slept == []

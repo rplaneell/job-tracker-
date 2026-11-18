@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo } from 'react';
 import { OrthographicCamera, Vector3 } from 'three';
 import { useHq } from '../state/useHq';
-import { CAMERA, CORNERS, GLASS_OFFICE, OFFICE, fitZoom } from './layout';
+import { CAMERA, CORNERS, CV_STATION, GLASS_OFFICE, OFFICE, fitZoom } from './layout';
 
 const UP = new Vector3(0, 1, 0);
 
@@ -16,14 +16,15 @@ export function CameraRig({ corner }: { corner: number }) {
   const overview = useMemo(() => new Vector3(...OFFICE.center), []);
   const desk = useMemo(() => new Vector3(...OFFICE.desk.center), []);
   const glass = useMemo(() => new Vector3(...GLASS_OFFICE.center), []);
+  const station = useMemo(() => new Vector3(...CV_STATION.center), []);
   const current = useMemo(() => overview.clone(), [overview]);
   const goal = useMemo(() => new Vector3(), []);
 
   useFrame((_, dt) => {
     const base = fitZoom(size.width, size.height);
     const focused = focus !== null;
-    const zoom = focused ? base * (focus === 'scouting' ? CAMERA.scoutFocusFactor : CAMERA.focusFactor) : base;
-    goal.copy(focus === 'reception' ? desk : focus === 'scouting' ? glass : overview);
+    const zoom = focused ? base * (focus === 'scouting' ? CAMERA.scoutFocusFactor : focus === 'cv' ? CAMERA.cvFocusFactor : CAMERA.focusFactor) : base;
+    goal.copy(focus === 'reception' ? desk : focus === 'scouting' ? glass : focus === 'cv' ? station : overview);
     if (focused && size.width >= 900) {
       // Slide the view so the desk sits in the free area to the left of the side panel.
       goal.addScaledVector(right, CAMERA.panelPx / 2 / zoom);

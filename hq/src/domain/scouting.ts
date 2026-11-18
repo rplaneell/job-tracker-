@@ -67,7 +67,7 @@ export function shortlist<T extends Verdict>(verdicts: T[], limit: number): T[] 
 const SCOUT_STATUSES: readonly string[] = ['idle', 'waiting', 'working', 'completed', 'failed'];
 
 /** Lets a link such as ?sim=working preview a status in simulation mode. Anything unknown is ignored. */
-export function parseSimStatus(search: string): ScoutStatus | null {
-  const value = new URLSearchParams(search).get('sim');
+export function parseSimStatus(search: string, key = 'sim'): ScoutStatus | null {
+  const value = new URLSearchParams(search).get(key);
   return value !== null && SCOUT_STATUSES.includes(value) ? (value as ScoutStatus) : null;
 }

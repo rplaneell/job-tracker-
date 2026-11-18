@@ -25,3 +25,12 @@ export const SAMPLE_SCOUT_ITEMS = [
   { roleId: 'b', score: 84, reason: 'Venture fund associate in Basel, health focus, graduate friendly.', shortlisted: true, title: 'Investment Analyst Intern', company: 'Example Ventures' },
   { roleId: 'c', score: 77, reason: 'Bioprocess strategy analyst in Copenhagen, matches the lab background.', shortlisted: true, title: 'Strategy Analyst, Biotech', company: 'Example Partners' },
 ];
+
+/** Simulation only: a finished tailoring run and two drafts. Never shown as real. */
+export const SAMPLE_CV_TASKS = [
+  { id: 'c1', status: 'done' as const, claimedAt: '2026-11-18T09:10:00Z', createdAt: '2026-11-18T09:00:00Z', finishedAt: '2026-11-18T09:25:00Z' },
+];
+export const SAMPLE_CV_DRAFTS = [
+  { id: 'd1', title: 'Business Analyst, Life Sciences', company: 'Example Advisory', status: 'draft' as const },
+  { id: 'd2', title: 'Investment Analyst Intern', company: 'Example Ventures', status: 'approved' as const },
+];

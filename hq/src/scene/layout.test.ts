@@ -47,3 +47,31 @@ describe('door blind zone', () => {
     }
   });
 });
+
+import { CV_STATION, OFFICE as OFFICE_PLAN } from './layout';
+
+describe('CV Tailor station', () => {
+  const { spot, obstacles, radius } = CV_STATION;
+
+  it('is on the floor of the building', () => {
+    expect(spot.x).toBeGreaterThan(-9.9);
+    expect(spot.x).toBeLessThan(-0.1);
+    expect(spot.z).toBeGreaterThan(0.1);
+    expect(spot.z).toBeLessThan(9.9);
+  });
+
+  it.each(obstacles.map((o) => [o.name, o] as const))('is clear of the %s', (_name, o) => {
+    const inside = spot.x > o.minX - radius && spot.x < o.maxX + radius && spot.z > o.minZ - radius && spot.z < o.maxZ + radius;
+    expect(inside).toBe(false);
+  });
+
+  it('is not in the glass office and not on top of the reception desk', () => {
+    const g = GLASS_OFFICE.box;
+    expect(spot.x > g.minX && spot.x < g.maxX && spot.z > g.minZ && spot.z < g.maxZ).toBe(false);
+    expect(Math.hypot(spot.x - OFFICE_PLAN.desk.center[0], spot.z - OFFICE_PLAN.desk.center[2])).toBeGreaterThan(2);
+  });
+
+  it('is at least a metre from every goblin', () => {
+    for (const s of GLASS_OFFICE.spots) expect(Math.hypot(spot.x - s.x, spot.z - s.z)).toBeGreaterThan(1);
+  });
+});

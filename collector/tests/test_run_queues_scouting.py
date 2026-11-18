@@ -74,7 +74,9 @@ def test_a_failing_queue_write_does_not_stop_the_run_or_lose_the_roles():
     assert len(client.tables["roles"]) == 1
 
 
-def test_a_big_first_run_is_split_into_tasks_of_50_and_capped_at_300_roles():
-    _, client = go([role(str(i)) for i in range(400)])
+def test_a_big_first_run_is_split_into_tasks_of_50_and_nothing_is_dropped():
+    _, client = go([role(str(i)) for i in range(410)])
     sizes = [len(t["payload"]["role_ids"]) for t in tasks(client)]
-    assert sizes == [50] * 6
+    assert sizes == [50] * 8 + [10]
+    queued = {rid for t in tasks(client) for rid in t["payload"]["role_ids"]}
+    assert queued == role_ids_for(client, *[str(i) for i in range(410)])

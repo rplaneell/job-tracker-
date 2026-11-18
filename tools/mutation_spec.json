@@ -235,12 +235,6 @@
    "file": "collector/src/jobtracker/store.py",
    "old": "SCOUT_TASK_SIZE = 50",
    "new": "SCOUT_TASK_SIZE = 51"
-  },
-  {
-   "name": "queue: seven tasks allowed per run",
-   "file": "collector/src/jobtracker/store.py",
-   "old": "SCOUT_MAX_TASKS = 6",
-   "new": "SCOUT_MAX_TASKS = 7"
   }
  ]
 }

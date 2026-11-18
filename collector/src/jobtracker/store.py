@@ -8,7 +8,6 @@ from jobtracker.models import Role
 Key = tuple[str, str]
 
 SCOUT_TASK_SIZE = 50  # roles in one Scouting task
-SCOUT_MAX_TASKS = 6  # per collection run, so one huge first run cannot bury the daily review
 
 
 class Store:
@@ -102,7 +101,6 @@ class Store:
 
     def queue_scout_tasks(self, roles: list[Role], now: datetime) -> int:
         """Queues Scouting work for new matched roles. Returns how many roles were queued."""
-        roles = roles[: SCOUT_TASK_SIZE * SCOUT_MAX_TASKS]
         ids: list[str] = []
         for source in sorted({r.source for r in roles}):
             wanted = [r.source_id for r in roles if r.source == source]

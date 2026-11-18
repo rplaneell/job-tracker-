@@ -219,6 +219,16 @@
    "detail": "26 breaks across the profile filter, link safety, robots gate, pacing, retries, store and board finder. First run caught 23 and 3 survived. Those three pointed at real missing tests (pacing arithmetic, error status, email escaping with no link) which were added, and all 26 are now caught.",
    "limit": "Only the collector. TypeScript logic was break tested by hand on two functions, not with the runner. Some survivors can be harmless equivalents.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 23,
+   "area": "Repository controls",
+   "check": "Commit message rule false alarm on the test: prefix",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "The rule flagged every subject starting with the word test, including the normal 'test: add x' prefix. Found when it blocked two of my own commits. The new test failed on the old pattern and passes on the fixed one. A bare test, test 2, wip, tmp and fixup! are still flagged.",
+   "limit": "The rule is a list of patterns I can only extend when real commits show a false alarm.",
+   "date": "2026-11-18"
   }
  ]
 }

@@ -54,7 +54,7 @@ def check_message(sha, message):
         out.append(f"{sha}: empty commit message")
     if len(subject) > CFG["subject_limit"]:
         out.append(f"{sha}: subject is {len(subject)} characters, limit is {CFG['subject_limit']}")
-    if re.match(r"(?i)^(wip\b|fixup!|squash!|tmp\b|asdf\b|test\b)", subject):      # note: \b does not work after '!'
+    if re.match(r"(?i)^(wip\b|fixup!|squash!|tmp\b|asdf\b|test\b(?!:|\())", subject):      # note: \b does not work after '!'
         out.append(f"{sha}: unfinished commit subject '{subject[:30]}' (wip, fixup, squash, tmp)")
     if len(lines) > 1 and lines[1].strip():
         out.append(f"{sha}: second line must be blank (subject, blank line, body)")

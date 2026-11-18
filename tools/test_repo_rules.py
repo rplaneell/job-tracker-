@@ -37,3 +37,12 @@ def test_built_file_edited_without_a_source_change_is_flagged():
     built = rules.CFG["built_file"]
     assert rules.check_built_without_source({built}) != []
     assert rules.check_built_without_source({built, rules.CFG["source_prefixes"][0] + "x"}) == []
+
+
+def test_a_test_prefix_is_a_normal_commit_subject_but_a_bare_test_is_not():
+    """Found by using the rule on real commits: 'test: add x' is the usual way to say a commit adds tests."""
+    ok = ["test: add property tests", "test(collector): add golden file", "tests: add a backtest"]
+    for subject in ok:
+        assert rules.check_message("abc1234", subject + "\n\nbody") == [], subject
+    for subject in ["test", "test 2", "Test commit", "wip", "tmp stuff", "fixup! x"]:
+        assert rules.check_message("abc1234", subject), subject

@@ -20,3 +20,8 @@ export function groupByStage<T extends { stage: string }>(apps: T[]): Record<Sta
 export function canMove(from: Stage, to: Stage): boolean {
   return from !== to;
 }
+
+/** The forward path an application takes, for drawing it. Rejected is a way out, not a step on the path. */
+export function journeyStages(): Stage[] {
+  return STAGES.filter((s) => s !== "rejected");
+}

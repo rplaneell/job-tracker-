@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { browserClient } from "@/lib/supabase/client";
 import { loginMessage } from "@/lib/loginMessage";
+import { journeyStages } from "@/lib/stages";
 
 function GitHubMark() {
   return (
@@ -34,18 +35,32 @@ export default function Login() {
   }
 
   const message = loginMessage(problem);
+  const path = journeyStages();
   return (
     <main className="login">
-      <div className="login-body">
+      <section className="login-art" aria-hidden="true">
         <p className="login-name">Job tracker</p>
+        <h2>From a saved role to an offer.</h2>
+        <p className="login-art-lede">Company job boards are collected every morning. Nothing moves forward unless you say so.</p>
+        <ol className="login-path">
+          {path.map((stage, i) => (
+            <li key={stage} style={{ ["--i" as string]: i, ["--n" as string]: path.length }}>
+              <span className="login-node" />
+              <span className="login-stage">{stage}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+      <section className="login-body">
         <h1>Sign in</h1>
-        <p className="login-lede">Your roles, applications and CVs. One owner, no one else gets in.</p>
+        <p className="login-lede">Only the owner account can enter.</p>
         <button className="login-provider" type="button" onClick={withGitHub} disabled={busy}>
           <GitHubMark />
           {busy ? "Opening GitHub" : "Continue with GitHub"}
         </button>
         {message && <p className="alert" role="alert">{message}</p>}
-      </div>
+        <p className="login-foot">Private. One owner.</p>
+      </section>
     </main>
   );
 }

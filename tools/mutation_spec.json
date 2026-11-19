@@ -445,6 +445,30 @@
       "file": "collector/src/jobtracker/store.py",
       "old": "if row[\"matched\"] and not existing[role.key]:",
       "new": "if row[\"matched\"]:"
+    },
+    {
+      "name": "alerts: any host that contains linkedin.com is accepted",
+      "file": "collector/src/jobtracker/alerts.py",
+      "old": "(host == \"linkedin.com\" or host.endswith(\".linkedin.com\"))",
+      "new": "(\"linkedin.com\" in host)"
+    },
+    {
+      "name": "alerts: plain http links are accepted",
+      "file": "collector/src/jobtracker/alerts.py",
+      "old": "parts.scheme != \"https\" or ",
+      "new": "False or "
+    },
+    {
+      "name": "alerts: roles outside the regions are stored",
+      "file": "collector/src/jobtracker/alerts.py",
+      "old": "kept = [r for r in roles if in_region(r, rules)]",
+      "new": "kept = list(roles)"
+    },
+    {
+      "name": "alerts: job text goes into the audit log",
+      "file": "collector/src/jobtracker/alerts.py",
+      "old": "\"detail\": summary}",
+      "new": "\"detail\": {**summary, \"titles\": [r.title for r in roles]}}"
     }
   ]
 }

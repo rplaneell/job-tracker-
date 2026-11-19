@@ -1,8 +1,9 @@
 import { OFFICE_LINKS } from '../data/links';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { loadOffice, type OfficeData } from '../data/officeData';
 import { buildOfficeState, type OfficeMode } from '../domain/officeState';
 import { parseSimStatus, scoutStatus } from '../domain/scouting';
+import { KEY_STEP, yawFromDrag } from '../scene/rotation';
 import { Scene } from '../scene/Scene';
 import { useHq } from '../state/useHq';
 import { Credits } from '../ui/Credits';
@@ -23,6 +24,9 @@ export function App() {
   const setLowPower = useHq((s) => s.setLowPower);
   const setCreditsOpen = useHq((s) => s.setCreditsOpen);
   const openDepartment = useHq((s) => s.openDepartment);
+  const rotateBy = useHq((s) => s.rotateBy);
+  const resetView = useHq((s) => s.resetView);
+  const root = useRef<HTMLDivElement>(null);
   const now = useMemo(() => new Date(), []);
   // The office reads the owner's real data through the dashboard. Run on its own (no dashboard, for example while
   // developing) it shows sample data that is labelled Simulation. Inside the dashboard it never shows invented data.
@@ -56,13 +60,48 @@ export function App() {
   }, [openDepartment]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && leave();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') leave();
+      else if (e.key === 'ArrowLeft') rotateBy(-KEY_STEP);
+      else if (e.key === 'ArrowRight') rotateBy(KEY_STEP);
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [leave]);
+  }, [leave, rotateBy]);
+
+  // Drag sideways on the office to turn it, all the way round. Works with a mouse, a finger or a pen.
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    let lastX: number | null = null;
+    let id = -1;
+    const down = (e: PointerEvent) => {
+      if (!(e.target instanceof HTMLCanvasElement) || !e.isPrimary) return;
+      lastX = e.clientX;
+      id = e.pointerId;
+    };
+    const move = (e: PointerEvent) => {
+      if (lastX === null || e.pointerId !== id) return;
+      rotateBy(yawFromDrag(e.clientX - lastX));
+      lastX = e.clientX;
+    };
+    const up = (e: PointerEvent) => {
+      if (e.pointerId === id) lastX = null;
+    };
+    el.addEventListener('pointerdown', down);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+  }, [rotateBy]);
 
   return (
-    <div className="relative h-full w-full">
+    <div ref={root} className="relative h-full w-full">
       <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} simulated={state.simulated} />
 
       <div className="pointer-events-none absolute inset-0">
@@ -94,11 +133,20 @@ export function App() {
 
         {focus === null && (
           <p className="absolute bottom-4 left-4 max-w-[19rem] rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 text-xs text-ink-soft shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
-            Click the Office Manager at the reception desk to open Reception.
+            Drag to turn the office all the way round. Click the Office Manager at the reception desk to open Reception.
           </p>
         )}
 
-        <div className="pointer-events-auto absolute bottom-4 right-4 flex gap-2">
+        <div className="pointer-events-auto absolute bottom-4 right-4 flex flex-wrap justify-end gap-2">
+          <button type="button" aria-label="Turn the office left" onClick={() => rotateBy(-KEY_STEP)} className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500">
+            ⟲
+          </button>
+          <button type="button" aria-label="Turn the office right" onClick={() => rotateBy(KEY_STEP)} className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500">
+            ⟳
+          </button>
+          <button type="button" onClick={resetView} className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500">
+            Reset view
+          </button>
           <button
             type="button"
             onClick={() => openDepartment('scouting')}

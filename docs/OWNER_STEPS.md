@@ -69,3 +69,15 @@ key in Supabase if you think it was exposed.
 
 The check cannot judge meaning. A reworded line could still read as stronger than the truth, so you are the final reader.
 Your CV text never goes into the activity log and is never sent to any outside service.
+
+## The 3D office is the front door
+
+The dashboard project now builds the 3D office (Job HQ) into itself and serves it at `/hq`. After you sign in, `/` opens the office. Roles live at `/roles`, and the office links to Roles, Pipeline, Your CV and Sources.
+
+* **One Vercel project is enough.** The separate Job HQ Vercel project is no longer needed. You can delete it in Vercel (Project, Settings, Advanced, Delete Project).
+* **One Vercel setting to check.** The dashboard project builds the office from the `hq` folder, which sits next to the dashboard's `web` folder. In Vercel, open the dashboard project, then Settings, General, Root Directory, and make sure **Include source files outside of the Root Directory in the Build Step** is switched on (it normally is by default). If a build fails saying it cannot find `../hq`, this is the cause.
+* **The office still shows sample data** labelled Simulation until it can read your database (milestone M1).
+
+## The daily email sender
+
+The daily email needs three GitHub Actions secrets: `ALERT_EMAIL_TO` (your address), `ALERT_EMAIL_FROM` (the sender) and `RESEND_API_KEY`. `ALERT_EMAIL_FROM` was empty on 19 November 2026. A wrong or empty email setting no longer stops the job collection: roles are saved first, the job then shows red, and the log says which setting to fix. With a free Resend account, the sender can be `Job Tracker <onboarding@resend.dev>` and it can only send to the email address you signed up to Resend with.

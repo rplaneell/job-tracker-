@@ -11,7 +11,7 @@ describe("isPublicPath", () => {
     expect(isPublicPath("/icon.png")).toBe(true);
   });
   it("keeps every data page private", () => {
-    for (const p of ["/", "/cv", "/cv/123", "/pipeline", "/roles/abc", "/sources", "/practice"]) expect(isPublicPath(p)).toBe(false);
+    for (const p of ["/", "/hq", "/hq/assets/index.js", "/hq/models/office.glb", "/roles", "/cv", "/cv/123", "/pipeline", "/roles/abc", "/sources", "/practice"]) expect(isPublicPath(p)).toBe(false);
   });
   it("does not treat lookalike paths as public", () => {
     for (const p of ["/loginx", "/login-evil", "/brandx/secret", "/brand", "/icon.png.html", "/auth/callbackx", "/xbrand/a.png"]) expect(isPublicPath(p)).toBe(false);

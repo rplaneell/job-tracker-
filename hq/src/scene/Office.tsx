@@ -1,9 +1,10 @@
+import { modelUrl } from '../data/modelUrl';
 import { useGLTF } from '@react-three/drei';
 import { useLayoutEffect } from 'react';
 import { Mesh } from 'three';
 import { applyPalette } from './palette';
 
-const URL = '/models/office.glb';
+const URL = modelUrl('office.glb');
 
 /** The glass walled office floor. Every surface takes and casts soft shadows. */
 export function Office({ shadows }: { shadows: boolean }) {

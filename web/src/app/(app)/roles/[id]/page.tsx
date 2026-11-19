@@ -25,7 +25,7 @@ export default async function RoleDetail({ params }: { params: Promise<{ id: str
     <>
       <div className="head">
         <div>
-          <p><Link href="/">← Roles</Link></p>
+          <p><Link href="/roles">← Roles</Link></p>
           <h1>{role.title}</h1>
           <p>{role.company} · {where(role.city, role.country)} · posted {ago(role.posted_at ?? role.first_seen)}</p>
           <div className="tags">

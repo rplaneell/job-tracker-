@@ -1,10 +1,11 @@
+import { modelUrl } from '../data/modelUrl';
 import { Html, useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import type { Group } from 'three';
 import { Mesh } from 'three';
 import { useHq } from '../state/useHq';
 
-const URL = '/models/manager.glb';
+const URL = modelUrl('manager.glb');
 
 interface ManagerProps {
   position: [number, number, number];

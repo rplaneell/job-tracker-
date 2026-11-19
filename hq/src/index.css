@@ -116,6 +116,14 @@ canvas:active {
 .intro-veil {
   background: var(--sky);
 }
+.intro-back {
+  /* Behind the 3D office (which is in the page itself), above the page background. */
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
 .climb-world {
   position: absolute;
   inset: 0;
@@ -199,13 +207,6 @@ canvas:active {
   will-change: transform, opacity;
 }
 
-/* Warm light spilling from the lit office floor as the drone arrives, drawn on the tower itself so it moves with it. */
-.hq-halo {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  background: radial-gradient(closest-side, rgba(255, 214, 150, 0.85) 0%, rgba(255, 196, 120, 0.35) 55%, rgba(255, 196, 120, 0) 100%);
-}
 .intro-flash {
   position: absolute;
   inset: 0;

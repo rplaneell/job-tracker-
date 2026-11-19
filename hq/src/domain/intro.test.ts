@@ -9,6 +9,7 @@ import {
   POP_START,
   REDUCED_MS,
   SHADOWS_AT_MS,
+  TOWER_WINDOW,
   WAVES,
   WAVE_MS,
   climbSpeedAt,
@@ -19,16 +20,11 @@ import {
   introEnabledFromSearch,
   introFrame,
   popScale,
+  towerScale,
   revealLift,
   span,
   waveOf,
 } from './intro';
-
-/** The moment the tower is fully gone, found by scanning the frames. */
-function introFrameFadeEnd(): number {
-  for (let ms = 0; ms <= INTRO_MS; ms += 10) if (introFrame(ms, false).wallOpacity === 0) return ms;
-  return INTRO_MS;
-}
 
 const LAST_POP_END = POP_START.goblins + 3 * POP_START.goblinStep + POP_MS;
 
@@ -69,18 +65,61 @@ describe('the opening animation timing', () => {
 });
 
 describe('introFrame', () => {
-  it('starts at the street, looking steeply up, with a solid tower and the camera at the entrance', () => {
+  it('starts at the street, looking steeply up, off to the left, with a solid tower and no office showing', () => {
     const f = introFrame(0, false);
     expect(f.active).toBe(true);
     expect(f.climb).toBe(0);
     expect(f.speed).toBe(0);
     expect(f.tilt).toBeCloseTo(34);
-    expect(f.glow).toBe(0);
+    expect(f.glide).toBeCloseTo(1);
+    expect(f.office).toBe(0);
     expect(f.wallOpacity).toBe(1);
     expect(f.wallScale).toBe(1);
-    expect(f.zoomFactor).toBeCloseTo(2.4);
-    expect(f.slide).toBe(1);
-    expect(f.elevation).toBeCloseTo(0.5);
+    expect(f.zoomIn).toBe(1);
+    expect(f.yaw).toBeCloseTo(50);
+    expect(f.elevation).toBeCloseTo(0.32);
+  });
+
+  it('keeps the window of the tower and the screen size in proportion', () => {
+    expect(TOWER_WINDOW.w).toBeGreaterThan(TOWER_WINDOW.h);
+    expect(towerScale(1280, 720)).toBeCloseTo(720 / 730);
+    // On a narrow phone the window may not be wider than the screen.
+    expect(TOWER_WINDOW.w * towerScale(390, 844)).toBeLessThanOrEqual(390);
+    // On a very wide window the height decides.
+    expect(towerScale(3000, 600)).toBeCloseTo(600 / 730);
+  });
+
+  it('slides across from the left to face the window as it climbs, and never back', () => {
+    expect(introFrame(1700, false).glide).toBe(0);
+    let last = Infinity;
+    for (let ms = 0; ms <= INTRO_MS; ms += 10) {
+      const g = introFrame(ms, false).glide;
+      expect(g).toBeLessThanOrEqual(last);
+      last = g;
+    }
+  });
+
+  it('shows the real office through the window only as the drone arrives, with the window level by then', () => {
+    expect(introFrame(1300, false).office).toBe(0);
+    expect(introFrame(CLIMB_TO_MS, false).office).toBe(1);
+    expect(introFrame(1400, false).office).toBeGreaterThan(0);
+    // The drone has stopped rolling before the office shows, so the clipped 3D view lines up with the window.
+    expect(Math.abs(introFrame(1650, false).roll)).toBeLessThan(0.01);
+    expect(Math.abs(introFrame(1650, false).drift)).toBeLessThan(0.01);
+  });
+
+  it('swings the side view round from the left into the normal view, rising as it does', () => {
+    expect(introFrame(1600, false).yaw).toBeCloseTo(50);
+    expect(introFrame(2800, false).yaw).toBe(0);
+    let lastYaw = Infinity;
+    let lastElevation = -1;
+    for (let ms = 0; ms <= INTRO_MS; ms += 10) {
+      const f = introFrame(ms, false);
+      expect(f.yaw).toBeLessThanOrEqual(lastYaw);
+      expect(f.elevation).toBeGreaterThanOrEqual(lastElevation);
+      lastYaw = f.yaw;
+      lastElevation = f.elevation;
+    }
   });
 
   it('climbs steadily and never goes back down', () => {
@@ -117,22 +156,16 @@ describe('introFrame', () => {
     const rolls = Array.from({ length: 60 }, (_, i) => introFrame(CLIMB_FROM_MS + i * 20, false).roll);
     expect(Math.max(...rolls.map(Math.abs))).toBeGreaterThan(0.2);
     expect(Math.max(...rolls.map(Math.abs))).toBeLessThan(1.5);
-    expect(introFrame(2150, false).roll).toBeCloseTo(0, 10);
-    expect(introFrame(2150, false).drift).toBeCloseTo(0, 10);
+    expect(introFrame(1700, false).roll).toBeCloseTo(0, 10);
+    expect(introFrame(1700, false).drift).toBeCloseTo(0, 10);
   });
 
-  it('warms the glass with light as the drone arrives, then lets it go as the tower fades', () => {
-    expect(introFrame(1200, false).glow).toBe(0);
-    expect(introFrame(CLIMB_TO_MS, false).glow).toBeGreaterThan(0.9);
-    expect(introFrame(2300, false).glow).toBe(0);
-  });
-
-  it('never stops: the push in starts before the climb ends, and something is always moving', () => {
-    expect(introFrame(CLIMB_TO_MS - 200, false).wallScale).toBeGreaterThan(1);
+  it('never stops: the push in starts as the climb ends, and something is always moving', () => {
+    expect(introFrame(CLIMB_TO_MS + 100, false).wallScale).toBeGreaterThan(1);
     for (let ms = 200; ms < 2700; ms += 10) {
       const a = introFrame(ms, false);
       const b = introFrame(ms + 10, false);
-      const moved = Math.abs(b.climb - a.climb) + Math.abs(b.wallScale - a.wallScale) + Math.abs(b.zoomFactor - a.zoomFactor) + Math.abs(b.wallOpacity - a.wallOpacity);
+      const moved = Math.abs(b.climb - a.climb) + Math.abs(b.glide - a.glide) + Math.abs(b.wallScale - a.wallScale) + Math.abs(b.zoomIn - a.zoomIn) + Math.abs(b.wallOpacity - a.wallOpacity);
       expect(moved, `still at ${ms} ms`).toBeGreaterThan(0);
     }
   });
@@ -149,27 +182,27 @@ describe('introFrame', () => {
 
   it('flashes as the drone flies in', () => {
     expect(introFrame(1750, false).flash).toBe(0);
-    expect(introFrame(2000, false).flash).toBeGreaterThan(0.5);
+    expect(introFrame(2000, false).flash).toBeGreaterThan(0.3);
     expect(introFrame(2450, false).flash).toBe(0);
   });
 
   it('removes the tower by the time the office is built', () => {
-    expect(introFrame(2300, false).wallOpacity).toBe(0);
-    expect(introFrame(2350, false).wallScale).toBeCloseTo(4.2);
+    expect(introFrame(2500, false).wallOpacity).toBe(0);
+    expect(introFrame(2500, false).wallScale).toBeCloseTo(4.2);
   });
 
   it('pulls the camera back and ends on the normal overview exactly', () => {
     const end = introFrame(INTRO_MS, false);
     expect(end.active).toBe(false);
-    expect(end.zoomFactor).toBe(1);
-    expect(end.slide).toBe(0);
+    expect(end.zoomIn).toBe(0);
+    expect(end.yaw).toBe(0);
     expect(end.elevation).toBe(1);
     const settled = introFrame(2800, false);
-    expect(settled.zoomFactor).toBe(1);
-    expect(settled.slide).toBe(0);
+    expect(settled.zoomIn).toBe(0);
+    expect(settled.yaw).toBe(0);
     let last = Infinity;
     for (let ms = 0; ms <= INTRO_MS; ms += 20) {
-      const z = introFrame(ms, false).zoomFactor;
+      const z = introFrame(ms, false).zoomIn;
       expect(z).toBeLessThanOrEqual(last);
       last = z;
     }
@@ -181,8 +214,9 @@ describe('introFrame', () => {
     expect(start.speed).toBe(0);
     expect(start.tilt).toBe(0);
     expect(start.wallOpacity).toBe(0);
-    expect(start.zoomFactor).toBe(1);
-    expect(start.slide).toBe(0);
+    expect(start.zoomIn).toBe(0);
+    expect(start.yaw).toBe(0);
+    expect(start.office).toBe(1);
     expect(start.elevation).toBe(1);
     expect(introFrame(REDUCED_MS / 2, true).veil).toBeCloseTo(0.5);
     const end = introFrame(REDUCED_MS, true);
@@ -207,9 +241,9 @@ describe('the office building itself', () => {
     expect([...order].sort((a, b) => a - b)).toEqual(order);
   });
 
-  it('starts building as the drone arrives at the glass, before the tower has faded', () => {
-    expect(WAVES.floor.start).toBeGreaterThanOrEqual(CLIMB_TO_MS);
-    expect(WAVES.floor.start).toBeLessThan(introFrameFadeEnd());
+  it('builds while it shows through the window: the first group starts just as the office appears', () => {
+    expect(WAVES.floor.start).toBeLessThanOrEqual(1350);
+    expect(introFrame(WAVES.floor.start + WAVE_MS, false).office).toBeGreaterThan(0.5);
   });
 
   it('is complete when the camera settles', () => {

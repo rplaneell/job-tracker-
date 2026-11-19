@@ -69,6 +69,8 @@ export function Scene({ managerLine, corner, scoutStatus, cvStatus, deskStatus, 
         near: -80,
         far: 160,
       }}
+      // During the opening animation the office shows only through the window of the tower (the page sets these two values).
+      style={{ clipPath: 'var(--office-clip, none)', opacity: 'var(--office-opacity, 1)' }}
       gl={{ alpha: true, antialias: true, toneMapping: ACESFilmicToneMapping, outputColorSpace: SRGBColorSpace, toneMappingExposure: 1.12 }}
       onPointerMissed={() => useHq.getState().leave()}
     >

@@ -1,3 +1,5 @@
+import { TOWER_WINDOW } from '../domain/intro';
+
 /**
  * The tower the drone climbs, the city behind it and the clouds in front of it. They are painted once with the browser's own
  * drawing tools when the page opens, so there are no image files to download. Sizes are in pixels of the painted picture.
@@ -8,10 +10,10 @@ export const FACADE = {
   h: 3400,
   /** Where the drone starts: the point of the tower in the middle of the screen at the street. */
   startY: 2880,
-  /** Where it ends: the middle of the lit office floor. */
-  endY: 406,
-  /** The part of the office glass the drone ends up facing, in the same pixels. Its size sets how big the tower appears. */
-  focus: { x: 450, y: 216, w: 300, h: 380 },
+  /** Where it ends: the middle of the big window of the office floor. */
+  endY: 387,
+  /** The window of the office floor, in the same pixels. It is left see through: the real 3D office shows in it. */
+  window: { x: 214, y: 178, w: TOWER_WINDOW.w, h: TOWER_WINDOW.h },
 };
 
 /** A tiny random number generator, so every painting is the same each time. */
@@ -143,57 +145,69 @@ export function drawFacade(): HTMLCanvasElement | null {
   ctx.fillRect(0, TOP_FLOOR_BOTTOM, W, FLOORS * FLOOR_H);
   ctx.restore();
 
-  // The office floor: tall, warm and lit, with the same glass skin over it.
-  const top = ROOF + 50;
-  const office = ctx.createLinearGradient(0, top, 0, TOP_FLOOR_BOTTOM - 24);
-  office.addColorStop(0, '#fff1d2');
-  office.addColorStop(1, '#f1bd78');
-  ctx.fillStyle = office;
-  ctx.fillRect(0, top, W, TOP_FLOOR_BOTTOM - 24 - top);
-  ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  for (let x = 40; x < W; x += 150) ctx.fillRect(x, top + 22, 70, 5); // ceiling lights
-  // Desks and monitors seen from outside, small and dark against the light.
-  for (let x = 20; x + 130 <= W - 20; x += 190) {
-    ctx.fillStyle = '#7a5538';
-    ctx.fillRect(x, 520, 130, 12);
-    ctx.fillRect(x + 8, 532, 6, 64);
-    ctx.fillRect(x + 116, 532, 6, 64);
-    ctx.fillStyle = '#2b3138';
-    ctx.fillRect(x + 28, 480, 44, 34);
-    ctx.fillStyle = '#7fb3e0';
-    ctx.fillRect(x + 31, 483, 38, 26);
-    ctx.fillStyle = '#3d4a3a';
-    ctx.beginPath();
-    ctx.arc(x + 100, 500, 16, 0, Math.PI * 2);
-    ctx.fill();
+  // The office floor: one big window, left empty (see through) so the real 3D office shows in it, in a steel frame.
+  const win = { x: FACADE.window.x - TOWER_X, y: FACADE.window.y, w: FACADE.window.w, h: FACADE.window.h };
+  const frameBottom = TOP_FLOOR_BOTTOM - 24;
+  ctx.fillStyle = '#2f353c';
+  ctx.fillRect(0, win.y - 16, W, 16); // beam above the window
+  ctx.fillStyle = 'rgba(255,255,255,0.28)';
+  ctx.fillRect(0, win.y - 16, W, 2);
+  for (const x of [0, win.x + win.w]) {
+    // The corner columns of the tower on both sides of the window.
+    const col = ctx.createLinearGradient(x, 0, x + win.x, 0);
+    col.addColorStop(0, '#444b53');
+    col.addColorStop(0.5, '#262b31');
+    col.addColorStop(1, '#3a4047');
+    ctx.fillStyle = col;
+    ctx.fillRect(x, win.y - 16, win.x, frameBottom - win.y + 16);
   }
-  const sheen = ctx.createLinearGradient(0, top, 0, TOP_FLOOR_BOTTOM - 24);
-  sheen.addColorStop(0, 'rgba(190,220,245,0.34)');
-  sheen.addColorStop(0.6, 'rgba(255,255,255,0.05)');
-  sheen.addColorStop(1, 'rgba(120,160,195,0.2)');
+  // A few thin mullions between the big panes of the window.
+  for (let c = 1; c < TOWER_W / 200; c++) {
+    const x = c * 200;
+    if (x <= win.x || x >= win.x + win.w) continue;
+    ctx.fillStyle = '#20252b';
+    ctx.fillRect(x - 3, win.y, 6, win.h);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillRect(x + 2, win.y, 1, win.h);
+  }
+  // A faint sheen on the glass, the sky reflected in it, so it reads as glass and not as a hole.
+  const sheen = ctx.createLinearGradient(0, win.y, 0, win.y + win.h);
+  sheen.addColorStop(0, 'rgba(190,222,248,0.3)');
+  sheen.addColorStop(0.5, 'rgba(255,255,255,0.04)');
+  sheen.addColorStop(1, 'rgba(120,165,205,0.16)');
   ctx.fillStyle = sheen;
-  ctx.fillRect(0, top, W, TOP_FLOOR_BOTTOM - 24 - top);
-  for (let c = 0; c <= TOWER_W / 100; c++) {
-    ctx.fillStyle = '#2a2f35';
-    ctx.fillRect(c * 100 - 3, top, 6, TOP_FLOOR_BOTTOM - 24 - top);
-    ctx.fillStyle = 'rgba(255,255,255,0.22)';
-    ctx.fillRect(c * 100 + 2, top, 1, TOP_FLOOR_BOTTOM - 24 - top);
+  ctx.fillRect(win.x, win.y, win.w, win.h);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(win.x, win.y, win.w, win.h);
+  ctx.clip();
+  ctx.globalCompositeOperation = 'screen';
+  for (const x of [win.x + 120, win.x + 470]) {
+    const band = ctx.createLinearGradient(x, 0, x + 170, 0);
+    band.addColorStop(0, 'rgba(255,255,255,0)');
+    band.addColorStop(0.5, 'rgba(255,255,255,0.13)');
+    band.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = band;
+    ctx.setTransform(1, 0, -0.36, 1, TOWER_X, 0);
+    ctx.fillRect(x, win.y, 170, win.h);
   }
-  // Steel beam above and a glowing amber edge on the slab below, so the floor reads from far away.
-  ctx.fillStyle = '#3a4047';
-  ctx.fillRect(0, top - 8, W, 8);
+  ctx.setTransform(1, 0, 0, 1, TOWER_X, 0);
+  ctx.restore();
+  // The slab under the window, with a glowing amber edge so the floor reads from far away.
   ctx.fillStyle = '#383e45';
-  ctx.fillRect(0, TOP_FLOOR_BOTTOM - 24, W, 24);
+  ctx.fillRect(0, frameBottom, W, 24);
+  ctx.fillStyle = '#9aa3ab';
+  ctx.fillRect(0, frameBottom, W, 2);
   ctx.save();
   ctx.shadowColor = 'rgba(255,170,60,0.95)';
   ctx.shadowBlur = 26;
   ctx.fillStyle = '#ffb347';
-  ctx.fillRect(0, TOP_FLOOR_BOTTOM - 20, W, 5);
+  ctx.fillRect(0, frameBottom + 4, W, 5);
   ctx.restore();
 
   // The roof edge and its parapet.
   ctx.fillStyle = '#2b3138';
-  ctx.fillRect(0, ROOF, W, 50 - 8);
+  ctx.fillRect(0, ROOF, W, win.y - 16 - ROOF);
   ctx.fillStyle = '#a9b2ba';
   ctx.fillRect(0, ROOF, W, 3);
   ctx.fillStyle = '#555c64';

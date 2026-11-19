@@ -84,10 +84,18 @@ def test_a_senior_role_in_an_alert_is_never_stored_or_queued():
     assert [r["source_id"] for r in db.tables["roles"]] == ["3"]
 
 
-def test_roles_outside_the_five_regions_are_not_stored():
+def test_alert_roles_are_stored_wherever_they_are_but_only_roles_in_the_regions_are_queued_for_scouting():
     db = FakeClient()
-    out = alerts.add_alerts(db, [item(location="Paris, France"), item(url="https://www.linkedin.com/jobs/view/2/", location="Madrid, Spain"), item(url="https://www.linkedin.com/jobs/view/3/", location="")], RULES, NOW)
-    assert db.tables["roles"] == [] and out["dropped"] == {"outside your regions": 3}
+    out = alerts.add_alerts(db, [item(url="https://www.linkedin.com/jobs/view/1/", location="Paris, France"), item(url="https://www.linkedin.com/jobs/view/2/", location="Madrid, Spain"), item(url="https://www.linkedin.com/jobs/view/3/", location=""), item(url="https://www.linkedin.com/jobs/view/4/", location="Barcelona, Spain")], RULES, NOW)
+    assert out["stored_new"] == 4 and out["dropped"] == {}
+    assert out["queued_for_scouting"] == 1
+    assert sorted(r["source_id"] for r in db.tables["roles"]) == ["1", "2", "3", "4"]
+
+
+def test_every_type_of_position_in_an_alert_is_stored():
+    db = FakeClient()
+    out = alerts.add_alerts(db, [item(title="Warehouse Operative"), item(url="https://www.linkedin.com/jobs/view/2/", title="Head Chef")], RULES, NOW)
+    assert out["stored_new"] == 2 and out["queued_for_scouting"] == 0
 
 
 def test_the_second_time_the_same_alert_arrives_nothing_new_is_queued():

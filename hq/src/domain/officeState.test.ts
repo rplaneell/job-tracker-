@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { OfficeData } from '../data/officeData';
 import { buildOfficeState } from './officeState';
-import { SAMPLE_CV_DRAFTS, SAMPLE_SCOUT_ITEMS } from './sample';
+import { SAMPLE_ALERTS, SAMPLE_CV_DRAFTS, SAMPLE_SCOUT_ITEMS } from './sample';
 
 const NOW = new Date('2026-11-19T10:00:00Z');
 const live = (over: Partial<OfficeData> = {}): OfficeData => ({
-  now: NOW, scoutTasks: [], scoutItems: [], cvTasks: [], cvDrafts: [], applications: [], priorities: [], ...over,
+  now: NOW, scoutTasks: [], scoutItems: [], cvTasks: [], cvDrafts: [], applications: [], priorities: [], alerts: [], lastIntake: null, ...over,
 });
 
 describe('buildOfficeState', () => {
@@ -50,5 +50,27 @@ describe('buildOfficeState', () => {
   });
   it('greets by the time of day of the data', () => {
     expect(buildOfficeState('live', live(), new Date('2026-11-19T08:00:00')).line.startsWith('Good morning')).toBe(true);
+  });
+  it('shows the real LinkedIn alerts and the real intake state', () => {
+    const alert = { id: 'a', title: 'Data Science Trainee', company: 'Novartis España', city: 'Barcelona', href: 'https://www.linkedin.com/jobs/view/1/', fits: true, score: 70, shortlisted: true, firstSeen: '2026-11-19T07:40:00Z' };
+    const s = buildOfficeState('live', live({ alerts: [alert], lastIntake: { at: '2026-11-19T07:40:00Z', received: 12, storedNew: 6, queued: 5 } }), NOW);
+    expect(s.alerts).toEqual([alert]);
+    expect(s.linkedinStatus).toBe('completed');
+    expect(s.lastIntake?.storedNew).toBe(6);
+  });
+  it('shows no alerts and an idle desk when nothing was collected, loading or unreadable, and never sample alerts', () => {
+    expect(buildOfficeState('live', live(), NOW).linkedinStatus).toBe('idle');
+    for (const mode of ['loading', 'unavailable'] as const) {
+      const s = buildOfficeState(mode, null, NOW);
+      expect(s.alerts).toEqual([]);
+      expect(s.lastIntake).toBeNull();
+      expect(s.linkedinStatus).toBe('idle');
+    }
+    expect(buildOfficeState('live', live(), NOW).alerts).not.toEqual(SAMPLE_ALERTS);
+  });
+  it('uses clearly labelled sample alerts only in sample mode', () => {
+    const s = buildOfficeState('sample', null, NOW);
+    expect(s.alerts).toEqual(SAMPLE_ALERTS);
+    expect(s.simulated).toBe(true);
   });
 });

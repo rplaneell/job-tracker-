@@ -32,6 +32,19 @@ describe("readOffice", () => {
     expect(out.verdicts).toEqual([]);
     expect(out.versions).toEqual([]);
     expect(out.newRoles).toEqual([]);
+    expect(out.alerts).toEqual([]);
+    expect(out.intakes).toEqual([]);
+  });
+  it("reads this week's LinkedIn alert roles with their Scouting verdicts, and the latest intake runs from the audit log", async () => {
+    const calls: Call[] = [];
+    await readOffice(fakeClient({}, calls), NOW);
+    const alerts = calls.find((c) => c.table === "roles" && c.filters.includes("eq source linkedin_alert"))!;
+    expect(alerts.columns).toContain("scout_verdicts(score,shortlisted)");
+    expect(alerts.filters).toEqual(expect.arrayContaining(["eq status open", "gte first_seen"]));
+    const intakes = calls.find((c) => c.table === "audit_log")!;
+    expect(intakes.filters).toEqual(["eq action alerts_add"]);
+    expect(intakes.columns).toBe("at,detail");
+    expect(intakes.order).toBe("at");
   });
   it("only asks for roles that fit the profile, are open and were first seen in the last three days", async () => {
     const calls: Call[] = [];
@@ -42,7 +55,7 @@ describe("readOffice", () => {
   it("caps every read, so one big table never makes a huge reply", async () => {
     const calls: Call[] = [];
     await readOffice(fakeClient({}, calls), NOW);
-    expect(calls.length).toBe(5);
+    expect(calls.length).toBe(7);
     for (const c of calls) expect(c.limit).toBeGreaterThan(0);
     for (const c of calls) expect(c.limit).toBeLessThanOrEqual(500);
   });

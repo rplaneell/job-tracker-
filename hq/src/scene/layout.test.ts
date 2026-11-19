@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CREW_SIZE } from '../domain/goblins';
-import { GLASS_OFFICE, GOBLIN_RADIUS } from './layout';
+import { GLASS_OFFICE, GOBLIN_RADIUS, LINKEDIN_STATION } from './layout';
 
 const { box, obstacles, spots } = GLASS_OFFICE;
 
@@ -73,5 +73,45 @@ describe('CV Tailor station', () => {
 
   it('is at least a metre from every goblin', () => {
     for (const s of GLASS_OFFICE.spots) expect(Math.hypot(spot.x - s.x, spot.z - s.z)).toBeGreaterThan(1);
+  });
+});
+
+describe('LinkedIn desk', () => {
+  const { spot, obstacles, radius, table } = LINKEDIN_STATION;
+
+  it('is on the floor of the building', () => {
+    for (const p of [spot, { x: table.minX, z: table.minZ }, { x: table.maxX, z: table.maxZ }]) {
+      expect(p.x).toBeGreaterThan(-9.9);
+      expect(p.x).toBeLessThan(-0.1);
+      expect(p.z).toBeGreaterThan(0.1);
+      expect(p.z).toBeLessThan(9.9);
+    }
+  });
+
+  it.each(obstacles.map((o) => [o.name, o] as const))('keeps the person clear of the %s', (_name, o) => {
+    const inside = spot.x > o.minX - radius && spot.x < o.maxX + radius && spot.z > o.minZ - radius && spot.z < o.maxZ + radius;
+    expect(inside).toBe(false);
+  });
+
+  it('keeps the person clear of its own table, with the table in front of them from the default camera', () => {
+    expect(spot.z + radius).toBeLessThan(table.minZ);
+    expect(spot.x).toBeGreaterThan(table.minX);
+    expect(spot.x).toBeLessThan(table.maxX);
+  });
+
+  it('is outside the glass Scouting room, away from the reception desk, the CV Tailor and every goblin spot', () => {
+    const g = GLASS_OFFICE.box;
+    expect(spot.x > g.minX && spot.x < g.maxX && spot.z > g.minZ && spot.z < g.maxZ).toBe(false);
+    expect(Math.hypot(spot.x - OFFICE_PLAN.desk.center[0], spot.z - OFFICE_PLAN.desk.center[2])).toBeGreaterThan(2);
+    expect(Math.hypot(spot.x - CV_STATION.spot.x, spot.z - CV_STATION.spot.z)).toBeGreaterThan(2);
+    for (const s of GLASS_OFFICE.spots) expect(Math.hypot(spot.x - s.x, spot.z - s.z)).toBeGreaterThan(2);
+  });
+
+  it('looks at the middle of the desk when the camera is on it', () => {
+    const [cx, , cz] = LINKEDIN_STATION.center;
+    expect(cx).toBeGreaterThan(table.minX - 0.5);
+    expect(cx).toBeLessThan(table.maxX + 0.5);
+    expect(cz).toBeGreaterThan(spot.z - 0.5);
+    expect(cz).toBeLessThan(table.maxZ + 0.5);
   });
 });

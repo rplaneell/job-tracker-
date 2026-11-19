@@ -256,3 +256,6 @@ tr:last-child td { border-bottom: 0; }
   .login-path li { padding-bottom: calc(var(--i) * 8px); }
   .login-path li:not(:last-child)::before { bottom: calc(var(--i) * 8px + 6px); }
 }
+.tag.linkedin { background: #e8f1fb; color: #0a66c2; border-color: #bcd6f1; }
+:root[data-theme="dark"] .tag.linkedin { background: #10263a; color: #7fb6ee; border-color: #20415f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.linkedin { background: #10263a; color: #7fb6ee; border-color: #20415f; } }

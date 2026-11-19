@@ -10,6 +10,7 @@ import { Credits } from '../ui/Credits';
 import { CvPanel } from '../ui/CvPanel';
 import { ReceptionPanel } from '../ui/ReceptionPanel';
 import { Intro } from '../ui/Intro';
+import { LinkedInPanel } from '../ui/LinkedInPanel';
 import { ScoutPanel } from '../ui/ScoutPanel';
 
 /** Optional ?corner=0..3 picks which side of the office the camera looks from. */
@@ -58,7 +59,7 @@ export function App() {
   // A link such as ?focus=reception opens that department straight away.
   useEffect(() => {
     const wanted = new URLSearchParams(window.location.search).get('focus');
-    if (wanted === 'reception' || wanted === 'scouting' || wanted === 'cv') openDepartment(wanted);
+    if (wanted === 'reception' || wanted === 'scouting' || wanted === 'cv' || wanted === 'linkedin') openDepartment(wanted);
   }, [openDepartment]);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export function App() {
 
   return (
     <div ref={root} className="relative h-full w-full">
-      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} simulated={state.simulated} />
+      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} linkedinStatus={state.linkedinStatus} simulated={state.simulated} />
 
       <div className={`chrome pointer-events-none absolute inset-0 ${chromeOn ? '' : 'chrome-off'}`}>
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
@@ -165,6 +166,13 @@ export function App() {
           </button>
           <button
             type="button"
+            onClick={() => openDepartment('linkedin')}
+            className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
+          >
+            LinkedIn
+          </button>
+          <button
+            type="button"
             onClick={() => setLowPower(!lowPower)}
             aria-pressed={lowPower}
             className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
@@ -182,6 +190,7 @@ export function App() {
 
         {focus === 'reception' && <ReceptionPanel view={view} now={data?.now ?? now} source={state.source} />}
         {focus === 'cv' && <CvPanel status={cv} drafts={state.cvDrafts} source={state.source} onClose={leave} />}
+        {focus === 'linkedin' && <LinkedInPanel status={state.linkedinStatus} alerts={state.alerts} intake={state.lastIntake} source={state.source} onClose={leave} />}
         {focus === 'scouting' && <ScoutPanel status={scout} items={state.scoutItems} source={state.source} onClose={leave} />}
       </div>
       <Credits />

@@ -11,7 +11,7 @@ from jobtracker.run import run_collection
 from jobtracker.store import Store
 
 NOW = datetime(2026, 11, 17, 6, 0, tzinfo=timezone.utc)
-RULES = Rules(["Switzerland"], ["analyst"], ["senior"], {"consulting": ["analyst"]}, {"internship": ["intern"]})
+RULES = Rules(["Switzerland"], ["analyst"], ["senior"], {"consulting": ["analyst"]}, {"internship": ["intern"]}, drop_title_words=["senior"])
 
 
 def role(sid, title="Analyst", country="Switzerland", source="greenhouse", company="Acme"):
@@ -88,7 +88,8 @@ def test_only_new_matched_roles_returned_for_email():
     adapter = lambda _c, s: [role("1"), role("2", title="Senior Analyst"), role("3", country="France")]
     first, client, _ = go([src("Acme")], {"greenhouse": adapter})
     assert [r.source_id for r in first.new_matched] == ["1"]
-    assert first.total_seen == 3 and len(client.tables["roles"]) == 2  # the French role is read but not stored
+    # the French role is read but not stored, and the senior role is never stored either: the owner does not want senior roles at all
+    assert first.total_seen == 3 and len(client.tables["roles"]) == 1
     second, _, _ = go([src("Acme")], {"greenhouse": adapter}, client=client)
     assert second.new_matched == []
 
@@ -177,3 +178,14 @@ def test_roles_in_spanish_cities_other_than_barcelona_are_not_stored():
     client = FakeClient()
     run_collection([src("Acme")], limited, Store(client), httpx.Client(), NOW, lambda _s: None, adapters={"greenhouse": lambda _c, _s: roles})
     assert sorted(r["source_id"] for r in client.tables["roles"]) == ["1", "3"]
+
+
+def test_senior_roles_are_never_stored_and_one_stored_earlier_is_closed():
+    client = FakeClient()
+    go([src("Acme")], {"greenhouse": lambda _c, s: [role("1", title="Analyst"), role("2", title="Analyst")]}, client=client)
+    result, _, _ = go([src("Acme")], {"greenhouse": lambda _c, s: [role("1", title="Analyst"), role("2", title="Senior Analyst"), role("3", title="Senior Strategy Analyst")]}, client=client)
+    by_id = {r["source_id"]: r for r in client.tables["roles"]}
+    assert set(by_id) == {"1", "2"}  # 3 was never stored
+    assert by_id["1"]["status"] == "open"
+    assert by_id["2"]["status"] == "closed"  # it came back as a senior role, so it is no longer seen
+    assert result.total_seen == 3

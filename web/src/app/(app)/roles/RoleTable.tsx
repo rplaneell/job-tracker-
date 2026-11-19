@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { applyFilters, cityOptions, countByCountry, type RoleRow } from "@/lib/filters";
+import { applyFilters, cityOptions, countByCountry, isLinkedInAlert, type RoleRow } from "@/lib/filters";
 import { COUNTRY_CODE, FIELD, LEVEL, ago, where } from "@/lib/labels";
 import { safeHref } from "@/lib/safeHref";
 import { STAGES, type Stage } from "@/lib/stages";
@@ -12,6 +12,7 @@ const PAGE = 40;
 function Tags({ role, stage }: { role: RoleRow; stage?: string }) {
   return (
     <div className="tags">
+      {isLinkedInAlert(role) && <span className="tag linkedin">LinkedIn alert</span>}
       {role.matched && <span className="tag match">Fits your profile</span>}
       {stage && <span className="tag saved">{stage}</span>}
       {role.field_tag && <span className="tag">{FIELD[role.field_tag] ?? role.field_tag}</span>}
@@ -23,6 +24,7 @@ function Tags({ role, stage }: { role: RoleRow; stage?: string }) {
 export default function RoleTable({ roles, stages: initialStages }: { roles: RoleRow[]; stages: Record<string, string> }) {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [source, setSource] = useState<"" | "linkedin" | "boards">("");
   const [field, setField] = useState("");
   const [search, setSearch] = useState("");
   const [matchedOnly, setMatchedOnly] = useState(false);
@@ -32,7 +34,7 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
   const [error, setError] = useState("");
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  const list = useMemo(() => applyFilters(roles, { country, city, field, search, matchedOnly }), [roles, country, city, field, search, matchedOnly]);
+  const list = useMemo(() => applyFilters(roles, { country, city, source, field, search, matchedOnly }), [roles, country, city, source, field, search, matchedOnly]);
   const cities = useMemo(() => cityOptions(roles, country || undefined), [roles, country]);
   const counts = useMemo(() => countByCountry(roles), [roles]);
   const open = openId ? roles.find((r) => r.id === openId) ?? null : null;
@@ -84,6 +86,11 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
               </button>
             ))}
           </div>
+          <select id="role-source" aria-label="Source" value={source} onChange={(e) => { setSource(e.target.value as "" | "linkedin" | "boards"); reset(); }}>
+            <option value="">All sources</option>
+            <option value="linkedin">LinkedIn alerts</option>
+            <option value="boards">Company job boards</option>
+          </select>
           <select id="role-city" aria-label="City" value={city} onChange={(e) => { setCity(e.target.value); reset(); }}>
             <option value="">All cities</option>
             {cities.map((c) => <option key={c.city} value={c.city}>{c.city} ({c.count})</option>)}

@@ -1,9 +1,24 @@
 import type { CvDraft } from '../ui/CvPanel';
 import type { AgentTask } from '../domain/scouting';
 import { STAGES, type Priority, type Stage } from '../domain/reception';
+import { describeIntake, safeLinkedInHref, type IntakeCounts } from '../domain/linkedin';
 import { toItems, toTasks, type ScoutItem } from './scoutData';
 
 /** Everything the office shows, read from the owner's own database through the dashboard's /api/office. */
+/** One role that came from a LinkedIn alert email, with its Scouting verdict if there is one. */
+export interface LinkedInAlert {
+  id: string;
+  title: string;
+  company: string;
+  city: string | null;
+  /** The plain LinkedIn job page, or null when the stored link is not one. */
+  href: string | null;
+  fits: boolean;
+  score: number | null;
+  shortlisted: boolean;
+  firstSeen: string;
+}
+
 export interface OfficeData {
   now: Date;
   scoutTasks: AgentTask[];
@@ -12,6 +27,8 @@ export interface OfficeData {
   cvDrafts: CvDraft[];
   applications: { stage: Stage }[];
   priorities: Priority[];
+  alerts: LinkedInAlert[];
+  lastIntake: (IntakeCounts & { at: string }) | null;
 }
 
 const DAY = 86_400_000;
@@ -32,6 +49,36 @@ function toDrafts(rows: unknown[]): CvDraft[] {
     drafts.push({ id, status: row.status, title: text(role.title) ?? 'Unknown role', company: text(role.company) ?? '' });
   }
   return drafts;
+}
+
+function toAlerts(rows: unknown[]): LinkedInAlert[] {
+  const alerts: LinkedInAlert[] = [];
+  for (const row of rows) {
+    if (!isRecord(row)) continue;
+    const id = text(row.id);
+    const title = text(row.title);
+    if (!id || !title) continue;
+    const verdict = list(row.scout_verdicts).find(isRecord);
+    const score = verdict && typeof verdict.score === 'number' && Number.isInteger(verdict.score) && verdict.score >= 0 && verdict.score <= 100 ? verdict.score : null;
+    alerts.push({
+      id,
+      title,
+      company: text(row.company) ?? '',
+      city: text(row.city),
+      href: safeLinkedInHref(row.url),
+      fits: row.matched === true,
+      score,
+      shortlisted: verdict?.shortlisted === true,
+      firstSeen: text(row.first_seen) ?? '',
+    });
+  }
+  return alerts;
+}
+
+function toLastIntake(rows: unknown[]): OfficeData['lastIntake'] {
+  const row = rows.find(isRecord);
+  const at = row ? text(row.at) : null;
+  return row && at && !Number.isNaN(Date.parse(at)) ? { at, ...describeIntake(row.detail) } : null;
 }
 
 function sentence(cities: string[]): string {
@@ -89,6 +136,8 @@ export function parseOfficePayload(raw: unknown): OfficeData | null {
     cvDrafts: toDrafts(list(raw.versions)),
     applications: applications.filter(isRecord).filter((a) => (STAGES as readonly string[]).includes(a.stage as string)).map((a) => ({ stage: a.stage as Stage })),
     priorities: buildPriorities(applications, list(raw.newRoles), now),
+    alerts: toAlerts(list(raw.alerts)),
+    lastIntake: toLastIntake(list(raw.intakes)),
   };
 }
 

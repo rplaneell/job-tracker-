@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { applyFilters, cityOptions, countByCountry, type RoleRow } from "./filters";
+import { applyFilters, cityOptions, countByCountry, isLinkedInAlert, isUnwantedTitle, type RoleRow } from "./filters";
 
 const row = (over: Partial<RoleRow>): RoleRow => ({
-  id: "1", company: "Acme", title: "Business Analyst", city: "Zurich", country: "Switzerland",
+  source: "greenhouse", id: "1", company: "Acme", title: "Business Analyst", city: "Zurich", country: "Switzerland",
   field_tag: "consulting", level_tag: "internship", matched: true, status: "open",
   first_seen: "2026-11-10T00:00:00Z", posted_at: null, url: "https://x", ...over,
 });
@@ -86,5 +86,39 @@ describe("cityOptions", () => {
   it("only lists cities of the chosen country", () => {
     expect(cityOptions(rows, "Switzerland")).toEqual([{ city: "Zurich", count: 2 }, { city: "Geneva", count: 1 }]);
     expect(cityOptions(rows, "Denmark")).toEqual([]);
+  });
+});
+
+describe("source filter", () => {
+  const rows = [
+    row({ id: "1", source: "greenhouse" }),
+    row({ id: "2", source: "linkedin_alert" }),
+    row({ id: "3", source: "lever" }),
+  ];
+  it("knows which roles came from a LinkedIn alert", () => {
+    expect(isLinkedInAlert(rows[1])).toBe(true);
+    expect(isLinkedInAlert(rows[0])).toBe(false);
+  });
+  it("shows only LinkedIn alerts, or only company boards, or everything", () => {
+    expect(applyFilters(rows, { ...none, source: "linkedin" }).map((r) => r.id)).toEqual(["2"]);
+    expect(applyFilters(rows, { ...none, source: "boards" }).map((r) => r.id).sort()).toEqual(["1", "3"]);
+    expect(applyFilters(rows, { ...none, source: "" })).toHaveLength(3);
+    expect(applyFilters(rows, none)).toHaveLength(3);
+  });
+  it("keeps alert roles in the same list as the others, sorted by the same rules", () => {
+    const mixed = [row({ id: "board", first_seen: "2026-11-10T00:00:00Z" }), row({ id: "alert", source: "linkedin_alert", first_seen: "2026-11-12T00:00:00Z" })];
+    expect(applyFilters(mixed, none).map((r) => r.id)).toEqual(["alert", "board"]);
+  });
+});
+
+describe("senior roles are never shown", () => {
+  it("recognises senior in the title as a whole word, in any case, and sr as well", () => {
+    for (const t of ["Senior Analyst", "Analyst, Senior", "SENIOR consultant", "Sr. Consultant", "Sr Analyst"]) expect(isUnwantedTitle(t), t).toBe(true);
+    for (const t of ["Seniority Analyst", "Junior Analyst", "Associate Consultant", "Srinagar Analyst", ""]) expect(isUnwantedTitle(t), t).toBe(false);
+  });
+  it("hides senior roles from the list even if they were stored earlier, whatever else is chosen", () => {
+    const rows = [row({ id: "1", title: "Senior Consultant" }), row({ id: "2", title: "Associate Consultant" }), row({ id: "3", title: "Sr. Analyst", matched: false })];
+    expect(applyFilters(rows, none).map((r) => r.id)).toEqual(["2"]);
+    expect(applyFilters(rows, { ...none, matchedOnly: true }).map((r) => r.id)).toEqual(["2"]);
   });
 });

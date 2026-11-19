@@ -22,7 +22,7 @@ from urllib.parse import urlsplit
 
 from jobtracker.adapters.locations import parse_location
 from jobtracker.models import Role
-from jobtracker.rules import Rules, in_region, load_rules, matches, tag_field, tag_level
+from jobtracker.rules import Rules, in_region, is_dropped, load_rules, matches, tag_field, tag_level
 from jobtracker.store import Store
 
 ALERT_SOURCE = "linkedin_alert"
@@ -97,9 +97,12 @@ def clean_alert_roles(items: Any) -> tuple[list[Role], dict[str, int]]:
 def add_alerts(db: Any, items: Any, rules: Rules, now: datetime) -> dict:
     """Stores the roles that are in the owner's regions and queues the ones that fit the profile for Scouting."""
     roles, dropped = clean_alert_roles(items)
-    kept = [r for r in roles if in_region(r, rules)]
-    if len(roles) != len(kept):
-        dropped["outside your regions"] = len(roles) - len(kept)
+    wanted = [r for r in roles if not is_dropped(r, rules)]
+    if len(wanted) != len(roles):
+        dropped["title word you never want"] = len(roles) - len(wanted)
+    kept = [r for r in wanted if in_region(r, rules)]
+    if len(wanted) != len(kept):
+        dropped["outside your regions"] = len(wanted) - len(kept)
     matched = {r.key: matches(r, rules) for r in kept}
     tags = {r.key: (tag_field(r, rules), tag_level(r, rules)) for r in kept}
     store = Store(db)

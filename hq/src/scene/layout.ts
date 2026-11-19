@@ -23,6 +23,8 @@ export const CAMERA = {
   scoutFocusFactor: 3.2,
   /** The CV Tailor stands in the open, so a medium zoom keeps the desks around it in view. */
   cvFocusFactor: 2.8,
+  /** The LinkedIn desk is a small table in the open, so it zooms like the CV Tailor. */
+  linkedinFocusFactor: 3,
   /** Width of the side panel in pixels, so the focused desk can sit beside it. */
   panelPx: 400,
 };
@@ -81,4 +83,61 @@ export const CV_STATION = {
     { name: 'east desk island', minX: -5.0, maxX: -3.5, minZ: 2.85, maxZ: 5.0 },
     { name: 'east island chair', minX: -5.65, maxX: -4.95, minZ: 2.95, maxZ: 3.65 },
   ] satisfies { name: string; minX: number; maxX: number; minZ: number; maxZ: number }[],
+};
+
+/**
+ * The LinkedIn desk: a table with LinkedIn merchandise and the person who runs it, on the open floor just north of the meeting
+ * room, well away from the glass Scouting room. Boxes were measured from a plan view of the office model, like the other places.
+ */
+export const LINKEDIN_STATION = {
+  /** Where the camera looks when the LinkedIn panel is open. */
+  center: [-8.7, 0.9, 5.6] as const,
+  /** Where the person stands: behind the table, facing the camera. */
+  spot: { x: -9.15, z: 5.1, rotationY: Math.PI / 4 },
+  radius: 0.3,
+  /** The merchandise table, in metres. */
+  table: { minX: -9.25, maxX: -7.95, minZ: 5.5, maxZ: 6.2, height: 0.76 },
+  obstacles: [
+    { name: 'west desk island', minX: -7.95, maxX: -6.5, minZ: 2.85, maxZ: 5.0 },
+    { name: 'left wall bench', minX: -10.0, maxX: -9.75, minZ: 4.7, maxZ: 5.8 },
+    { name: 'meeting room glass wall', minX: -10.0, maxX: -2.7, minZ: 6.85, maxZ: 7.0 },
+  ] satisfies { name: string; minX: number; maxX: number; minZ: number; maxZ: number }[],
+};
+
+/** The realistic goblin is about 0.5 m tall and 0.3 m across at the feet, so it needs 0.15 m either side of where it stands. */
+export const ROAM_RADIUS = 0.15;
+
+/**
+ * Is the floor point hidden behind the solid door from the default camera? The camera looks along (-1, -1) in the floor plane, so
+ * x minus z stays the same along a line of sight. The door spans x -8.45 to -7.55 in the south wall at z 1.75, so it hides lines
+ * with x - z between -10.2 and -9.3.
+ */
+export function inDoorBlindZone(x: number, z: number, radius: number = ROAM_RADIUS): boolean {
+  const line = x - z;
+  const lo = -10.2 - radius * Math.SQRT2;
+  const hi = -9.3 + radius * Math.SQRT2;
+  return !(line < lo || line > hi || z > 1.75);
+}
+
+/** Can a goblin walk through here: inside its glass office and clear of the furniture? It may pass behind the solid door. */
+export function isWalkableForGoblin(x: number, z: number, radius: number = ROAM_RADIUS): boolean {
+  const b = GLASS_OFFICE.box;
+  if (x < b.minX + radius || x > b.maxX - radius || z < b.minZ + radius || z > b.maxZ - radius) return false;
+  for (const o of GLASS_OFFICE.obstacles) {
+    // Touching the edge of the clearance box is allowed; only going inside it is not (the 1 micrometre absorbs rounding).
+    if (x > o.minX - radius + 1e-6 && x < o.maxX + radius - 1e-6 && z > o.minZ - radius + 1e-6 && z < o.maxZ + radius - 1e-6) return false;
+  }
+  return true;
+}
+
+/** Can a goblin stop and perform here: walkable, and where the camera can see it (not behind the solid door)? */
+export function isStandableForGoblin(x: number, z: number, radius: number = ROAM_RADIUS): boolean {
+  return isWalkableForGoblin(x, z, radius) && !inDoorBlindZone(x, z, radius);
+}
+
+/** Routes are planned with a 3 cm safety margin, so a path never clips the corner of a clearance box between two checks. */
+export const PLAN_RADIUS = ROAM_RADIUS + 0.03;
+export const GOBLIN_SPACES = {
+  standable: (x: number, z: number) => isStandableForGoblin(x, z, PLAN_RADIUS),
+  walkable: (x: number, z: number) => isWalkableForGoblin(x, z, PLAN_RADIUS),
 };

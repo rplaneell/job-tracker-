@@ -27,6 +27,8 @@ class Rules:
     science_description_terms: list[str] = field(default_factory=list)
     science_min_terms: int = 3
     operational_title_words: list[str] = field(default_factory=list)
+    # Roles with one of these whole words in the TITLE are never stored or shown at all (for example senior roles).
+    drop_title_words: list[str] = field(default_factory=list)
 
 
 def load_rules(path: Path) -> Rules:
@@ -41,6 +43,7 @@ def load_rules(path: Path) -> Rules:
         science_description_terms=data.get("science_description_terms") or [],
         science_min_terms=int(data.get("science_min_terms", 3)),
         operational_title_words=data.get("operational_title_words") or [],
+        drop_title_words=data.get("drop_title_words") or [],
     )
 
 
@@ -67,6 +70,11 @@ def _has(text: str, keyword: str) -> bool:
 
 def _any(text: str, keywords: list[str]) -> bool:
     return any(_has(text, k) for k in keywords)
+
+
+def is_dropped(role: Role, rules: Rules) -> bool:
+    """Does the title hold a word the owner never wants, such as senior? Only the title counts, never the description."""
+    return _any(role.title, rules.drop_title_words)
 
 
 def in_region(role: Role, rules: Rules) -> bool:

@@ -22,6 +22,11 @@ class Rules:
     max_years_experience: int | None = None
     # Countries where only some cities count, for example {Spain: [Barcelona]}. A country not listed here is taken whole.
     city_limits: dict[str, list[str]] = field(default_factory=dict)
+    # A role is about science when its title says so, or when its posting names at least science_min_terms different strong
+    # science terms and the job itself is not shop floor or hospitality work (operational_title_words).
+    science_description_terms: list[str] = field(default_factory=list)
+    science_min_terms: int = 3
+    operational_title_words: list[str] = field(default_factory=list)
 
 
 def load_rules(path: Path) -> Rules:
@@ -33,6 +38,9 @@ def load_rules(path: Path) -> Rules:
         **{key: data[key] for key in REQUIRED},
         max_years_experience=data.get("max_years_experience"),
         city_limits=data.get("city_limits") or {},
+        science_description_terms=data.get("science_description_terms") or [],
+        science_min_terms=int(data.get("science_min_terms", 3)),
+        operational_title_words=data.get("operational_title_words") or [],
     )
 
 
@@ -89,16 +97,33 @@ def matches(role: Role, rules: Rules) -> bool:
     return _any(role.title, rules.include_keywords)
 
 
-def _tag(role: Role, table: dict[str, list[str]]) -> str | None:
-    text = f"{role.title} {role.description}"
+def _tag(role: Role, table: dict[str, list[str]], skip: str | None = None) -> str | None:
+    """The first label whose word is in the TITLE. The description is never used here: a benefits paragraph that mentions
+    equity, a fund or a graduate scheme would otherwise label any role."""
     for tag, keywords in table.items():
-        if _any(text, keywords):
+        if tag != skip and _any(role.title, keywords):
             return tag
     return None
 
 
+def is_science_role(role: Role, rules: Rules) -> bool:
+    """Is the role about science? Its title names a science or health word, or its posting names several different strong
+    science terms (a biotech business analyst) and the job is not shop floor or hospitality work. One passing mention
+    never counts, so a benefits paragraph cannot make a receptionist a science role."""
+    if _any(role.title, rules.operational_title_words):
+        return False  # shop floor, hospitality and freelance gig titles are never science work, whatever else the title says
+    if _any(role.title, rules.field_keywords.get("health_science", [])):
+        return True
+    if not rules.science_description_terms:
+        return False
+    found = sum(1 for term in rules.science_description_terms if _has(role.description or "", term))
+    return found >= rules.science_min_terms
+
+
 def tag_field(role: Role, rules: Rules) -> str | None:
-    return _tag(role, rules.field_keywords)
+    if is_science_role(role, rules):
+        return "health_science"
+    return _tag(role, rules.field_keywords, skip="health_science")
 
 
 def tag_level(role: Role, rules: Rules) -> str | None:

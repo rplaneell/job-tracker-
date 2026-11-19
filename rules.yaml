@@ -28,13 +28,27 @@ exclude_keywords:
    kitchen, housekeeping, front office, f&b, food, beverage, reservation, events, rooms, hotel, hospitality,
    # bench science is not business work
    research associate, research assistant]
+# A role gets the first label below whose word is in its TITLE, so the order matters: a health or science word in the
+# title wins over the general labels. The description is never used, so a benefits paragraph cannot label a role.
 field_keywords:
+  health_science: [health, healthcare, life sciences, life science, biotech, pharma, pharmaceutical, medtech, clinical, biotechnology, medical, biopharma]
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]
   vc: [venture, vc, investment, portfolio, fund]
   business_analyst: [business analyst, analyst, analytics]
   business_development: [business development, partnerships, bd]
-  health_science: [health, healthcare, life sciences, biotech, pharma, medtech, clinical, biotechnology]
+# The health science label also goes to a role whose posting names at least 3 different strong science terms below
+# (a business analyst at a biotech company), unless the job is shop floor or hospitality work.
+science_min_terms: 3
+science_description_terms:
+  [life sciences, life science, biotech, biotechnology, pharma, pharmaceutical, pharmaceuticals, biopharma, medtech, medical device,
+   medical devices, clinical trial, clinical trials, clinical research, clinical, therapeutics, drug discovery, drug development,
+   genomics, proteomics, bioinformatics, diagnostics, laboratory, laboratories, molecular biology, biology, patients, healthcare,
+   hospitals, medicine]
+operational_title_words:
+  [warehouse, picker, picking, kommissionierung, wareneingang, lager, receptionist, reception, waiter, waitress, cook, chef, kitchen,
+   housekeeping, cleaner, driver, courier, cashier, restaurant, bartender, mitarbeiter, sachbearbeiter, aushilfe, f&b, guest service,
+   security guard, freelance, ai trainer]
 level_keywords:
   internship: [intern, internship, trainee, working student, stage]
   entry_level: [graduate, junior, entry level, associate, analyst, early careers]

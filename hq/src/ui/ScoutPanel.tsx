@@ -21,7 +21,7 @@ export function ScoutPanel({
 }: {
   status: ScoutStatus;
   items: ScoutItem[];
-  source: 'live' | 'simulation';
+  source: 'live' | 'simulation' | 'none';
   onClose: () => void;
 }) {
   const top = shortlist(items, 5);
@@ -70,8 +70,10 @@ export function ScoutPanel({
 
       <p className="mt-auto rounded-xl bg-sage-100 px-3 py-2 text-[11px] leading-snug text-sage-700">
         {source === 'simulation'
-          ? 'Sample data. Job HQ is not signed in to your database yet, so nothing here is real. Live data arrives with milestone M1.'
-          : 'Live from your database. Scouting only reads and scores roles. It sends nothing anywhere.'}
+          ? 'Sample data, shown because the office is running without your dashboard. Nothing here is real.'
+          : source === 'none'
+            ? 'Nothing is shown because your data could not be read.'
+            : 'Live from your database. Scouting only reads and scores roles. It sends nothing anywhere.'}
       </p>
     </aside>
   );

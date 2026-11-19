@@ -26,7 +26,7 @@ const TONE: Record<ScoutStatus, string> = {
  * CV Tailor: the real state of the cv agent. The status comes from the newest cv task row. Company and role text is
  * rendered as plain text only.
  */
-export function CvPanel({ status, drafts, source, onClose }: { status: ScoutStatus; drafts: CvDraft[]; source: 'live' | 'simulation'; onClose: () => void }) {
+export function CvPanel({ status, drafts, source, onClose }: { status: ScoutStatus; drafts: CvDraft[]; source: 'live' | 'simulation' | 'none'; onClose: () => void }) {
   return (
     <aside
       aria-label="CV Tailor"
@@ -76,8 +76,10 @@ export function CvPanel({ status, drafts, source, onClose }: { status: ScoutStat
 
       <p className="mt-auto rounded-xl bg-sage-100 px-3 py-2 text-[11px] leading-snug text-sage-700">
         {source === 'simulation'
-          ? 'Sample data. Job HQ is not signed in to your database yet, so nothing here is real. Live data arrives with milestone M1.'
-          : 'Live from your database. Your CV text never leaves it.'}
+          ? 'Sample data, shown because the office is running without your dashboard. Nothing here is real.'
+          : source === 'none'
+            ? 'Nothing is shown because your data could not be read.'
+            : 'Live from your database. Your CV text never leaves it.'}
       </p>
     </aside>
   );

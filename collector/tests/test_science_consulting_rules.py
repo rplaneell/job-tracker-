@@ -37,6 +37,10 @@ KEEP = [
     "Early Careers, Biotech Strategy",
     "Life Science Programme Graduate",
     "Healthcare Innovation Fellow",
+    "Management Trainee",
+    "Launch your career as a Management Trainee at Visma!",
+    "Sales Trainee",
+    "Research Analyst, Pharma",
 ]
 
 DROP = [
@@ -60,6 +64,23 @@ DROP = [
     "Nurse Practitioner Healthcare",
     "Laboratory Technician, Biotech",
     "Pharma Driver",
+    # real hotel trainee titles that the word trainee let in on the first live run
+    "Front Office Trainee",
+    "Kitchen Trainee",
+    "F&B Operational Trainee",
+    "Housekeeping Supervisor Trainee",
+    "Food and Beverage Trainee",
+    "Meetings and Events Trainee",
+    "Group& Events and Reservation Trainee",
+    "Rooms Management Trainee",
+    "Hospitality Internship Program",
+    "Hotel Operations Intern",
+    # lab bench titles that showed up in the owner's LinkedIn alerts
+    "Research Associate - Molecular Biology",
+    "Research Associate I/II",
+    "Laboratory Research Associate",
+    "Research Assistant- Pathology",
+    "Associate Scientist I, In Vivo Research",
 ]
 
 

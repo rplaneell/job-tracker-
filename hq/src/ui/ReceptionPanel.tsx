@@ -19,8 +19,8 @@ function dueText(due: string, now: Date): string {
   return sameDay ? `Today ${time}` : d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
-/** Reception: today at a glance. Sample data until milestone M1 connects the real database. */
-export function ReceptionPanel({ view, now }: { view: ReceptionView; now: Date }) {
+/** Reception: today at a glance. Real data from the database, or labelled sample data when the office runs on its own. */
+export function ReceptionPanel({ view, now, source }: { view: ReceptionView; now: Date; source: 'live' | 'simulation' | 'none' }) {
   const leave = useHq((s) => s.leave);
   return (
     <aside
@@ -73,7 +73,11 @@ export function ReceptionPanel({ view, now }: { view: ReceptionView; now: Date }
       </section>
 
       <p className="mt-auto rounded-xl bg-sage-100 px-3 py-2 text-[11px] leading-snug text-sage-700">
-        Sample data for the visual proof. Milestone M1 connects this panel to your real roles and applications.
+        {source === 'simulation'
+          ? 'Sample data for the visual proof, shown because the office is running without your dashboard.'
+          : source === 'none'
+            ? 'Nothing is shown because your data could not be read.'
+            : 'Live from your database. Follow ups appear when an application has had no news for 7 days.'}
       </p>
     </aside>
   );

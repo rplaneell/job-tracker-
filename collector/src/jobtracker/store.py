@@ -32,7 +32,7 @@ class Store:
         tags: dict[Key, tuple[str | None, str | None]],
         now: datetime,
     ) -> list[Role]:
-        existing = self._existing_keys(roles)
+        existing = self._existing_keys(roles)  # key -> was it kept before this run
         new_rows, old_rows, new_roles = [], [], []
         for role in roles:
             field_tag, level_tag = tags.get(role.key, (None, None))
@@ -56,6 +56,8 @@ class Store:
             }
             if role.key in existing:
                 old_rows.append(row)  # first_seen is left out so it is kept
+                if row["matched"] and not existing[role.key]:
+                    new_roles.append(role)  # already stored, but the rules now keep it, so Scouting must see it
             else:
                 new_rows.append({**row, "first_seen": now.isoformat()})
                 new_roles.append(role)
@@ -64,21 +66,21 @@ class Store:
                 self.client.table("roles").upsert(batch, on_conflict="source,source_id").execute()
         return new_roles
 
-    def _existing_keys(self, roles: list[Role]) -> set[Key]:
-        found: set[Key] = set()
+    def _existing_keys(self, roles: list[Role]) -> dict[Key, bool]:
+        found: dict[Key, bool] = {}
         for source in {r.source for r in roles}:
             ids = [r.source_id for r in roles if r.source == source]
             for start in range(0, len(ids), 100):
                 rows = (
                     self.client.table("roles")
-                    .select("source,source_id")
+                    .select("source,source_id,matched")
                     .eq("source", source)
                     .in_("source_id", ids[start : start + 100])
                     .execute()
                     .data
                 )
                 rows = _rows(rows)
-                found.update((r["source"], r["source_id"]) for r in rows)
+                found.update({(r["source"], r["source_id"]): bool(r.get("matched")) for r in rows})
         return found
 
     def close_missing(self, source: str, company: str, seen_ids: set[str], now: datetime) -> int:

@@ -10,6 +10,10 @@ interface HqState {
   creditsOpen: boolean;
   /** Turns off soft shadows to keep older laptops and phones smooth. */
   lowPower: boolean;
+  /** How far the office is turned, in radians. It is not wrapped, so turning past a full circle just keeps going. */
+  yaw: number;
+  rotateBy: (delta: number) => void;
+  resetView: () => void;
   /** False while the opening animation is still playing, so the header and buttons can fade in at the end. */
   chromeOn: boolean;
   /** False until a moment after the opening animation, so the speech bubbles do not spoil the first view. */
@@ -28,6 +32,9 @@ export const useHq = create<HqState>((set) => ({
   hoverManager: false,
   creditsOpen: false,
   lowPower: false,
+  yaw: 0,
+  rotateBy: (delta) => set((s) => (Number.isFinite(delta) ? { yaw: s.yaw + delta } : s)),
+  resetView: () => set({ yaw: 0 }),
   chromeOn: !introClock.enabled,
   labelsOn: !introClock.enabled,
   openDepartment: (focus) => set({ focus }),

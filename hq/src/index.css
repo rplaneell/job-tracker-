@@ -33,6 +33,12 @@ body {
 
 canvas {
   display: block;
+  /* a finger drag turns the office instead of scrolling the page */
+  touch-action: none;
+  cursor: grab;
+}
+canvas:active {
+  cursor: grabbing;
 }
 
 /* Speech bubble that floats above a character */

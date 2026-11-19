@@ -183,9 +183,6 @@ tr:last-child td { border-bottom: 0; }
 .prose { padding: 18px; white-space: pre-wrap; color: var(--ink-2); line-height: 1.6; max-width: 72ch; }
 
 /* Login */
-.login { min-height: 100vh; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
-.login .panel { width: min(400px, 100%); padding: 28px; display: grid; gap: 18px; }
-.login form { display: grid; gap: 12px; }
 
 @media (max-width: 900px) {
   .shell { grid-template-columns: minmax(0, 1fr); }
@@ -223,3 +220,12 @@ tr:last-child td { border-bottom: 0; }
   .cv-sheet { position: absolute; left: 0; top: 0; width: 100%; max-width: none; border: 0; padding: 0; background: #fff; color: #000; }
   .no-print { display: none !important; }
 }
+.login { min-height: 100vh; display: flex; align-items: center; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+.login-body { width: min(380px, 100%); margin: 0 auto; display: grid; gap: 14px; transform: translateY(-6vh); }
+.login-name { margin: 0; font: 500 12px var(--f-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.login h1 { font-size: 34px; line-height: 1.1; }
+.login-lede { margin: 0 0 6px; color: var(--ink-2); font-size: 15px; max-width: 34ch; }
+.login-provider { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px 16px; cursor: pointer;
+  border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); font: 600 15px var(--f-body); }
+.login-provider:hover { background: var(--surface-2); }
+.login-provider:disabled { opacity: 0.6; cursor: default; }

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { serverClient } from "@/lib/supabase/server";
+import { callbackProblem } from "@/lib/loginMessage";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -8,5 +9,5 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) return NextResponse.redirect(new URL("/", request.url));
   }
-  return NextResponse.redirect(new URL("/login?error=link", request.url));
+  return NextResponse.redirect(new URL(`/login?error=${callbackProblem(request.nextUrl.searchParams)}`, request.url));
 }

@@ -421,6 +421,18 @@
       "file": "collector/src/jobtracker/career_doc.py",
       "old": "if not document or not document.strip():",
       "new": "if False:"
+    },
+    {
+      "name": "email: a bad setting is no longer reported after saving",
+      "file": "collector/src/jobtracker/run.py",
+      "old": "    if problem:\n",
+      "new": "    if False:\n"
+    },
+    {
+      "name": "email: the sender is not checked",
+      "file": "collector/src/jobtracker/run.py",
+      "old": "((\"ALERT_EMAIL_TO\", to), (\"ALERT_EMAIL_FROM\", sender))",
+      "new": "((\"ALERT_EMAIL_TO\", to),)"
     }
   ]
 }

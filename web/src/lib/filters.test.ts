@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyFilters, countByCountry, type RoleRow } from "./filters";
+import { applyFilters, cityOptions, countByCountry, type RoleRow } from "./filters";
 
 const row = (over: Partial<RoleRow>): RoleRow => ({
   id: "1", company: "Acme", title: "Business Analyst", city: "Zurich", country: "Switzerland",
@@ -49,5 +49,42 @@ describe("countByCountry", () => {
   it("counts open roles per country and skips missing countries", () => {
     const rows = [row({ id: "1" }), row({ id: "2" }), row({ id: "3", country: "Spain" }), row({ id: "4", country: null }), row({ id: "5", status: "closed" })];
     expect(countByCountry(rows)).toEqual({ Switzerland: 2, Spain: 1 });
+  });
+});
+
+describe("city filter", () => {
+  const rows = [
+    row({ id: "1", city: "Zurich" }),
+    row({ id: "2", city: "Geneva" }),
+    row({ id: "3", city: "Barcelona", country: "Spain" }),
+    row({ id: "4", city: null }),
+  ];
+  it("filters by city", () => {
+    expect(applyFilters(rows, { ...none, city: "Geneva" }).map((r) => r.id)).toEqual(["2"]);
+  });
+  it("combines with the country filter", () => {
+    expect(applyFilters(rows, { ...none, country: "Spain", city: "Zurich" })).toEqual([]);
+    expect(applyFilters(rows, { ...none, country: "Spain", city: "Barcelona" }).map((r) => r.id)).toEqual(["3"]);
+  });
+  it("hides roles with no city when a city is chosen, and shows them when none is", () => {
+    expect(applyFilters(rows, { ...none, city: "Zurich" }).map((r) => r.id)).toEqual(["1"]);
+    expect(applyFilters(rows, none)).toHaveLength(4);
+  });
+});
+
+describe("cityOptions", () => {
+  const rows = [
+    row({ id: "1", city: "Zurich" }), row({ id: "2", city: "Zurich" }), row({ id: "3", city: "Geneva" }),
+    row({ id: "4", city: "Barcelona", country: "Spain" }), row({ id: "5", city: null }), row({ id: "6", city: "  " }),
+    row({ id: "7", city: "Bern", status: "closed" }),
+  ];
+  it("lists cities of open roles with counts, most roles first, then by name", () => {
+    expect(cityOptions(rows)).toEqual([
+      { city: "Zurich", count: 2 }, { city: "Barcelona", count: 1 }, { city: "Geneva", count: 1 },
+    ]);
+  });
+  it("only lists cities of the chosen country", () => {
+    expect(cityOptions(rows, "Switzerland")).toEqual([{ city: "Zurich", count: 2 }, { city: "Geneva", count: 1 }]);
+    expect(cityOptions(rows, "Denmark")).toEqual([]);
   });
 });

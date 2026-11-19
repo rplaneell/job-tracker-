@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { applyFilters, countByCountry, type RoleRow } from "@/lib/filters";
+import { applyFilters, cityOptions, countByCountry, type RoleRow } from "@/lib/filters";
 import { COUNTRY_CODE, FIELD, LEVEL, ago, where } from "@/lib/labels";
 import { safeHref } from "@/lib/safeHref";
 import { STAGES, type Stage } from "@/lib/stages";
@@ -22,6 +22,7 @@ function Tags({ role, stage }: { role: RoleRow; stage?: string }) {
 
 export default function RoleTable({ roles, stages: initialStages }: { roles: RoleRow[]; stages: Record<string, string> }) {
   const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
   const [field, setField] = useState("");
   const [search, setSearch] = useState("");
   const [matchedOnly, setMatchedOnly] = useState(false);
@@ -31,7 +32,8 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
   const [error, setError] = useState("");
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  const list = useMemo(() => applyFilters(roles, { country, field, search, matchedOnly }), [roles, country, field, search, matchedOnly]);
+  const list = useMemo(() => applyFilters(roles, { country, city, field, search, matchedOnly }), [roles, country, city, field, search, matchedOnly]);
+  const cities = useMemo(() => cityOptions(roles, country || undefined), [roles, country]);
   const counts = useMemo(() => countByCountry(roles), [roles]);
   const open = openId ? roles.find((r) => r.id === openId) ?? null : null;
   const reset = () => setShown(PAGE);
@@ -73,15 +75,19 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
               value={search} onChange={(e) => { setSearch(e.target.value); reset(); }} />
           </label>
           <div className="seg" role="group" aria-label="Country">
-            <button type="button" aria-pressed={country === ""} onClick={() => { setCountry(""); reset(); }}>
+            <button type="button" aria-pressed={country === ""} onClick={() => { setCountry(""); setCity(""); reset(); }}>
               All<span className="mono">{roles.length}</span>
             </button>
             {Object.entries(COUNTRY_CODE).map(([name, code]) => (
-              <button key={code} type="button" aria-pressed={country === name} onClick={() => { setCountry(name); reset(); }}>
+              <button key={code} type="button" aria-pressed={country === name} onClick={() => { setCountry(name); setCity(""); reset(); }}>
                 {code}<span className="mono">{counts[name] ?? 0}</span>
               </button>
             ))}
           </div>
+          <select id="role-city" aria-label="City" value={city} onChange={(e) => { setCity(e.target.value); reset(); }}>
+            <option value="">All cities</option>
+            {cities.map((c) => <option key={c.city} value={c.city}>{c.city} ({c.count})</option>)}
+          </select>
           <select id="role-field" aria-label="Field" value={field} onChange={(e) => { setField(e.target.value); reset(); }}>
             <option value="">All fields</option>
             {Object.entries(FIELD).map(([key, label]) => <option key={key} value={key}>{label}</option>)}

@@ -1,3 +1,4 @@
+import { modelUrl } from '../data/modelUrl';
 import { Html, useAnimations, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
@@ -8,7 +9,7 @@ import { STATUS_LABEL, type ScoutStatus } from '../domain/scouting';
 import { useHq } from '../state/useHq';
 import { GLASS_OFFICE } from './layout';
 
-const URL = '/models/goblin.glb';
+const URL = modelUrl('goblin.glb');
 /** The model is about 143 units tall; this makes a goblin roughly half a metre high, a little taller than a desk chair seat. */
 const SCALE = 0.0036;
 /** Where the model's feet and middle are, so it stands on its spot instead of floating or orbiting it. */

@@ -39,7 +39,11 @@ export default function Login() {
   return (
     <main className="login">
       <section className="login-art" aria-hidden="true">
-        <p className="login-name">Job tracker</p>
+        <p className="login-brand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/the-climb-mark.png" alt="" width={40} height={40} />
+          the climb
+        </p>
         <h2>From a saved role to an offer.</h2>
         <p className="login-art-lede">Company job boards are collected every morning. Nothing moves forward unless you say so.</p>
         <ol className="login-path">

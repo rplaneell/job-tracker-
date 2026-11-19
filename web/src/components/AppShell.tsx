@@ -7,6 +7,12 @@ import { browserClient } from "@/lib/supabase/client";
 type Counts = { roles: number; pipeline: number; sources: number };
 
 const icons = {
+  office: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 17V8l7-5 7 5v9" />
+      <path d="M8 17v-5h4v5" />
+    </svg>
+  ),
   roles: (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
       <rect x="3" y="3" width="14" height="14" rx="3" />
@@ -63,7 +69,7 @@ export default function AppShell({ counts, children }: { counts: Counts; childre
   const path = usePathname();
   const router = useRouter();
   const { dark, toggle } = useTheme();
-  const current = (href: string) => (href === "/" ? path === "/" || path.startsWith("/roles") : path.startsWith(href));
+  const current = (href: string) => path.startsWith(href);
 
   async function signOut() {
     await browserClient().auth.signOut();
@@ -82,17 +88,18 @@ export default function AppShell({ counts, children }: { counts: Counts; childre
   return (
     <div className="shell">
       <aside className="side">
-        <Link href="/" className="brand">
-          <span className="mark" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 12.5 6 8l3 2.5L14 4" />
-              <path d="M10.5 4H14v3.5" />
-            </svg>
-          </span>
-          Job tracker
-        </Link>
+        {/* the office is a separate page of its own, so this is a plain link and not a client side one */}
+        <a href="/hq" className="brand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-mark" src="/brand/the-climb-mark.png" alt="" width={28} height={28} />
+          the climb
+        </a>
         <nav className="nav" aria-label="Main">
-          {item("/", "Roles", icons.roles, <span className="count">{counts.roles}</span>)}
+          <a href="/hq">
+            {icons.office}
+            Office
+          </a>
+          {item("/roles", "Roles", icons.roles, <span className="count">{counts.roles}</span>)}
           {item("/pipeline", "Pipeline", icons.pipeline, counts.pipeline ? <span className="count">{counts.pipeline}</span> : null)}
           {item("/sources", "Sources", icons.sources, <span className="count">{counts.sources}</span>)}
           {item("/cv", "Your CV", icons.cv, null)}

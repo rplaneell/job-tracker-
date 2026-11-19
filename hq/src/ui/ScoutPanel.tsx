@@ -66,6 +66,8 @@ export function ScoutPanel({
         ))}
       </section>
 
+      <a href="/roles" className="rounded-xl border border-line bg-white px-3 py-2 text-center text-sm font-medium text-sage-700 hover:bg-sage-100 focus-visible:outline-2 focus-visible:outline-sage-500">See all roles</a>
+
       <p className="mt-auto rounded-xl bg-sage-100 px-3 py-2 text-[11px] leading-snug text-sage-700">
         {source === 'simulation'
           ? 'Sample data. Job HQ is not signed in to your database yet, so nothing here is real. Live data arrives with milestone M1.'

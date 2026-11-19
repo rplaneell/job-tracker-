@@ -23,8 +23,23 @@ body,
   margin: 0;
 }
 
+/* The sky above the clouds at the top of the tower, where the office sits. The opening animation ends in this same sky. */
+:root {
+  --sky: linear-gradient(180deg, #6fa8d6 0%, #9cc7e6 34%, #cfe3ef 62%, #f3e4cf 86%, #f7d8b4 100%);
+}
+
 body {
-  background: radial-gradient(120% 95% at 50% 38%, #fcfbf7 0%, #eff3ed 55%, #dde6dc 100%) fixed;
+  background:
+    radial-gradient(70% 28% at 84% 5%, rgba(255, 247, 224, 0.8) 0%, rgba(255, 247, 224, 0) 72%),
+    radial-gradient(24% 4% at 22% 17%, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(28% 5% at 62% 29%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(34% 7% at 5% 62%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(30% 7% at 97% 76%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(48% 11% at 14% 85%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(40% 9% at 40% 93%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(52% 12% at 76% 89%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0) 100%),
+    var(--sky);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -87,7 +102,7 @@ canvas:active {
   }
 }
 
-/* ---------- Opening animation: a door into the office ---------- */
+/* ---------- Opening animation: a drone climbs the glass tower and flies into the office ---------- */
 .intro,
 .intro-veil {
   position: fixed;
@@ -97,119 +112,99 @@ canvas:active {
 }
 .intro {
   overflow: hidden;
-  /* The door is 30vh wide and 60vh tall, standing on a floor that starts 78vh down. */
-  --door-w: 30vh;
-  --door-h: 60vh;
-  --door-top: 18vh;
-  --wall: #b5c8b1;
-  --trim: #9fbad2;
 }
 .intro-veil {
-  background: radial-gradient(120% 95% at 50% 38%, #fcfbf7 0%, #eff3ed 55%, #dde6dc 100%);
+  background: var(--sky);
 }
-.intro-wall {
+.climb-world {
   position: absolute;
   inset: 0;
-  transform-origin: 50% calc(var(--door-top) + var(--door-h) / 2);
+  transform-origin: 50% 50%;
   will-change: transform, opacity;
 }
-.intro-part {
-  position: absolute;
-}
-.intro-top {
-  left: 0;
-  right: 0;
-  top: 0;
-  height: var(--door-top);
-  background: var(--wall);
-}
-.intro-left,
-.intro-right {
-  top: var(--door-top);
-  height: var(--door-h);
-  width: calc(50% - var(--door-w) / 2);
-  background: linear-gradient(to top, var(--trim) 0 3vh, var(--wall) 3vh 100%);
-}
-.intro-left {
-  left: 0;
-}
-.intro-right {
-  right: 0;
-}
-.intro-floor {
-  left: 0;
-  right: 0;
-  top: calc(var(--door-top) + var(--door-h));
-  bottom: 0;
-  background: linear-gradient(to bottom, #b98b5e 0%, #c99d6e 40%, #d9b384 100%);
-}
-.intro-doorway {
-  position: absolute;
-  left: calc(50% - var(--door-w) / 2);
-  top: var(--door-top);
-  width: var(--door-w);
-  height: var(--door-h);
-  perspective: 1400px;
-  /* The wooden frame around the opening. */
-  box-shadow: 0 0 0 1.2vh #7c5a3a;
-}
-.intro-glow {
+.climb-sky,
+.climb-dusk,
+.climb-sun,
+.climb-haze,
+.climb-vignette {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  background: radial-gradient(ellipse at 50% 70%, #fff6e2 0%, #f8d7a0 45%, #f0a65e 100%);
-  box-shadow: 0 0 5vh 1.5vh rgba(240, 166, 94, 0.75);
+  pointer-events: none;
 }
-.intro-door {
-  position: absolute;
-  inset: 0;
-  transform-origin: 0% 50%;
-  background: linear-gradient(100deg, #a67d57 0%, #b98b5e 55%, #a67d57 100%);
-  border-radius: 0.6vh 0.6vh 0 0;
-  box-shadow: inset 0 0 0 0.5vh rgba(60, 40, 22, 0.35);
-  will-change: transform;
+.climb-sky {
+  background: var(--sky);
 }
-.intro-inset {
-  position: absolute;
-  left: 15%;
-  right: 15%;
-  border-radius: 0.5vh;
-  background: linear-gradient(135deg, #94704c 0%, #a67d57 100%);
-  box-shadow: inset 0 0.3vh 0.8vh rgba(40, 26, 14, 0.4), 0 0.2vh 0 rgba(255, 235, 205, 0.35);
+.climb-dusk {
+  background: linear-gradient(180deg, #2d4a78 0%, #7b79a7 34%, #e59b7b 70%, #f9c98d 100%);
 }
-.intro-inset-top {
-  top: 8%;
-  height: 34%;
+.climb-sun {
+  background: radial-gradient(60% 50% at 76% 8%, rgba(255, 244, 214, 0.95) 0%, rgba(255, 226, 170, 0.45) 34%, rgba(255, 226, 170, 0) 70%);
 }
-.intro-inset-bottom {
-  top: 50%;
-  height: 40%;
+.climb-haze {
+  background: linear-gradient(to top, rgba(247, 205, 160, 0.75) 0%, rgba(247, 205, 160, 0) 45%);
 }
-.intro-plaque {
+.climb-vignette {
+  background: radial-gradient(120% 100% at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(8, 18, 34, 0.45) 100%);
+}
+.climb-skyline {
   position: absolute;
   left: 50%;
-  top: 9%;
-  transform: translateX(-50%);
-  width: 34%;
-  padding: 0.7vh 0;
-  border-radius: 0.8vh;
-  background: linear-gradient(135deg, #f0d596 0%, #d8b36a 50%, #b88f46 100%);
-  box-shadow: 0 0.3vh 0.8vh rgba(40, 26, 14, 0.45);
-  color: #5a4116;
-  font-size: 2.6vh;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-align: center;
+  top: 50%;
+  width: 1800px;
+  height: 900px;
+  margin-left: -900px;
+  margin-top: -180px;
+  background: var(--skyline, none) 0 0 / 100% 100% no-repeat;
+  will-change: transform;
 }
-.intro-knob {
+.climb-stage {
   position: absolute;
-  right: 9%;
-  top: 52%;
-  width: 2.4vh;
-  height: 2.4vh;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff1c4 0%, #d8b36a 55%, #9a7430 100%);
-  box-shadow: 0 0.3vh 0.8vh rgba(40, 26, 14, 0.5);
+  inset: 0;
+  perspective: 1100px;
+  perspective-origin: 50% 42%;
+}
+.climb-tilt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.climb-plane {
+  position: absolute;
+  left: -600px;
+  top: -1700px;
+  width: 1200px;
+  height: 3400px;
+  background: var(--facade, none) 0 0 / 100% 100% no-repeat;
+  will-change: transform;
+}
+.climb-ghost {
+  pointer-events: none;
+  opacity: 0;
+}
+.climb-clouds {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1600px;
+  height: 2600px;
+  margin-left: -800px;
+  margin-top: -1300px;
+  background: var(--clouds, none) 0 0 / 100% 100% no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Warm light spilling from the lit office floor as the drone arrives, drawn on the tower itself so it moves with it. */
+.hq-halo {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 214, 150, 0.85) 0%, rgba(255, 196, 120, 0.35) 55%, rgba(255, 196, 120, 0) 100%);
 }
 .intro-flash {
   position: absolute;

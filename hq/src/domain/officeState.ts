@@ -1,5 +1,5 @@
 import type { LinkedInAlert, OfficeData } from '../data/officeData';
-import { linkedinStatus, type LinkedInStatus } from './linkedin';
+import { deskStatus, type LinkedInStatus } from './linkedin';
 import type { ScoutItem } from '../data/scoutData';
 import type { CvDraft } from '../ui/CvPanel';
 import { buildReceptionView, type Priority, type ReceptionView, type Stage } from './reception';
@@ -18,7 +18,7 @@ export interface OfficeState {
   cvDrafts: CvDraft[];
   alerts: LinkedInAlert[];
   lastIntake: OfficeData['lastIntake'];
-  linkedinStatus: LinkedInStatus;
+  deskStatus: LinkedInStatus;
   /** True only for sample data, so its labels show. Real data and empty states carry no label. */
   simulated: boolean;
   /** live: real data. simulation: labelled sample data. none: there is nothing to show, because nothing was read. */
@@ -58,5 +58,5 @@ export function buildOfficeState(mode: OfficeMode, data: OfficeData | null, now:
     notice = 'The office could not read your data. Sign in again or try later.';
   }
   const source = mode === 'sample' ? 'simulation' : mode === 'loading' || unread ? 'none' : 'live';
-  return { line, view, ...content, linkedinStatus: linkedinStatus(content.lastIntake?.at ?? null, when), simulated: mode === 'sample', source, notice };
+  return { line, view, ...content, deskStatus: deskStatus(content.lastIntake?.at ?? null, when), simulated: mode === 'sample', source, notice };
 }

@@ -26,7 +26,7 @@ export function safeLinkedInHref(url: unknown): string | null {
   return JOB_PATH.test(parts.pathname) ? url : null;
 }
 
-export function linkedinStatus(lastIntakeAt: string | null, now: Date): LinkedInStatus {
+export function deskStatus(lastIntakeAt: string | null, now: Date): LinkedInStatus {
   const t = Date.parse(lastIntakeAt ?? '');
   return Number.isNaN(t) || now.getTime() - t > FRESH_MS ? 'idle' : 'completed';
 }

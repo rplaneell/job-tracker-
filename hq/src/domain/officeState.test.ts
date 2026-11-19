@@ -55,16 +55,16 @@ describe('buildOfficeState', () => {
     const alert = { id: 'a', title: 'Data Science Trainee', company: 'Novartis España', city: 'Barcelona', href: 'https://www.linkedin.com/jobs/view/1/', fits: true, score: 70, shortlisted: true, firstSeen: '2026-11-19T07:40:00Z' };
     const s = buildOfficeState('live', live({ alerts: [alert], lastIntake: { at: '2026-11-19T07:40:00Z', received: 12, storedNew: 6, queued: 5 } }), NOW);
     expect(s.alerts).toEqual([alert]);
-    expect(s.linkedinStatus).toBe('completed');
+    expect(s.deskStatus).toBe('completed');
     expect(s.lastIntake?.storedNew).toBe(6);
   });
   it('shows no alerts and an idle desk when nothing was collected, loading or unreadable, and never sample alerts', () => {
-    expect(buildOfficeState('live', live(), NOW).linkedinStatus).toBe('idle');
+    expect(buildOfficeState('live', live(), NOW).deskStatus).toBe('idle');
     for (const mode of ['loading', 'unavailable'] as const) {
       const s = buildOfficeState(mode, null, NOW);
       expect(s.alerts).toEqual([]);
       expect(s.lastIntake).toBeNull();
-      expect(s.linkedinStatus).toBe('idle');
+      expect(s.deskStatus).toBe('idle');
     }
     expect(buildOfficeState('live', live(), NOW).alerts).not.toEqual(SAMPLE_ALERTS);
   });

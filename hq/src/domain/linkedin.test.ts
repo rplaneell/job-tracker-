@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { describeIntake, linkedinStatus, safeLinkedInHref } from './linkedin';
+import { describeIntake, deskStatus, safeLinkedInHref } from './linkedin';
 
 describe('safeLinkedInHref', () => {
   it('accepts a plain LinkedIn job page link', () => {
@@ -20,14 +20,14 @@ describe('safeLinkedInHref', () => {
   });
 });
 
-describe('linkedinStatus', () => {
+describe('deskStatus', () => {
   const now = new Date('2026-11-19T10:00:00Z');
   it('is completed when alerts were collected in the last 36 hours, otherwise idle', () => {
-    expect(linkedinStatus('2026-11-19T07:40:00Z', now)).toBe('completed');
-    expect(linkedinStatus('2026-11-18T00:00:00Z', now)).toBe('completed');
-    expect(linkedinStatus('2026-11-17T21:59:00Z', now)).toBe('idle');
-    expect(linkedinStatus(null, now)).toBe('idle');
-    expect(linkedinStatus('not a date', now)).toBe('idle');
+    expect(deskStatus('2026-11-19T07:40:00Z', now)).toBe('completed');
+    expect(deskStatus('2026-11-18T00:00:00Z', now)).toBe('completed');
+    expect(deskStatus('2026-11-17T21:59:00Z', now)).toBe('idle');
+    expect(deskStatus(null, now)).toBe('idle');
+    expect(deskStatus('not a date', now)).toBe('idle');
   });
 });
 

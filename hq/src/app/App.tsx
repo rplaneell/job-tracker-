@@ -105,7 +105,7 @@ export function App() {
 
   return (
     <div ref={root} className="relative h-full w-full">
-      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} linkedinStatus={state.linkedinStatus} simulated={state.simulated} />
+      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} deskStatus={state.deskStatus} simulated={state.simulated} />
 
       <div className={`chrome pointer-events-none absolute inset-0 ${chromeOn ? '' : 'chrome-off'}`}>
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
@@ -190,7 +190,7 @@ export function App() {
 
         {focus === 'reception' && <ReceptionPanel view={view} now={data?.now ?? now} source={state.source} />}
         {focus === 'cv' && <CvPanel status={cv} drafts={state.cvDrafts} source={state.source} onClose={leave} />}
-        {focus === 'linkedin' && <LinkedInPanel status={state.linkedinStatus} alerts={state.alerts} intake={state.lastIntake} source={state.source} onClose={leave} />}
+        {focus === 'linkedin' && <LinkedInPanel status={state.deskStatus} alerts={state.alerts} intake={state.lastIntake} source={state.source} onClose={leave} />}
         {focus === 'scouting' && <ScoutPanel status={scout} items={state.scoutItems} source={state.source} onClose={leave} />}
       </div>
       <Credits />

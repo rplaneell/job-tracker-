@@ -47,9 +47,9 @@ export function App() {
 
       <div className="pointer-events-none absolute inset-0">
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-sage-700 text-sm font-bold text-white">HQ</span>
+          <img src="/brand/the-climb-mark.png" alt="" width={32} height={32} className="h-8 w-8 rounded-xl" />
           <div className="leading-tight">
-            <div className="text-sm font-semibold tracking-tight">Job HQ</div>
+            <div className="text-sm font-semibold tracking-tight">the climb</div>
             <div className="text-[11px] text-ink-soft">Visual proof · Reception</div>
           </div>
         </header>

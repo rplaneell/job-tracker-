@@ -83,13 +83,9 @@ export default function AppShell({ counts, children }: { counts: Counts; childre
     <div className="shell">
       <aside className="side">
         <Link href="/" className="brand">
-          <span className="mark" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 12.5 6 8l3 2.5L14 4" />
-              <path d="M10.5 4H14v3.5" />
-            </svg>
-          </span>
-          Job tracker
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-mark" src="/brand/the-climb-mark.png" alt="" width={28} height={28} />
+          the climb
         </Link>
         <nav className="nav" aria-label="Main">
           {item("/", "Roles", icons.roles, <span className="count">{counts.roles}</span>)}

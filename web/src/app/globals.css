@@ -60,6 +60,7 @@ h1, h2, h3 { font-family: var(--f-head); margin: 0; letter-spacing: -0.01em; tex
   padding: 20px 14px; border-right: 1px solid var(--line); background: var(--surface); }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; font: 800 17px/1 var(--f-head); letter-spacing: -0.02em; color: var(--ink); }
 .brand:hover { text-decoration: none; }
+.brand-mark { width: 28px; height: 28px; border-radius: 8px; flex: none; }
 .mark { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
 .mark svg { width: 16px; height: 16px; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
@@ -227,7 +228,8 @@ tr:last-child td { border-bottom: 0; }
   background-size: 36px 36px; border-right: 1px solid var(--line); overflow: hidden; }
 .login-art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 40%, var(--accent-soft)); }
 .login-art > * { position: relative; z-index: 1; }
-.login-name { margin: 0; font: 500 12px var(--f-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.login-brand { margin: 0 0 10px; display: flex; align-items: center; gap: 12px; font: 800 22px/1 var(--f-head); letter-spacing: -0.02em; color: var(--ink); }
+.login-brand img { border-radius: 10px; }
 .login-art h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.05; max-width: 14ch; }
 .login-art-lede { margin: 0; color: var(--ink-2); font-size: 15px; max-width: 38ch; }
 .login-path { list-style: none; margin: 28px 0 0; padding: 0; display: flex; align-items: flex-end; gap: 0; max-width: 520px; }

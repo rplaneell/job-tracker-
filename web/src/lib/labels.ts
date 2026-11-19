@@ -9,13 +9,14 @@ export const FIELD: Record<string, string> = {
 
 export const LEVEL: Record<string, string> = { internship: "Internship", entry_level: "Entry level" };
 
-/** The five places the owner targets, with their two letter country codes (ISO 3166). */
+/** The six places the owner targets, with their two letter country codes (ISO 3166). */
 export const COUNTRY_CODE: Record<string, string> = {
   Netherlands: "NL",
   Belgium: "BE",
   Switzerland: "CH",
   Spain: "ES",
   Denmark: "DK",
+  "United States": "US",
 };
 
 export function ago(iso: string | null, now: Date = new Date()): string {

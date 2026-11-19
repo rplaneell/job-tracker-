@@ -1,5 +1,5 @@
 # Which roles count as relevant. All matching is case insensitive, whole words only.
-countries: [Spain, Switzerland, Belgium, Netherlands, Denmark]
+countries: [Spain, Switzerland, Belgium, Netherlands, Denmark, United States]
 # In Spain only Barcelona counts. A country that is not listed here is taken whole.
 city_limits:
   Spain: [Barcelona]

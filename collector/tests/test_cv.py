@@ -306,3 +306,47 @@ def test_cli_reports_a_refusal_with_the_reason_and_exit_code_2():
     assert code == 2 and "99" in out["error"]
     code, (out,) = run_cli(client, "submit", "--task", "t1", "--file", "-", stdin="not json")
     assert code == 2 and "JSON" in out["error"]
+
+
+# the photo rule: only for roles in Barcelona, decided by the program, never by the model
+
+@pytest.mark.parametrize(
+    "role, expected",
+    [
+        ({"country": "Spain", "city": "Barcelona"}, True),
+        ({"country": "Spain", "city": " barcelona "}, True),
+        ({"country": "Spain", "city": None, "location_raw": "Barcelona, Catalonia, Spain (Hybrid)"}, True),
+        ({"country": "Spain", "city": "Madrid"}, False),
+        ({"country": "Spain", "city": None, "location_raw": "Spain"}, False),
+        ({"country": "Spain", "city": None, "location_raw": "Barcelonetta Industrial Park"}, False),
+        ({"country": "Switzerland", "city": "Zurich"}, False),
+        ({"country": "Belgium", "city": "Barcelona"}, False),  # the word alone is not enough, the country must be Spain
+        ({"country": None, "city": None}, False),
+        ({}, False),
+    ],
+)
+def test_the_photo_is_wanted_only_for_roles_in_barcelona(role, expected):
+    assert cv.wants_photo(role) is expected
+
+
+def test_a_version_for_a_barcelona_role_is_marked_to_show_the_photo_and_others_are_not():
+    client, task = claimed()  # the seeded role is in Brussels
+    cv.submit_version(client, task, GOOD)
+    assert client.tables["cv_versions"][-1]["content"]["withPhoto"] is False
+    client2 = seed(FakeClient())
+    client2.tables["roles"][0].update(city="Barcelona", country="Spain")
+    task2 = cv.claim_task(client2, NOW)
+    cv.submit_version(client2, task2, GOOD)
+    assert client2.tables["cv_versions"][-1]["content"]["withPhoto"] is True
+
+
+def test_the_model_cannot_ask_for_or_against_a_photo():
+    for key in ("withPhoto", "photo"):
+        t = json.loads(json.dumps(GOOD)); t[key] = True
+        bad(t, "unknown_field")
+
+
+def test_the_photo_is_never_handed_to_the_model():
+    client, task = claimed()
+    client.tables["cv_master"][0]["photo"] = "data:image/jpeg;base64,SECRETPHOTOBYTES"
+    assert "SECRETPHOTOBYTES" not in json.dumps(cv.read_inputs(client, task))

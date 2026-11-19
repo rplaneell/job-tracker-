@@ -169,6 +169,18 @@ def validate_tailored(master: dict, tailored: Any, role_company: str, role_title
     return merged
 
 
+# ---- the photo rule ----------------------------------------------------------------------------------------------
+
+
+def wants_photo(role: dict) -> bool:
+    """The owner's CV carries a photo only for roles in Barcelona. The program decides this, never the model."""
+    if (role.get("country") or "") != "Spain":
+        return False
+    if (role.get("city") or "").strip().lower() == "barcelona":
+        return True
+    return re.search(r"(?<![\w])barcelona(?![\w])", (role.get("location_raw") or "").lower()) is not None
+
+
 # ---- the tools ---------------------------------------------------------------------------------------------------
 
 def _audit(db: Any, action: str, detail: dict) -> None:
@@ -257,6 +269,7 @@ def submit_version(db: Any, task: CvTask, tailored: Any) -> str:
         master = _master(db)
         role = _role(db, task.role_id)
         merged = validate_tailored(master, tailored, role.get("company") or "", role.get("title") or "")
+        merged["withPhoto"] = wants_photo(role)
     except CvRejected as exc:
         _audit(db, "rejected", {"task": task.id, "code": exc.code})
         raise

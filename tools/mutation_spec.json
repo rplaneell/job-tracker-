@@ -355,6 +355,30 @@
    "file": "collector/src/jobtracker/compliance.py",
    "old": "MAX_REDIRECTS = 3",
    "new": "MAX_REDIRECTS = 300"
+  },
+  {
+   "name": "photo: every country gets the photo",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "if (role.get(\"country\") or \"\") != \"Spain\":",
+   "new": "if False:"
+  },
+  {
+   "name": "photo: the city text alone no longer counts",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "return re.search(r\"(?<![\\w])barcelona(?![\\w])\", (role.get(\"location_raw\") or \"\").lower()) is not None",
+   "new": "return False"
+  },
+  {
+   "name": "photo: every version gets the photo",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "merged[\"withPhoto\"] = wants_photo(role)",
+   "new": "merged[\"withPhoto\"] = True"
+  },
+  {
+   "name": "photo: no version gets the photo",
+   "file": "collector/src/jobtracker/cv.py",
+   "old": "merged[\"withPhoto\"] = wants_photo(role)",
+   "new": "merged[\"withPhoto\"] = False"
   }
  ]
 }

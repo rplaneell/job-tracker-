@@ -459,6 +459,46 @@
    "detail": "A person (model 'Low poly ordinary man in shirt and pants' by Agor_2012, CC BY 4.0, textures reduced and seven unused animations removed) stands in the aisle between the two desk islands. What he does comes only from the real status of the cv agent through tested rules: idle and waiting stand, working picks up papers, completed jumps, failed falls and stays down. The credit test failed first (model without a credit) and now passes, the animation rules and the station layout were written test first, and four deliberate breaks of the rules are caught (one malformed edit was redone). The panel shows a Simulation badge, escapes all text (script and image tags stay plain text), and says the one rule: it only reorders and rewords the master CV. A first render floated outside the building because I measured the model in world coordinates, which was found in the screenshot and fixed by measuring a separate unplaced copy. 120 HQ tests pass, build clean, production audit 0.",
    "limit": "Status is sample data labelled Simulation until Job HQ can sign in (milestone M1). Poses are checked by screenshot only. Idle and waiting look alike, and the label above the character tells them apart.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 47,
+   "area": "Database access",
+   "check": "CV photo column (migration 0005)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The check failed first (column missing). After applying: the owner can save a real JPEG data address and remove it, an SVG image, a javascript address, an oversized photo and a value with quotes are all refused by the database, and another signed in user can neither read nor change the photo. Removing the validity rule inside a rolled back transaction made the check fail. No test rows were left.",
+   "limit": "The photo is stored as text in the owner only master CV row, so it is only as private as that row. Only the service role and the owner can read it.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 48,
+   "area": "Agent tools",
+   "check": "Photo only for Barcelona roles",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The tool decides, never the model: wants_photo is true only for a role in Spain whose city is Barcelona (or whose location text names Barcelona as a whole word), and every new version records withPhoto accordingly. The model cannot set withPhoto or photo (refused as unknown fields), and the photo is never handed to the model (a test searches the tool output for it). Tests failed first, 349 collector tests pass, 4 deliberate breaks caught (63 of 63). On the live data a Brussels and a Denmark draft came out without a photo and the Barcelona draft with one.",
+   "limit": "Roles stored with a missing city and no Barcelona in their location text get no photo.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 49,
+   "area": "Hostile input",
+   "check": "CV photo display and upload in the dashboard",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A tested check (15 cases) accepts only a plain JPEG data address under the size limit and refuses SVG, PNG, script and web addresses, quotes, spaces, angle brackets, non text values and oversized photos. A draft shows the photo only if it asks for it and the stored photo passes that check. The upload shrinks any picture to a small JPEG in the browser before saving. 76 web tests pass, type check clean.",
+   "limit": "The upload screen is checked by type and build only, not by a browser click test.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 50,
+   "area": "Live run",
+   "check": "First real tailoring of the owner's CV for three shortlisted roles",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The owner's master CV and photo were saved to the owner only table (read back as counts only: 1 row, 3 experience entries, 3 degrees, 10 skills, 3 languages, photo present). Three tasks were claimed and finished through the real tool, each version passed the truthfulness checks on the first submission, the audit log holds ids only, and three one page A4 PDFs were produced. The Back Market listing asks for SQL and data tools that are not in the CV, so the draft does not claim them.",
+   "limit": "The checks cannot judge meaning, so the owner reads every draft. The CV text and photo were handled only in the private scratch folder and the owner's own database, never in the repository.",
+   "date": "2026-11-19"
   }
  ]
 }

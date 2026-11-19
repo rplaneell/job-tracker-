@@ -2,7 +2,9 @@ import Link from "next/link";
 import { formatCvText, type CvMaster } from "@/lib/cvText";
 import { ago } from "@/lib/labels";
 import { serverClient } from "@/lib/supabase/server";
+import { isJpegDataUrl } from "@/lib/cvPhoto";
 import CvEditor from "./CvEditor";
+import PhotoSettings from "./PhotoSettings";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +13,7 @@ type VersionRow = { id: string; status: string; created_at: string; roles: { tit
 export default async function CvPage() {
   const supabase = await serverClient();
   const [master, versions] = await Promise.all([
-    supabase.from("cv_master").select("content").maybeSingle(),
+    supabase.from("cv_master").select("content,photo").maybeSingle(),
     supabase.from("cv_versions").select("id,status,created_at,roles(title,company)").order("created_at", { ascending: false }).limit(50),
   ]);
   let initial = "";
@@ -33,6 +35,10 @@ export default async function CvPage() {
       <section className="panel note">
         <h2>Master CV</h2>
         <CvEditor initial={initial} />
+      </section>
+      <section className="panel note">
+        <h2>Photo</h2>
+        <PhotoSettings hasMaster={Boolean(master.data)} initial={isJpegDataUrl(master.data?.photo) ? master.data!.photo : null} />
       </section>
       <section className="panel note">
         <h2>Tailored drafts</h2>

@@ -214,6 +214,7 @@ tr:last-child td { border-bottom: 0; }
 .cv-sheet h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--line); padding-bottom: 3px; margin: 18px 0 8px; }
 .cv-sheet ul { margin: 4px 0 0; padding-left: 18px; }
 .cv-contact { margin: 2px 0 0; color: var(--ink-2); }
+.cv-photo { float: right; width: 30mm; height: 40mm; object-fit: cover; object-position: top center; margin: 0 0 8px 16px; border-radius: 2px; }
 .cv-entry { margin-bottom: 10px; }
 .cv-dates { float: right; color: var(--ink-2); }
 @media print {

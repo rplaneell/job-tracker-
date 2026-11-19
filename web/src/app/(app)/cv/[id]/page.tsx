@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { CvEntry, CvItem } from "@/lib/cvText";
+import { photoFor } from "@/lib/cvPhoto";
 import { contactLine } from "@/lib/cvView";
 import { serverClient } from "@/lib/supabase/server";
 import VersionActions from "./VersionActions";
@@ -10,6 +11,8 @@ export const dynamic = "force-dynamic";
 type Version = {
   name: string; email: string; phone: string; location: string; links: string[]; summary: string;
   education: CvEntry[]; experience: CvEntry[]; skills: CvItem[]; languages: CvItem[];
+  /** Set by the tailoring tool, only for roles in Barcelona. */
+  withPhoto?: boolean;
 };
 
 function Entries({ title, list }: { title: string; list: CvEntry[] }) {
@@ -34,6 +37,9 @@ export default async function CvVersionPage({ params }: { params: Promise<{ id: 
   if (!data) notFound();
   const cv = data.content as Version;
   const role = Array.isArray(data.roles) ? data.roles[0] : data.roles;
+  // The photo is read only when this draft asks for it, and is printed only if it is a safe jpeg.
+  const photoRow = cv.withPhoto === true ? await supabase.from("cv_master").select("photo").maybeSingle() : null;
+  const photo = photoFor(cv.withPhoto, photoRow?.data?.photo);
 
   return (
     <>
@@ -46,6 +52,7 @@ export default async function CvVersionPage({ params }: { params: Promise<{ id: 
         <VersionActions id={data.id} status={data.status} roleId={data.role_id} />
       </div>
       <article className="cv-sheet panel">
+        {photo && /* eslint-disable-next-line @next/next/no-img-element */ <img className="cv-photo" src={photo} alt="" width={113} height={151} />}
         <h1>{cv.name}</h1>
         <p className="cv-contact">{contactLine(cv)}</p>
         {cv.links?.length ? <p className="cv-contact">{cv.links.join(" · ")}</p> : null}

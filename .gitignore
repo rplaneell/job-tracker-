@@ -32,3 +32,6 @@ coverage/
 
 # Build output from pip install -e
 *.egg-info/
+
+# Personal Claude Code permission choices for this computer
+.claude/settings.local.json

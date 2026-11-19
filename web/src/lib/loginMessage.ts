@@ -1,14 +1,17 @@
-/** The sentence the login page shows for a problem. Never repeats text taken from the address bar. */
-export type LoginProblem = { status?: number; code?: string; page?: string } | null;
+/** What the login page can say about a problem. Only known codes are shown; text from the address bar is never repeated. */
+export type LoginProblem = "not-owner" | "link" | "start";
 
-export function loginMessage(problem: LoginProblem): string | null {
-  if (!problem) return null;
-  if (problem.status === 429 || problem.code === "over_email_send_rate_limit") {
-    return "Too many links were requested. Wait about a minute, then ask for one new link and use only the newest email.";
-  }
-  if (problem.page === "link") {
-    return "That link could not sign you in. Open it in the same browser where you asked for it, then ask for a new link.";
-  }
-  if (problem.page !== undefined) return null; // an unknown value from the address bar says nothing
-  return "That email cannot sign in. Use the owner email set up in Supabase.";
+const MESSAGES: Record<LoginProblem, string> = {
+  "not-owner": "That Google account is not the owner account for this dashboard. Sign in with the Google account you set up as owner.",
+  link: "Sign in did not finish. Try again in the same browser.",
+  start: "Sign in could not start. Check your connection and try again.",
+};
+
+export function loginMessage(problem: string | null): string | null {
+  return problem !== null && Object.hasOwn(MESSAGES, problem) ? MESSAGES[problem as LoginProblem] : null;
+}
+
+/** Supabase sends people back to the callback with an error_code when Google works but the account may not enter. */
+export function callbackProblem(params: URLSearchParams): LoginProblem {
+  return params.get("error_code") === "signup_disabled" ? "not-owner" : "link";
 }

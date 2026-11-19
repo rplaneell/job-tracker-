@@ -5,7 +5,7 @@ import { safeHref } from "./safeHref";
 
 const country = fc.constantFrom("Netherlands", "Belgium", "Switzerland", "Spain", "Denmark", null);
 const role = fc.record({
-  id: fc.uuid(), company: fc.string({ maxLength: 20 }), title: fc.string({ maxLength: 40 }),
+  source: fc.constantFrom("greenhouse", "lever", "linkedin_alert"), id: fc.uuid(), company: fc.string({ maxLength: 20 }), title: fc.string({ maxLength: 40 }),
   city: fc.option(fc.string({ maxLength: 12 }), { nil: null }), country,
   field_tag: fc.option(fc.constantFrom("consulting", "finance", "vc"), { nil: null }), level_tag: fc.constant(null),
   matched: fc.boolean(), status: fc.constantFrom("open" as const, "closed" as const),

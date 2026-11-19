@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { introClock } from './introClock';
 
-export type Department = 'reception' | 'scouting' | 'cv';
+export type Department = 'reception' | 'scouting' | 'cv' | 'linkedin';
 
 interface HqState {
   /** Which department the camera is focused on, if any. */

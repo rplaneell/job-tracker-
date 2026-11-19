@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from jobtracker.models import Role
-from jobtracker.rules import Rules, load_rules, matches, tag_field, tag_level
+from jobtracker.rules import Rules, is_dropped, load_rules, matches, tag_field, tag_level
 
 RULES = Rules(
     countries=["Switzerland", "Spain"],
@@ -130,3 +130,28 @@ def test_shipped_rules_reject_management_and_senior_titles():
                   "Team Lead, Consulting", "Vice President, Finance", "Engineering Manager", "Chief of Staff Analyst",
                   "Principal Consultant", "Partner, Healthcare"]:
         assert not matches(role(title=title, country="Spain"), rules), title
+
+
+DROP_RULES = Rules(countries=["Switzerland"], include_keywords=["analyst"], exclude_keywords=[], field_keywords={}, level_keywords={}, drop_title_words=["senior", "sr"])
+
+
+def test_a_role_with_a_never_wanted_word_in_the_title_is_dropped():
+    for title in ["Senior Analyst", "Analyst, Senior", "SENIOR business analyst", "Sr. Consultant", "Sr Analyst"]:
+        assert is_dropped(role(title=title), DROP_RULES), title
+
+
+def test_only_whole_words_in_the_title_count_and_the_description_never_does():
+    for title in ["Seniority Analyst", "Junior Analyst", "Analyst", "Srinagar Analyst"]:
+        assert not is_dropped(role(title=title, description="Report to a senior director. Senior leadership team."), DROP_RULES), title
+
+
+def test_nothing_is_dropped_when_no_words_are_set():
+    assert not is_dropped(role(title="Senior Analyst"), RULES)
+
+
+def test_the_real_rules_drop_senior_roles():
+    from pathlib import Path
+
+    real = load_rules(Path(__file__).resolve().parents[2] / "rules.yaml")
+    assert is_dropped(role(title="Senior Consultant, Life Sciences"), real)
+    assert not is_dropped(role(title="Associate Consultant, Life Sciences"), real)

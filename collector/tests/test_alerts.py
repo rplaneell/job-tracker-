@@ -70,10 +70,18 @@ def test_the_same_job_twice_counts_once_and_a_huge_batch_is_refused():
 
 def test_roles_are_stored_and_matching_ones_are_queued_for_scouting():
     db = FakeClient()
-    out = alerts.add_alerts(db, [item(), item(url="https://www.linkedin.com/jobs/view/2/", title="Senior Manager Strategy")], RULES, NOW)
+    out = alerts.add_alerts(db, [item(), item(url="https://www.linkedin.com/jobs/view/2/", title="Strategy Analyst, Events Marketing")], RULES, NOW)
     assert out["stored_new"] == 2 and out["queued_for_scouting"] == 1
     assert {r["source"] for r in db.tables["roles"]} == {"linkedin_alert"}
     assert sum(len(t["payload"]["role_ids"]) for t in db.tables["agent_tasks"]) == 1
+
+
+def test_a_senior_role_in_an_alert_is_never_stored_or_queued():
+    db = FakeClient()
+    out = alerts.add_alerts(db, [item(title="Senior Manager Strategy"), item(url="https://www.linkedin.com/jobs/view/2/", title="Sr. Consultant"), item(url="https://www.linkedin.com/jobs/view/3/")], RULES, NOW)
+    assert out["stored_new"] == 1 and out["queued_for_scouting"] == 1
+    assert out["dropped"] == {"title word you never want": 2}
+    assert [r["source_id"] for r in db.tables["roles"]] == ["3"]
 
 
 def test_roles_outside_the_five_regions_are_not_stored():

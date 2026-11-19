@@ -11,6 +11,7 @@ export interface OfficeClient {
 }
 
 const NEW_ROLE_DAYS = 3;
+const ALERT_DAYS = 7;
 
 async function read(query: OfficeQuery, table: string): Promise<unknown[]> {
   const { data, error } = await query;
@@ -24,12 +25,18 @@ async function read(query: OfficeQuery, table: string): Promise<unknown[]> {
  */
 export async function readOffice(client: OfficeClient, now: Date) {
   const since = new Date(now.getTime() - NEW_ROLE_DAYS * 86_400_000).toISOString();
-  const [tasks, verdicts, versions, applications, newRoles] = await Promise.all([
+  const alertsSince = new Date(now.getTime() - ALERT_DAYS * 86_400_000).toISOString();
+  const [tasks, verdicts, versions, applications, newRoles, alerts, intakes] = await Promise.all([
     read(client.from("agent_tasks").select("id,kind,status,claimed_at,created_at,finished_at").order("created_at", { ascending: false }).limit(200), "agent_tasks"),
     read(client.from("scout_verdicts").select("role_id,score,reason,shortlisted,roles(title,company)").order("created_at", { ascending: false }).limit(200), "scout_verdicts"),
     read(client.from("cv_versions").select("id,status,roles(title,company)").order("created_at", { ascending: false }).limit(50), "cv_versions"),
     read(client.from("applications").select("stage,applied_at,roles(title,company)").limit(500), "applications"),
     read(client.from("roles").select("city").eq("matched", true).eq("status", "open").gte("first_seen", since).limit(500), "roles"),
+    read(
+      client.from("roles").select("id,title,company,city,url,matched,first_seen,scout_verdicts(score,shortlisted)").eq("source", "linkedin_alert").eq("status", "open").gte("first_seen", alertsSince).order("first_seen", { ascending: false }).limit(100),
+      "roles",
+    ),
+    read(client.from("audit_log").select("at,detail").eq("action", "alerts_add").order("at", { ascending: false }).limit(20), "audit_log"),
   ]);
-  return { now: now.toISOString(), tasks, verdicts, versions, applications, newRoles };
+  return { now: now.toISOString(), tasks, verdicts, versions, applications, newRoles, alerts, intakes };
 }

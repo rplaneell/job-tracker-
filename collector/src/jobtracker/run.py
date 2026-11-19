@@ -22,7 +22,7 @@ from jobtracker.adapters.teamtailor import fetch_teamtailor
 from jobtracker.compliance import PoliteClient
 from jobtracker.models import Role
 from jobtracker.registry import Source, load_sources
-from jobtracker.rules import Rules, in_region, load_rules, matches, tag_field, tag_level
+from jobtracker.rules import Rules, in_region, is_dropped, load_rules, matches, tag_field, tag_level
 from jobtracker.store import Store
 
 ADAPTERS: dict[str, Callable[[httpx.Client, Source], list[Role]]] = {
@@ -96,7 +96,7 @@ def run_collection(
             store.record_run(source.name, True, 0, "empty list returned, roles not closed", now)
             continue
         # Only roles in the owner's regions are stored, so a long source list cannot flood the database.
-        kept = [r for r in roles if in_region(r, rules)]
+        kept = [r for r in roles if in_region(r, rules) and not is_dropped(r, rules)]
         matched = {r.key: matches(r, rules) for r in kept}
         tags = {r.key: (tag_field(r, rules), tag_level(r, rules)) for r in kept}
         new_roles = store.upsert_roles(kept, matched, tags, now)

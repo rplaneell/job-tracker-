@@ -7,6 +7,8 @@ import { SHADOWS_AT_MS } from '../domain/intro';
 import { introClock, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
 import { CameraRig } from './CameraRig';
+import { LinkedInDesk } from './LinkedInDesk';
+import type { LinkedInStatus } from '../domain/linkedin';
 import { CvTailor } from './CvTailor';
 import { GoblinCrew } from './GoblinCrew';
 import { Lighting } from './Lighting';
@@ -22,6 +24,7 @@ interface SceneProps {
   scoutStatus: ScoutStatus;
   /** The real status of the CV agent. It decides what the CV Tailor character does. */
   cvStatus: ScoutStatus;
+  deskStatus: LinkedInStatus;
   /** True while the status is sample data, so the label above the goblins says so. */
   simulated: boolean;
 }
@@ -51,7 +54,7 @@ function FloorShadows() {
 }
 
 /** The 3D office. It gets plain values in and reports clicks through the store. It never touches job data. */
-export function Scene({ managerLine, corner, scoutStatus, cvStatus, simulated }: SceneProps) {
+export function Scene({ managerLine, corner, scoutStatus, cvStatus, deskStatus, simulated }: SceneProps) {
   const lowPower = useHq((s) => s.lowPower);
   const shadows = !lowPower;
   const dir = CORNERS[corner] ?? CORNERS[0];
@@ -78,6 +81,9 @@ export function Scene({ managerLine, corner, scoutStatus, cvStatus, simulated }:
         </SafeBoundary>
         <SafeBoundary>
           <CvTailor status={cvStatus} shadows={shadows} simulated={simulated} />
+        </SafeBoundary>
+        <SafeBoundary>
+          <LinkedInDesk status={deskStatus} shadows={shadows} simulated={simulated} />
         </SafeBoundary>
         <FloorShadows />
         <ReadyFlag />

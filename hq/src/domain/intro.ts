@@ -99,7 +99,7 @@ export const WAVE_MS = 450;
 /** How long a character takes to pop in. */
 export const POP_MS = 400;
 /** When each character starts to pop in. Goblins add a little per goblin. */
-export const POP_START = { manager: 1900, cv: 2000, goblins: 2100, goblinStep: 60 };
+export const POP_START = { manager: 1900, cv: 2000, linkedin: 2050, goblins: 2100, goblinStep: 60 };
 
 const BY_MATERIAL: Record<string, Wave> = {
   'floor.001': 'floor',

@@ -1,8 +1,9 @@
-import type { OfficeData } from '../data/officeData';
+import type { LinkedInAlert, OfficeData } from '../data/officeData';
+import { deskStatus, type LinkedInStatus } from './linkedin';
 import type { ScoutItem } from '../data/scoutData';
 import type { CvDraft } from '../ui/CvPanel';
 import { buildReceptionView, type Priority, type ReceptionView, type Stage } from './reception';
-import { SAMPLE_APPLICATIONS, SAMPLE_CV_DRAFTS, SAMPLE_CV_TASKS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from './sample';
+import { SAMPLE_ALERTS, SAMPLE_APPLICATIONS, SAMPLE_CV_DRAFTS, SAMPLE_CV_TASKS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from './sample';
 import type { AgentTask } from './scouting';
 
 /** loading: asked and waiting. live: real data read. unavailable: could not be read. sample: running on its own without the dashboard. */
@@ -15,6 +16,9 @@ export interface OfficeState {
   cvTasks: AgentTask[];
   scoutItems: ScoutItem[];
   cvDrafts: CvDraft[];
+  alerts: LinkedInAlert[];
+  lastIntake: OfficeData['lastIntake'];
+  deskStatus: LinkedInStatus;
   /** True only for sample data, so its labels show. Real data and empty states carry no label. */
   simulated: boolean;
   /** live: real data. simulation: labelled sample data. none: there is nothing to show, because nothing was read. */
@@ -25,7 +29,7 @@ export interface OfficeState {
 
 /** Decides what the office shows. Sample content can only appear in sample mode, never next to real or missing data. */
 export function buildOfficeState(mode: OfficeMode, data: OfficeData | null, now: Date): OfficeState {
-  const empty = { scoutTasks: [] as AgentTask[], cvTasks: [] as AgentTask[], scoutItems: [] as ScoutItem[], cvDrafts: [] as CvDraft[] };
+  const empty = { scoutTasks: [] as AgentTask[], cvTasks: [] as AgentTask[], scoutItems: [] as ScoutItem[], cvDrafts: [] as CvDraft[], alerts: [] as LinkedInAlert[], lastIntake: null as OfficeData['lastIntake'] };
   let priorities: Priority[] = [];
   let applications: { stage: Stage }[] = [];
   let content = empty;
@@ -34,11 +38,11 @@ export function buildOfficeState(mode: OfficeMode, data: OfficeData | null, now:
     priorities = data.priorities;
     applications = data.applications;
     when = data.now;
-    content = { scoutTasks: data.scoutTasks, cvTasks: data.cvTasks, scoutItems: data.scoutItems, cvDrafts: data.cvDrafts };
+    content = { scoutTasks: data.scoutTasks, cvTasks: data.cvTasks, scoutItems: data.scoutItems, cvDrafts: data.cvDrafts, alerts: data.alerts, lastIntake: data.lastIntake };
   } else if (mode === 'sample') {
     priorities = SAMPLE_PRIORITIES;
     applications = SAMPLE_APPLICATIONS;
-    content = { scoutTasks: SAMPLE_SCOUT_TASKS, cvTasks: SAMPLE_CV_TASKS, scoutItems: SAMPLE_SCOUT_ITEMS, cvDrafts: SAMPLE_CV_DRAFTS };
+    content = { scoutTasks: SAMPLE_SCOUT_TASKS, cvTasks: SAMPLE_CV_TASKS, scoutItems: SAMPLE_SCOUT_ITEMS, cvDrafts: SAMPLE_CV_DRAFTS, alerts: SAMPLE_ALERTS, lastIntake: null };
   }
   let view = buildReceptionView(priorities, applications, when);
   let line = `${view.greeting}. ${view.headline}`;
@@ -54,5 +58,5 @@ export function buildOfficeState(mode: OfficeMode, data: OfficeData | null, now:
     notice = 'The office could not read your data. Sign in again or try later.';
   }
   const source = mode === 'sample' ? 'simulation' : mode === 'loading' || unread ? 'none' : 'live';
-  return { line, view, ...content, simulated: mode === 'sample', source, notice };
+  return { line, view, ...content, deskStatus: deskStatus(content.lastIntake?.at ?? null, when), simulated: mode === 'sample', source, notice };
 }

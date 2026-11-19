@@ -11,7 +11,7 @@ export default async function Roles() {
   const [{ data: roles }, { data: apps }, { data: runs }] = await Promise.all([
     supabase
       .from("roles")
-      .select("id,company,title,city,country,field_tag,level_tag,matched,status,first_seen,posted_at,url")
+      .select("id,source,company,title,city,country,field_tag,level_tag,matched,status,first_seen,posted_at,url")
       .eq("status", "open")
       .order("first_seen", { ascending: false })
       .limit(5000),

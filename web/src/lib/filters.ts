@@ -1,5 +1,7 @@
 export type RoleRow = {
   id: string;
+  /** Which collector produced the role: a company board (greenhouse, lever...) or linkedin_alert. */
+  source: string;
   company: string;
   title: string;
   city: string | null;
@@ -16,19 +18,28 @@ export type RoleRow = {
 export type Filters = {
   country?: string;
   city?: string;
+  /** linkedin: only alerts from the owner's LinkedIn emails. boards: only company job boards. Empty: both. */
+  source?: "" | "linkedin" | "boards";
   field?: string;
   matchedOnly: boolean;
   search: string;
 };
+
+/** Senior roles are never wanted, so they are hidden even when an older collection stored them. Whole word in the title only. */
+export const isUnwantedTitle = (title: string): boolean => /(?<![\p{L}\p{N}])(senior|sr)(?![\p{L}\p{N}])/iu.test(title);
+
+export const isLinkedInAlert = (r: Pick<RoleRow, "source">): boolean => r.source === "linkedin_alert";
 
 /** Open roles only; matches to the owner's profile first, then the newest first. */
 export function applyFilters(roles: RoleRow[], f: Filters): RoleRow[] {
   const q = f.search.trim().toLowerCase();
   return roles
     .filter((r) => r.status === "open")
+    .filter((r) => !isUnwantedTitle(r.title))
     .filter((r) => !f.matchedOnly || r.matched)
     .filter((r) => !f.country || r.country === f.country)
     .filter((r) => !f.city || r.city === f.city)
+    .filter((r) => !f.source || (f.source === "linkedin") === isLinkedInAlert(r))
     .filter((r) => !f.field || r.field_tag === f.field)
     .filter((r) => !q || r.title.toLowerCase().includes(q) || r.company.toLowerCase().includes(q))
     .sort((a, b) => Number(b.matched) - Number(a.matched) || b.first_seen.localeCompare(a.first_seen));

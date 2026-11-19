@@ -4,7 +4,7 @@ import { OrthographicCamera, Vector3 } from 'three';
 import { introFrame } from '../domain/intro';
 import { introClock, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
-import { CAMERA, CORNERS, CV_STATION, GLASS_OFFICE, OFFICE, fitZoom } from './layout';
+import { CAMERA, CORNERS, CV_STATION, GLASS_OFFICE, LINKEDIN_STATION, OFFICE, fitZoom } from './layout';
 import { rotateDirection } from './rotation';
 
 const UP = new Vector3(0, 1, 0);
@@ -22,6 +22,7 @@ export function CameraRig({ corner }: { corner: number }) {
   const desk = useMemo(() => new Vector3(...OFFICE.desk.center), []);
   const glass = useMemo(() => new Vector3(...GLASS_OFFICE.center), []);
   const station = useMemo(() => new Vector3(...CV_STATION.center), []);
+  const linkedin = useMemo(() => new Vector3(...LINKEDIN_STATION.center), []);
   const current = useMemo(() => overview.clone(), [overview]);
   const goal = useMemo(() => new Vector3(), []);
   const tilted = useMemo(() => new Vector3(), []);
@@ -45,8 +46,8 @@ export function CameraRig({ corner }: { corner: number }) {
       return;
     }
     const focused = focus !== null;
-    const zoom = focused ? fit * (focus === 'scouting' ? CAMERA.scoutFocusFactor : focus === 'cv' ? CAMERA.cvFocusFactor : CAMERA.focusFactor) : fit;
-    goal.copy(focus === 'reception' ? desk : focus === 'scouting' ? glass : focus === 'cv' ? station : overview);
+    const zoom = focused ? fit * (focus === 'scouting' ? CAMERA.scoutFocusFactor : focus === 'cv' ? CAMERA.cvFocusFactor : focus === 'linkedin' ? CAMERA.linkedinFocusFactor : CAMERA.focusFactor) : fit;
+    goal.copy(focus === 'reception' ? desk : focus === 'scouting' ? glass : focus === 'cv' ? station : focus === 'linkedin' ? linkedin : overview);
     if (focused && size.width >= 900) {
       // Slide the view so the desk sits in the free area to the left of the side panel.
       goal.addScaledVector(right, CAMERA.panelPx / 2 / zoom);

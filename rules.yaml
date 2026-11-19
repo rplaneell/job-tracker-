@@ -37,6 +37,8 @@ field_keywords:
   vc: [venture, vc, investment, portfolio, fund]
   business_analyst: [business analyst, analyst, analytics]
   business_development: [business development, partnerships, bd]
+# A role with one of these whole words in its TITLE is never stored or shown at all (the owner does not want senior roles).
+drop_title_words: [senior, sr]
 # The health science label also goes to a role whose posting names at least 3 different strong science terms below
 # (a business analyst at a biotech company), unless the job is shop floor or hospitality work.
 science_min_terms: 3

@@ -24,9 +24,9 @@ export const CREDITS: Credit[] = [
   },
   {
     file: 'goblin.glb',
-    title: 'Low Poly Goblin (Rigged)',
-    author: 'Yanez Designs',
-    url: 'https://sketchfab.com/3d-models/low-poly-goblin-rigged-7dc07eff136d4725ac6d1d5001656182',
+    title: 'Ape-like Goblin (Gameready)',
+    author: 'Livagof',
+    url: 'https://sketchfab.com/3d-models/ape-like-goblin-gameready-573e13159e7a4b2cad3fe34a1c754dcc',
     use: 'The Scouting goblins',
   },
   {
@@ -35,5 +35,12 @@ export const CREDITS: Credit[] = [
     author: 'Agor_2012',
     url: 'https://sketchfab.com/3d-models/low-poly-ordinary-man-in-shirt-and-pants-f658b9e1bb324f2ab1e9f00d7d6b4065',
     use: 'The CV Tailor',
+  },
+  {
+    file: 'linkedin_host.glb',
+    title: 'Casual NPC Woman | Free Low-Poly 3D Model',
+    author: 'Stas_SayHallo',
+    url: 'https://sketchfab.com/3d-models/casual-npc-woman-free-low-poly-3d-model-48902da4e3f8494b80e349a3cb819385',
+    use: 'The LinkedIn desk host',
   },
 ];

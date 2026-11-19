@@ -1,0 +1,5 @@
+# False alarms: the word "linkedinStatus" is a code identifier (a function and property name), not a key.
+# The identifier is now called deskStatus. These fingerprints cover the one earlier commit that still has the old name.
+7abf21e21a966a45fa512f1b665dc0c3b180b6b8:hq/src/domain/officeState.ts:linkedin-client-id:21
+7abf21e21a966a45fa512f1b665dc0c3b180b6b8:hq/src/scene/Scene.tsx:linkedin-client-id:27
+7abf21e21a966a45fa512f1b665dc0c3b180b6b8:hq/src/domain/linkedin.test.ts:linkedin-client-secret:2

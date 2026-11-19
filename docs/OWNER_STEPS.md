@@ -56,3 +56,16 @@ The tools need the Supabase secret key. In a Claude Code cloud session it is sto
 on your project host, entered only in the secure form, never in chat. The newer `sb_secret_` keys belong in `apikey`, not in
 `Authorization`. To stop access, remove the entry under Network secrets in the cloud environment's settings, and create a new
 key in Supabase if you think it was exposed.
+
+## Tailoring a CV
+
+1. In the dashboard open **Your CV**, type or paste your master CV in the plain text layout, and press **Save master CV**.
+   Write only true things, one fact per line. Real numbers are fine. Anything you do not write here can never appear in a draft.
+2. Open a role you care about and press **Tailor my CV**. This only queues a request. Nothing is sent anywhere.
+3. In a Claude Code session on this repository say: "Tailor my CV for the queued task." Claude Code uses the tools in
+   `collector/src/jobtracker/cv.py` (claim, read, submit, finish). The tool copies your employers, degrees and dates itself and
+   refuses any new number or name that is not in your master CV, the company or the role title.
+4. Open the draft from the role page or from **Your CV**, read every line, press **Approve this draft**, then **Print or save as PDF**.
+
+The check cannot judge meaning. A reworded line could still read as stronger than the truth, so you are the final reader.
+Your CV text never goes into the activity log and is never sent to any outside service.

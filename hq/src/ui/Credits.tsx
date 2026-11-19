@@ -32,7 +32,7 @@ export function Credits() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-ink-soft">Changes made: meshes merged, textures resized and compressed, the characters placed in the scene, and the sword removed from the goblin. Licence: creativecommons.org/licenses/by/4.0</p>
+        <p className="mt-4 text-xs text-ink-soft">Changes made: meshes merged, textures resized and compressed, the characters placed in the scene, the sword removed from the goblin, and unused animations removed from the CV Tailor. Licence: creativecommons.org/licenses/by/4.0</p>
       </section>
     </div>
   );

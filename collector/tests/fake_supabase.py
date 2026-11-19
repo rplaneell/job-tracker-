@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 class FakeClient:
     def __init__(self) -> None:
-        self.tables: dict[str, list[dict]] = {"roles": [], "applications": [], "source_runs": [], "agent_tasks": [], "scout_verdicts": [], "audit_log": []}
+        self.tables: dict[str, list[dict]] = {"roles": [], "applications": [], "source_runs": [], "agent_tasks": [], "scout_verdicts": [], "audit_log": [], "cv_master": [], "cv_versions": [], "career_profile": [], "career_profile_revisions": []}
         self.touched: list[str] = []
         self.after_select = None  # optional hook: simulates another session acting right after a read
 

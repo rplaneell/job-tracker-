@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react';
 import { buildReceptionView } from '../domain/reception';
-import { SAMPLE_APPLICATIONS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from '../domain/sample';
+import { SAMPLE_APPLICATIONS, SAMPLE_CV_DRAFTS, SAMPLE_CV_TASKS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from '../domain/sample';
 import { parseSimStatus, scoutStatus } from '../domain/scouting';
 import { Scene } from '../scene/Scene';
 import { useHq } from '../state/useHq';
 import { Credits } from '../ui/Credits';
+import { CvPanel } from '../ui/CvPanel';
 import { ReceptionPanel } from '../ui/ReceptionPanel';
 import { ScoutPanel } from '../ui/ScoutPanel';
 
@@ -26,11 +27,12 @@ export function App() {
   const line = `${view.greeting}. ${view.headline}`;
   // Simulation until milestone M1 signs HQ in to the database. The panel says so on screen.
   const scout = useMemo(() => parseSimStatus(window.location.search) ?? scoutStatus(SAMPLE_SCOUT_TASKS, now), [now]);
+  const cv = useMemo(() => parseSimStatus(window.location.search, 'simcv') ?? scoutStatus(SAMPLE_CV_TASKS, now), [now]);
 
   // A link such as ?focus=reception opens that department straight away.
   useEffect(() => {
     const wanted = new URLSearchParams(window.location.search).get('focus');
-    if (wanted === 'reception' || wanted === 'scouting') openDepartment(wanted);
+    if (wanted === 'reception' || wanted === 'scouting' || wanted === 'cv') openDepartment(wanted);
   }, [openDepartment]);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export function App() {
 
   return (
     <div className="relative h-full w-full">
-      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} simulated />
+      <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} simulated />
 
       <div className="pointer-events-none absolute inset-0">
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
@@ -68,6 +70,13 @@ export function App() {
           </button>
           <button
             type="button"
+            onClick={() => openDepartment('cv')}
+            className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
+          >
+            CV Tailor
+          </button>
+          <button
+            type="button"
             onClick={() => setLowPower(!lowPower)}
             aria-pressed={lowPower}
             className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
@@ -84,6 +93,7 @@ export function App() {
         </div>
 
         {focus === 'reception' && <ReceptionPanel view={view} now={now} />}
+        {focus === 'cv' && <CvPanel status={cv} drafts={SAMPLE_CV_DRAFTS} source="simulation" onClose={leave} />}
         {focus === 'scouting' && <ScoutPanel status={scout} items={SAMPLE_SCOUT_ITEMS} source="simulation" onClose={leave} />}
       </div>
       <Credits />

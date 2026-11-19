@@ -1,18 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { loginMessage, type LoginProblem } from "@/lib/loginMessage";
 import { browserClient } from "@/lib/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [problem, setProblem] = useState<LoginProblem>(null);
+
+  useEffect(() => {
+    // the callback page sends people back here with ?error=link when a sign in link could not be used
+    const page = new URLSearchParams(location.search).get("error");
+    if (page) setProblem({ page });
+  }, []);
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
     setState("sending");
+    setProblem(null);
     const { error } = await browserClient().auth.signInWithOtp({
       email,
       options: { shouldCreateUser: false, emailRedirectTo: `${location.origin}/auth/callback` },
     });
+    if (error) setProblem({ status: error.status, code: error.code });
     setState(error ? "error" : "sent");
   }
 
@@ -42,7 +52,7 @@ export default function Login() {
           </button>
         </form>
         {state === "sent" && <p className="status" role="status">Check your inbox for the link.</p>}
-        {state === "error" && <p className="alert" role="alert">That email cannot sign in. Use the owner email set up in Supabase.</p>}
+        {loginMessage(problem) && <p className="alert" role="alert">{loginMessage(problem)}</p>}
       </section>
     </main>
   );

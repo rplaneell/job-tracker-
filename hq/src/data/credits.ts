@@ -29,4 +29,11 @@ export const CREDITS: Credit[] = [
     url: 'https://sketchfab.com/3d-models/low-poly-goblin-rigged-7dc07eff136d4725ac6d1d5001656182',
     use: 'The Scouting goblins',
   },
+  {
+    file: 'cv_tailor.glb',
+    title: 'Low poly ordinary man in shirt and pants',
+    author: 'Agor_2012',
+    url: 'https://sketchfab.com/3d-models/low-poly-ordinary-man-in-shirt-and-pants-f658b9e1bb324f2ab1e9f00d7d6b4065',
+    use: 'The CV Tailor',
+  },
 ];

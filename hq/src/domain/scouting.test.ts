@@ -53,6 +53,10 @@ import { parseSimStatus } from './scouting';
 
 describe('parseSimStatus', () => {
   it.each(['idle', 'waiting', 'working', 'completed', 'failed'])('accepts ?sim=%s', (s) => expect(parseSimStatus(`?sim=${s}`)).toBe(s));
+  it('reads another parameter name when asked', () => {
+    expect(parseSimStatus('?simcv=working', 'simcv')).toBe('working');
+    expect(parseSimStatus('?sim=working', 'simcv')).toBeNull();
+  });
   it('ignores unknown values, missing values and other parameters', () => {
     expect(parseSimStatus('?sim=exploded')).toBeNull();
     expect(parseSimStatus('')).toBeNull();

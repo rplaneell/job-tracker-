@@ -369,6 +369,166 @@
    "detail": "Scouting found that the collector marks roles in Madrid as matching because the rules accept the whole country of Spain, while the owner asked for Barcelona. Many matched roles are also junior sales, retail or software testing roles that fit no stated target field (consulting, finance, VC, analyst, business development, health). Fix: city_limits in rules.yaml (Spain: Barcelona only), applied both when storing and when matching, with an unknown city accepted only if the raw location text names Barcelona as a whole word. Added exclusions for social media, quality assurance, QA, retail, sales associate and part time titles. Tests failed first. The golden decision file changed in exactly one line (a Spanish role with no city given), read and accepted. 3 more deliberate breaks, all 42 caught.",
    "limit": "Fixed in rules.yaml and the rules code. The matched flag is still only a title keyword filter, so some weak fits remain (for example junior sales rep roles). Scouting scoring is the second filter. Roles already stored for Madrid close on the next collection run, which no longer reads them as in region.",
    "date": "2026-11-18"
+  },
+  {
+   "id": 38,
+   "area": "Agent tools",
+   "check": "Daily Scouting schedule, first test run in a fresh session",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A fresh Claude Code session started from the scheduled task reviewed the remaining 3 tasks (107 roles) with no errors and no injection attempts, and stopped with nothing queued. Read back from the database: 157 verdicts in total, 6 shortlisted, all 4 tasks done, audit log 169 rows (4 claims, 4 reads, 157 submits, 4 finishes), matching the session's own report. Three setup snags were found and fixed in the instructions: add_repo was missing (git clone works), the package needs Python 3.12 (3.11 was the default), and the editable install rewrote tracked egg-info files (now untracked and ignored). The session also caught listings whose city did not match the text and said so in the reasons.",
+   "limit": "The schedule has run once, by hand. The first unattended run is tomorrow at 08:20 Madrid time. Each run uses Claude Code usage. The service key stays in the environment's network secrets until the owner removes it.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 39,
+   "area": "Database access",
+   "check": "Owner only CV tables (migration 0004)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The check failed first (tables missing). After applying, a second signed in user sees and changes nothing in cv_master and cv_versions and cannot queue a tailoring task. The owner can read and edit the master CV, read, approve and delete versions, and queue only a queued tailor_cv task (a scout task, a finished task and a claimed task are all refused). Versions can only be written by the service role. Loosening the task policy in a rolled back transaction made the check fail. No test rows were left. The advisor shows no new warnings.",
+   "limit": "The tables are empty until the owner saves a CV. The old tables (roles, applications, source_runs) still allow any signed in user.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 40,
+   "area": "Hostile input",
+   "check": "CV text format (web/src/lib/cvText.ts)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 53 web tests pass with coverage above the floors. The parser keeps everything as plain text (a script tag and a bold tag stay as text), refuses entries with the wrong number of parts, links that are not http or https (javascript, ftp and file addresses), unknown sections, over long lines and over long CVs, reports every problem with its line number, and never throws on any input (property test). parse(format(cv)) returns the same CV (property test). Four deliberate breaks: three first survived and pointed at missing tests (entry with too many parts, non web links, multi line summary), which were added, and all four are now caught.",
+   "limit": "Format checks only. Whether the content is true is checked by the tailoring tool in Task 3, and the dashboard pages come in Task 4.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 41,
+   "area": "Agent tools",
+   "check": "CV tailoring tool and truthfulness validator (collector/src/jobtracker/cv.py)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Tests failed first (module missing), then 29 pass; the whole collector suite stays above the coverage floor. A tailored CV can only select, reorder and reword the master: the program copies employers, schools, degrees, dates and contact details, and refuses extra fields, unknown or reused ids, bullets from another entry, any number not in the original bullet, any new name not in the master CV, the company or the role title, over long or non text, and empty versions. A hostile instruction such as adding 10 years of Python experience is refused. Hypothesis properties: no number absent from the source ever gets through, and any text is either accepted or refused with a clear error. Two sessions cannot claim one task, stale claims are requeued, the audit log holds ids, counts and rule codes only (a test searches it for the CV text). 13 deliberate breaks, all caught (55 of 55 overall).",
+   "limit": "The validator cannot tell whether a reworded sentence is still true in meaning, only that it adds no new number or name. Spelled out numbers (twelve) and non capitalised new skills can pass, so the owner must read each draft before using it. Tested against the in memory stand in, not yet the live database.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 42,
+   "area": "Hostile input",
+   "check": "CV dashboard pages (editor, draft viewer, tailor button)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "Built and checked: 61 web tests pass with coverage above the floors, the production build is clean, and a logged out visitor to /cv, /cv/ID and a role page is redirected to the login page. All CV and role text is rendered as plain text by React (no raw HTML anywhere), links in a CV are shown as text and are not clickable, the editor refuses anything but http and https links, and the button state logic is tested (queued, working, stale claim, unreadable date). Writes use only what the database policies allow: save the master CV, approve or delete a draft, queue one tailor_cv task. Checked by screenshots of the three screens with a fictional CV.",
+   "limit": "No browser click tests and no check of the print output beyond the styles. Screens were checked against a local stand in for the database, not the live project, because no CV is saved yet.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 43,
+   "area": "Collector requests",
+   "check": "Redirects are checked step by step (independent security review, low item 1)",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "A separate reviewer read the whole repository and found nothing above its confidence bar. It listed two low items. The first was real as a politeness and safety gap: the collector's web client followed redirects by itself, so a redirect target was never checked against robots.txt or paced. Tests failed first. Now the gate follows each redirect itself, up to 3 steps, and every new host passes its own robots.txt and pacing. Redirects to plain http, IP addresses, localhost, other schemes, or loops are refused. 336 collector tests pass at 91% coverage and 4 new deliberate breaks are caught (59 of 59).",
+   "limit": "The robots.txt request itself may still follow redirects (the standard allows it) and its reply is only read as rules. A vendor can still redirect to another named https host that allows robots, which is then read like any board.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 44,
+   "area": "Collector requests",
+   "check": "Hostile role ids in database filters (independent security review, low item 2)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The reviewer could not confirm how the database library quotes odd characters in an in filter. I checked the real library: it quotes values with commas, brackets, quotes or backslashes and escapes embedded quotes and backslashes, and URL encodes the rest, so a hostile id such as x\"),(source_id.eq.\"y or a)&select=* stays one item inside one filter and cannot add filters. A newline is left unquoted but stays an ordinary character in the one value. A regression test now pins this for 9 hostile values, so a library update that changed it would fail the tests.",
+   "limit": "This relies on the library's behavior, which the test guards but does not control.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 45,
+   "area": "Independent review",
+   "check": "Full repository security review by a fresh reviewer",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A fresh read only reviewer went through the whole tracked tree (collector, migrations, web proxy and pages, hq data mapper, workflows, tools) against injection, XSS, XML, YAML, SSRF, authorization, secrets and workflow risks. No finding reached the 80 percent confidence bar. It also named the controls it verified as sound: link safety, escaped digest, safe XML and YAML, the Supabase address check, the Ashby exception, the scout tool limits, the owner only policies, the audit log triggers, the login redirect and workflow permissions.",
+   "limit": "One reviewer, one pass, read only. It saw the repository as of the CV tables migration and tools, not the CV dashboard pages written afterwards, which were checked by my own tests and screenshots. Not a penetration test.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 46,
+   "area": "Agent honesty",
+   "check": "CV Tailor character in the office",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A person (model 'Low poly ordinary man in shirt and pants' by Agor_2012, CC BY 4.0, textures reduced and seven unused animations removed) stands in the aisle between the two desk islands. What he does comes only from the real status of the cv agent through tested rules: idle and waiting stand, working picks up papers, completed jumps, failed falls and stays down. The credit test failed first (model without a credit) and now passes, the animation rules and the station layout were written test first, and four deliberate breaks of the rules are caught (one malformed edit was redone). The panel shows a Simulation badge, escapes all text (script and image tags stay plain text), and says the one rule: it only reorders and rewords the master CV. A first render floated outside the building because I measured the model in world coordinates, which was found in the screenshot and fixed by measuring a separate unplaced copy. 120 HQ tests pass, build clean, production audit 0.",
+   "limit": "Status is sample data labelled Simulation until Job HQ can sign in (milestone M1). Poses are checked by screenshot only. Idle and waiting look alike, and the label above the character tells them apart.",
+   "date": "2026-11-18"
+  },
+  {
+   "id": 47,
+   "area": "Database access",
+   "check": "CV photo column (migration 0005)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The check failed first (column missing). After applying: the owner can save a real JPEG data address and remove it, an SVG image, a javascript address, an oversized photo and a value with quotes are all refused by the database, and another signed in user can neither read nor change the photo. Removing the validity rule inside a rolled back transaction made the check fail. No test rows were left.",
+   "limit": "The photo is stored as text in the owner only master CV row, so it is only as private as that row. Only the service role and the owner can read it.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 48,
+   "area": "Agent tools",
+   "check": "Photo only for Barcelona roles",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The tool decides, never the model: wants_photo is true only for a role in Spain whose city is Barcelona (or whose location text names Barcelona as a whole word), and every new version records withPhoto accordingly. The model cannot set withPhoto or photo (refused as unknown fields), and the photo is never handed to the model (a test searches the tool output for it). Tests failed first, 349 collector tests pass, 4 deliberate breaks caught (63 of 63). On the live data a Brussels and a Denmark draft came out without a photo and the Barcelona draft with one.",
+   "limit": "Roles stored with a missing city and no Barcelona in their location text get no photo.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 49,
+   "area": "Hostile input",
+   "check": "CV photo display and upload in the dashboard",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "A tested check (15 cases) accepts only a plain JPEG data address under the size limit and refuses SVG, PNG, script and web addresses, quotes, spaces, angle brackets, non text values and oversized photos. A draft shows the photo only if it asks for it and the stored photo passes that check. The upload shrinks any picture to a small JPEG in the browser before saving. 76 web tests pass, type check clean.",
+   "limit": "The upload screen is checked by type and build only, not by a browser click test.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 50,
+   "area": "Live run",
+   "check": "First real tailoring of the owner's CV for three shortlisted roles",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The owner's master CV and photo were saved to the owner only table (read back as counts only: 1 row, 3 experience entries, 3 degrees, 10 skills, 3 languages, photo present). Three tasks were claimed and finished through the real tool, each version passed the truthfulness checks on the first submission, the audit log holds ids only, and three one page A4 PDFs were produced. The Back Market listing asks for SQL and data tools that are not in the CV, so the draft does not claim them.",
+   "limit": "The checks cannot judge meaning, so the owner reads every draft. The CV text and photo were handled only in the private scratch folder and the owner's own database, never in the repository.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 51,
+   "area": "Database access",
+   "check": "Private career document tables (migration 0006)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The access check failed first (tables missing). After applying: the owner can read the document and its revisions but cannot write them from the browser, revisions cannot be changed or deleted even by the all powerful role (append only triggers), and another signed in user sees nothing. Loosening the read policy in a rolled back transaction made the check fail. No test rows were left.",
+   "limit": "The document is private text in the owner's own database. Only the service role writes it, so a mistake in a tool could still overwrite the current version, but the revisions keep every earlier one.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 52,
+   "area": "Privacy",
+   "check": "Career document handling",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The owner's career document (identity, goals, verified facts, decisions, open questions, interview seeds) was built in the private scratch folder from the CV and the conversation, stored in the owner only table with revision 1 and read back by size only. It is not in the repository (the staged diff was scanned for the owner's name, email, phone and employer before committing). The product design document written alongside contains no personal data.",
+   "limit": "The scratch copy exists on the session machine until it is cleaned up. The CV photo and text were handled only there and in the owner's database.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 53,
+   "area": "Access control",
+   "check": "Older tables owner only",
+   "outcome": "fixed",
+   "proof": "ran",
+   "detail": "The roles, source_runs and applications tables let any signed in user read them (and change applications). The red test in supabase/tests/owner_only_old_tables.sql failed with 'FAIL intruder reads roles' on the live database. Migration 0007 limits all three to the owner through is_owner(). The same test then passed, the owner still reads and manages everything, and the 2223 stored roles were untouched.",
+   "limit": "Public sign ups in Supabase Auth must also be switched off by the owner in the dashboard; that setting is not in the repository and cannot be checked from here.",
+   "date": "2026-11-19"
   }
  ]
 }

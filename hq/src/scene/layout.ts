@@ -21,6 +21,8 @@ export const CAMERA = {
   focusFactor: 2.1,
   /** The glass office is a small room, so Scouting zooms in closer. */
   scoutFocusFactor: 3.2,
+  /** The CV Tailor stands in the open, so a medium zoom keeps the desks around it in view. */
+  cvFocusFactor: 2.8,
   /** Width of the side panel in pixels, so the focused desk can sit beside it. */
   panelPx: 400,
 };
@@ -63,4 +65,20 @@ export const GLASS_OFFICE = {
     { x: -9.1, z: 1.45, rotationY: Math.PI },
     { x: -7.5, z: 1.35, rotationY: Math.PI / 4 },
   ],
+};
+
+/**
+ * Where the CV Tailor stands: in the aisle between the two desk islands in the middle of the open office, where the floor is
+ * free and the default camera sees it. Boxes were measured from the plan view of the office model, like the other places.
+ */
+export const CV_STATION = {
+  /** Where the camera looks when the CV panel is open. */
+  center: [-6.0, 0.9, 4.2] as const,
+  spot: { x: -6.0, z: 4.2, rotationY: Math.PI / 4 },
+  radius: 0.3,
+  obstacles: [
+    { name: 'west desk island', minX: -7.95, maxX: -6.5, minZ: 2.85, maxZ: 5.0 },
+    { name: 'east desk island', minX: -5.0, maxX: -3.5, minZ: 2.85, maxZ: 5.0 },
+    { name: 'east island chair', minX: -5.65, maxX: -4.95, minZ: 2.95, maxZ: 3.65 },
+  ] satisfies { name: string; minX: number; maxX: number; minZ: number; maxZ: number }[],
 };

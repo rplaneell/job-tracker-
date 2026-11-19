@@ -39,7 +39,7 @@ USER_AGENT = "job-tracker personal tool (one check per day)"
 
 def make_client() -> PoliteClient:
     """The only HTTP client the collector uses: obeys robots.txt and paces requests."""
-    return PoliteClient(httpx.Client(follow_redirects=True), USER_AGENT)
+    return PoliteClient(httpx.Client(), USER_AGENT)  # redirects are followed by the gate itself, one checked step at a time
 PAUSE_SECONDS = 1.0
 RETRY_PAUSE_SECONDS = 5.0
 

@@ -127,3 +127,10 @@
 # Sidekick Health
 # Cardior
 # Zava
+- name: Veeva
+  kind: lever
+  board: veeva
+  city: Amsterdam
+  field: health_science
+  terms: ok
+  basis: official public Lever postings feed, found by the company name search on 2026-11-19; it lists entry level life sciences consulting roles

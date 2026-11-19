@@ -13,6 +13,8 @@ export type RoleRow = {
   first_seen: string;
   posted_at: string | null;
   url: string;
+  /** Set when the owner ticked an alert as checked and removed it. Such a role is hidden everywhere in the list. */
+  dismissed_at?: string | null;
 };
 
 export type Filters = {
@@ -30,11 +32,16 @@ export const isUnwantedTitle = (title: string): boolean => /(?<![\p{L}\p{N}])(se
 
 export const isLinkedInAlert = (r: Pick<RoleRow, "source">): boolean => r.source === "linkedin_alert";
 
+/** Only alerts from the owner's LinkedIn emails can be removed once checked. Company board roles stay until the company closes them. */
+export const canDismiss = (r: Pick<RoleRow, "source">): boolean => isLinkedInAlert(r);
+
+const isVisible = (r: RoleRow): boolean => r.status === "open" && !r.dismissed_at;
+
 /** Open roles only; matches to the owner's profile first, then the newest first. */
 export function applyFilters(roles: RoleRow[], f: Filters): RoleRow[] {
   const q = f.search.trim().toLowerCase();
   return roles
-    .filter((r) => r.status === "open")
+    .filter(isVisible)
     .filter((r) => !isUnwantedTitle(r.title))
     .filter((r) => !f.matchedOnly || r.matched)
     .filter((r) => !f.country || r.country === f.country)
@@ -48,7 +55,7 @@ export function applyFilters(roles: RoleRow[], f: Filters): RoleRow[] {
 export function countByCountry(roles: RoleRow[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const r of roles) {
-    if (r.status !== "open" || !r.country) continue;
+    if (!isVisible(r) || !r.country) continue;
     counts[r.country] = (counts[r.country] ?? 0) + 1;
   }
   return counts;
@@ -59,7 +66,7 @@ export function cityOptions(roles: RoleRow[], country?: string): { city: string;
   const counts = new Map<string, number>();
   for (const r of roles) {
     const city = r.city?.trim();
-    if (r.status !== "open" || !city || (country && r.country !== country)) continue;
+    if (!isVisible(r) || !city || (country && r.country !== country)) continue;
     counts.set(city, (counts.get(city) ?? 0) + 1);
   }
   return [...counts].map(([city, count]) => ({ city, count })).sort((a, b) => b.count - a.count || a.city.localeCompare(b.city));

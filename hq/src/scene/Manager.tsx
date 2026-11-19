@@ -3,7 +3,9 @@ import { Html, useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import type { Group } from 'three';
 import { Mesh } from 'three';
+import { POP_START } from '../domain/intro';
 import { useHq } from '../state/useHq';
+import { useIntroPop } from './useIntroPop';
 
 const URL = modelUrl('manager.glb');
 
@@ -21,9 +23,12 @@ export function Manager({ position, rotationY, line, shadows }: ManagerProps) {
   const { scene, animations } = useGLTF(URL);
   const { actions, names } = useAnimations(animations, group);
   const hover = useHq((s) => s.hoverManager);
+  const labelsOn = useHq((s) => s.labelsOn);
   const focus = useHq((s) => s.focus);
   const setHover = useHq((s) => s.setHoverManager);
   const openDepartment = useHq((s) => s.openDepartment);
+
+  useIntroPop(group, POP_START.manager);
 
   useEffect(() => {
     scene.traverse((o) => {
@@ -62,7 +67,7 @@ export function Manager({ position, rotationY, line, shadows }: ManagerProps) {
       }}
     >
       <primitive object={scene} />
-      {focus === null && (
+      {focus === null && labelsOn && (
         <Html position={[0, 2.15, 0]} center zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
           <div className={`speech ${hover ? 'speech-on' : ''}`}>
             <strong>Office Manager</strong>

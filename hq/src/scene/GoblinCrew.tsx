@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef } from 'react';
 import type { Group, Mesh } from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { CREW_SIZE, crewPoses, type Pose } from '../domain/goblins';
+import { POP_START } from '../domain/intro';
 import { STATUS_LABEL, type ScoutStatus } from '../domain/scouting';
 import { useHq } from '../state/useHq';
 import { GLASS_OFFICE } from './layout';
+import { useIntroPop } from './useIntroPop';
 
 const URL = '/models/goblin.glb';
 /** The model is about 143 units tall; this makes a goblin roughly half a metre high, a little taller than a desk chair seat. */
@@ -25,7 +27,9 @@ function Goblin({ index, pose, shadows }: { index: number; pose: Pose; shadows: 
   const { scene, animations } = useGLTF(URL);
   const copy = useMemo(() => clone(scene), [scene]);
   const body = useRef<Group>(null);
+  const place = useRef<Group>(null);
   const { actions, names } = useAnimations(animations, body);
+  useIntroPop(place, POP_START.goblins + index * POP_START.goblinStep);
   const openDepartment = useHq((s) => s.openDepartment);
   const still = useMemo(reducedMotion, []);
 
@@ -73,7 +77,7 @@ function Goblin({ index, pose, shadows }: { index: number; pose: Pose; shadows: 
   });
 
   return (
-    <group position={[spot.x, 0, spot.z]}>
+    <group ref={place} position={[spot.x, 0, spot.z]}>
       <group
         ref={body}
         onPointerOver={(e) => {
@@ -102,6 +106,7 @@ function Goblin({ index, pose, shadows }: { index: number; pose: Pose; shadows: 
  */
 export function GoblinCrew({ status, shadows, simulated }: { status: ScoutStatus; shadows: boolean; simulated: boolean }) {
   const focus = useHq((s) => s.focus);
+  const labelsOn = useHq((s) => s.labelsOn);
   const poses = useMemo(() => crewPoses(status, CREW_SIZE), [status]);
   const [cx, , cz] = GLASS_OFFICE.center;
   return (
@@ -109,7 +114,7 @@ export function GoblinCrew({ status, shadows, simulated }: { status: ScoutStatus
       {poses.map((pose, i) => (
         <Goblin key={i} index={i} pose={pose} shadows={shadows} />
       ))}
-      {focus === null && (
+      {focus === null && labelsOn && (
         <Html position={[cx, 3.1, cz]} center zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
           <div className="speech speech-on">
             <strong>Scouting crew</strong>

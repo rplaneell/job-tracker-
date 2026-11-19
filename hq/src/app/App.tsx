@@ -7,6 +7,7 @@ import { useHq } from '../state/useHq';
 import { Credits } from '../ui/Credits';
 import { CvPanel } from '../ui/CvPanel';
 import { ReceptionPanel } from '../ui/ReceptionPanel';
+import { Intro } from '../ui/Intro';
 import { ScoutPanel } from '../ui/ScoutPanel';
 
 /** Optional ?corner=0..3 picks which side of the office the camera looks from. */
@@ -21,6 +22,7 @@ export function App() {
   const lowPower = useHq((s) => s.lowPower);
   const setLowPower = useHq((s) => s.setLowPower);
   const setCreditsOpen = useHq((s) => s.setCreditsOpen);
+  const chromeOn = useHq((s) => s.chromeOn);
   const openDepartment = useHq((s) => s.openDepartment);
   const now = useMemo(() => new Date(), []);
   const view = useMemo(() => buildReceptionView(SAMPLE_PRIORITIES, SAMPLE_APPLICATIONS, now), [now]);
@@ -45,7 +47,7 @@ export function App() {
     <div className="relative h-full w-full">
       <Scene managerLine={line} corner={cornerFromUrl()} scoutStatus={scout} cvStatus={cv} simulated />
 
-      <div className="pointer-events-none absolute inset-0">
+      <div className={`chrome pointer-events-none absolute inset-0 ${chromeOn ? '' : 'chrome-off'}`}>
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
           <span className="grid h-8 w-8 place-items-center rounded-xl bg-sage-700 text-sm font-bold text-white">HQ</span>
           <div className="leading-tight">
@@ -97,6 +99,7 @@ export function App() {
         {focus === 'scouting' && <ScoutPanel status={scout} items={SAMPLE_SCOUT_ITEMS} source="simulation" onClose={leave} />}
       </div>
       <Credits />
+      <Intro />
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import { ContactShadows } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Suspense, useEffect, useState } from 'react';
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three';
 import type { ScoutStatus } from '../domain/scouting';
+import { SHADOWS_AT_MS } from '../domain/intro';
+import { introClock, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
 import { CameraRig } from './CameraRig';
 import { CvTailor } from './CvTailor';
@@ -28,8 +30,24 @@ interface SceneProps {
 function ReadyFlag() {
   useEffect(() => {
     document.body.dataset.ready = '1';
+    // Everything has loaded, so the opening animation can start from its first frame.
+    introClock.begin(performance.now());
   }, []);
   return null;
+}
+
+/**
+ * The soft shadow on the floor is drawn once, so it must wait until everything has landed (during the opening animation),
+ * or it would be drawn from an empty room.
+ */
+function FloorShadows() {
+  const at = Math.min(SHADOWS_AT_MS, introClock.duration);
+  const [on, setOn] = useState(() => introNow() >= at);
+  useFrame(() => {
+    if (!on && introNow() >= at) setOn(true);
+  });
+  if (!on) return null;
+  return <ContactShadows position={[OFFICE.center[0], -0.27, OFFICE.center[2]]} scale={24} blur={3.2} far={2.5} opacity={0.32} frames={1} resolution={512} />;
 }
 
 /** The 3D office. It gets plain values in and reports clicks through the store. It never touches job data. */
@@ -61,7 +79,7 @@ export function Scene({ managerLine, corner, scoutStatus, cvStatus, simulated }:
         <SafeBoundary>
           <CvTailor status={cvStatus} shadows={shadows} simulated={simulated} />
         </SafeBoundary>
-        <ContactShadows position={[OFFICE.center[0], -0.27, OFFICE.center[2]]} scale={24} blur={3.2} far={2.5} opacity={0.32} frames={1} resolution={512} />
+        <FloorShadows />
         <ReadyFlag />
       </Suspense>
       <CameraRig corner={corner} />

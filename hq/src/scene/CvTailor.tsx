@@ -3,9 +3,11 @@ import { useEffect, useMemo, useRef } from 'react';
 import { AnimationMixer, Box3, LoopOnce, LoopRepeat, type AnimationClip, type Group, type Mesh, type Object3D } from 'three';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { cvClip } from '../domain/cvAgent';
+import { POP_START } from '../domain/intro';
 import { STATUS_LABEL, type ScoutStatus } from '../domain/scouting';
 import { useHq } from '../state/useHq';
 import { CV_STATION } from './layout';
+import { useIntroPop } from './useIntroPop';
 
 const URL = '/models/cv_tailor.glb';
 /** About the height of the Office Manager, so the two read as grown ups next to the small goblins. */
@@ -36,7 +38,9 @@ function Person({ status, shadows }: { status: ScoutStatus; shadows: boolean }) 
   const { scene, animations } = useGLTF(URL);
   const copy = useMemo(() => clone(scene), [scene]);
   const root = useRef<Group>(null);
+  const place = useRef<Group>(null);
   const { actions } = useAnimations(animations, root);
+  useIntroPop(place, POP_START.cv);
   const openDepartment = useHq((s) => s.openDepartment);
   const fit = useMemo(() => measure(scene, animations), [scene, animations]);
   const still = useMemo(reducedMotion, []);
@@ -65,7 +69,7 @@ function Person({ status, shadows }: { status: ScoutStatus; shadows: boolean }) 
 
   const { x, z, rotationY } = CV_STATION.spot;
   return (
-    <group position={[x, 0, z]} rotation-y={rotationY}>
+    <group ref={place} position={[x, 0, z]} rotation-y={rotationY}>
       <group
         ref={root}
         onPointerOver={(e) => {
@@ -90,11 +94,12 @@ function Person({ status, shadows }: { status: ScoutStatus; shadows: boolean }) 
 
 export function CvTailor({ status, shadows, simulated }: { status: ScoutStatus; shadows: boolean; simulated: boolean }) {
   const focus = useHq((s) => s.focus);
+  const labelsOn = useHq((s) => s.labelsOn);
   const [cx, , cz] = CV_STATION.center;
   return (
     <>
       <Person status={status} shadows={shadows} />
-      {focus === null && (
+      {focus === null && labelsOn && (
         <Html position={[cx, 2.5, cz]} center zIndexRange={[20, 0]} style={{ pointerEvents: 'none' }}>
           <div className="speech speech-on">
             <strong>CV Tailor</strong>

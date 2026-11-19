@@ -25,7 +25,9 @@ exclude_keywords:
    clinical, nurse, physician, doctor, rater, trainer, freelance, technician, scientist, laboratory, pharmacist,
    therapist, safety, care, operator, warehouse, driver, dental, executive assistant, administrative assistant,
    # hotel and restaurant work is not business work either
-   kitchen, housekeeping, front office, f&b, food, beverage, reservation, events, rooms, hotel, hospitality]
+   kitchen, housekeeping, front office, f&b, food, beverage, reservation, events, rooms, hotel, hospitality,
+   # bench science is not business work
+   research associate, research assistant]
 field_keywords:
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]

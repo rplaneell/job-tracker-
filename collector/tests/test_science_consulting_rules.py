@@ -40,6 +40,7 @@ KEEP = [
     "Management Trainee",
     "Launch your career as a Management Trainee at Visma!",
     "Sales Trainee",
+    "Research Analyst, Pharma",
 ]
 
 DROP = [
@@ -74,6 +75,12 @@ DROP = [
     "Rooms Management Trainee",
     "Hospitality Internship Program",
     "Hotel Operations Intern",
+    # lab bench titles that showed up in the owner's LinkedIn alerts
+    "Research Associate - Molecular Biology",
+    "Research Associate I/II",
+    "Laboratory Research Associate",
+    "Research Assistant- Pathology",
+    "Associate Scientist I, In Vivo Research",
 ]
 
 

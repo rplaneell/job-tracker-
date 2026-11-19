@@ -6,21 +6,22 @@ import { TOWER_WINDOW } from '../domain/intro';
  */
 
 /*
- * Scale: the tower is drawn at 65 pixels to the metre, so a pane of glass is 1.5 m wide and an ordinary floor is 3.6 m high.
- * The office floor is the whole floor of the tower: its window is as wide as the office is when seen from the left (about
- * 12 m) and as tall as the office looks (about 5 m), so the real office fills it at its real size.
+ * Scale: the tower is drawn at about 76 pixels to the metre, so a pane of glass is 1.3 m wide and an ordinary floor is 3.6 m high.
+ * The office floor is the whole floor of the tower, cut through like a section drawing: the opening is as wide as the office is deep
+ * (about 10 m) and as tall as the office looks from the side (about 4.6 m), so the real office fills it, and its walls are the
+ * limits of the building. The floor above is the ceiling and the floor below is the floor.
  */
 const ROOF = 120;
 const WINDOW_Y = 178;
 const SLAB = 24;
 const TOP_FLOOR_BOTTOM = WINDOW_Y + TOWER_WINDOW.h + SLAB; // the office floor runs from just under the roof down to here
-const FLOOR_H = 234;
-const FLOORS = 11;
+const FLOOR_H = 272;
+const FLOORS = 8;
 const GROUND = TOP_FLOOR_BOTTOM + FLOORS * FLOOR_H;
 
 export const FACADE = {
   w: 1200,
-  h: 3700,
+  h: GROUND + 580,
   /** Where the drone starts: the point of the tower in the middle of the screen at the street. */
   startY: GROUND - 120,
   /** Where it ends: the middle of the big window of the office floor. */
@@ -153,13 +154,14 @@ export function drawFacade(): HTMLCanvasElement | null {
   ctx.fillRect(0, TOP_FLOOR_BOTTOM, W, FLOORS * FLOOR_H);
   ctx.restore();
 
-  // The office floor: one big window, left empty (see through) so the real 3D office shows in it, in a steel frame.
+  // The office floor, cut through like a section drawing: the opening is left empty (see through), so the real 3D office shows in it,
+  // and the slab above it is its ceiling and the slab below it is its floor. The columns at both sides are the limits of the building.
   const win = { x: FACADE.window.x - TOWER_X, y: FACADE.window.y, w: FACADE.window.w, h: FACADE.window.h };
   const frameBottom = TOP_FLOOR_BOTTOM - SLAB;
   ctx.fillStyle = '#2f353c';
-  ctx.fillRect(0, win.y - 16, W, 16); // beam above the window
+  ctx.fillRect(0, win.y - SLAB, W, SLAB); // the slab above, the ceiling of the office
   ctx.fillStyle = 'rgba(255,255,255,0.28)';
-  ctx.fillRect(0, win.y - 16, W, 2);
+  ctx.fillRect(0, win.y - SLAB, W, 2);
   for (const x of [0, win.x + win.w]) {
     // The corner columns of the tower on both sides of the window.
     const col = ctx.createLinearGradient(x, 0, x + win.x, 0);
@@ -167,40 +169,8 @@ export function drawFacade(): HTMLCanvasElement | null {
     col.addColorStop(0.5, '#262b31');
     col.addColorStop(1, '#3a4047');
     ctx.fillStyle = col;
-    ctx.fillRect(x, win.y - 16, win.x, frameBottom - win.y + 16);
+    ctx.fillRect(x, win.y - SLAB, win.x, frameBottom - win.y + SLAB);
   }
-  // A few thin mullions between the big panes of the window.
-  for (let c = 1; c < TOWER_W / 200; c++) {
-    const x = c * 200;
-    if (x <= win.x || x >= win.x + win.w) continue;
-    ctx.fillStyle = '#20252b';
-    ctx.fillRect(x - 3, win.y, 6, win.h);
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillRect(x + 2, win.y, 1, win.h);
-  }
-  // A faint sheen on the glass, the sky reflected in it, so it reads as glass and not as a hole.
-  const sheen = ctx.createLinearGradient(0, win.y, 0, win.y + win.h);
-  sheen.addColorStop(0, 'rgba(190,222,248,0.3)');
-  sheen.addColorStop(0.5, 'rgba(255,255,255,0.04)');
-  sheen.addColorStop(1, 'rgba(120,165,205,0.16)');
-  ctx.fillStyle = sheen;
-  ctx.fillRect(win.x, win.y, win.w, win.h);
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(win.x, win.y, win.w, win.h);
-  ctx.clip();
-  ctx.globalCompositeOperation = 'screen';
-  for (const x of [win.x + 120, win.x + 470]) {
-    const band = ctx.createLinearGradient(x, 0, x + 170, 0);
-    band.addColorStop(0, 'rgba(255,255,255,0)');
-    band.addColorStop(0.5, 'rgba(255,255,255,0.13)');
-    band.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = band;
-    ctx.setTransform(1, 0, -0.36, 1, TOWER_X, 0);
-    ctx.fillRect(x, win.y, 170, win.h);
-  }
-  ctx.setTransform(1, 0, 0, 1, TOWER_X, 0);
-  ctx.restore();
   // The slab under the window, with a glowing amber edge so the floor reads from far away.
   ctx.fillStyle = '#383e45';
   ctx.fillRect(0, frameBottom, W, 24);
@@ -215,7 +185,7 @@ export function drawFacade(): HTMLCanvasElement | null {
 
   // The roof edge and its parapet.
   ctx.fillStyle = '#2b3138';
-  ctx.fillRect(0, ROOF, W, win.y - 16 - ROOF);
+  ctx.fillRect(0, ROOF, W, win.y - SLAB - ROOF);
   ctx.fillStyle = '#a9b2ba';
   ctx.fillRect(0, ROOF, W, 3);
   ctx.fillStyle = '#555c64';

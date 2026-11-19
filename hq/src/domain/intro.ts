@@ -1,7 +1,7 @@
 /**
  * The opening animation: a drone climbs the glass tower floor by floor until it reaches the office window, comes up the left of the tower to the
- * office floor, which is the whole floor of the tower. It arrives there, with the real office seen from the left through the glass,
- * then zooms out and swings round into the actual dashboard, all in 3 seconds.
+ * office floor, which is the whole floor of the tower: a cross section, with the office walls as the limits of the building. It
+ * arrives there, then zooms out and swings round into the actual dashboard, all in 3 seconds.
  * This file holds only the timing maths, so it can be tested without a screen. Times are in milliseconds.
  */
 
@@ -46,8 +46,12 @@ export function towerScale(width: number, height: number): number {
   return Math.min(height / 730, (0.92 * width) / TOWER_WINDOW.w);
 }
 
-/** How the 3D camera sees the office when the drone arrives: round to the left of the normal view, and low, almost level with the floor. */
-export const ARRIVAL = { yaw: 50, elevation: 0.22 };
+/**
+ * How the 3D camera sees the office when the drone arrives: exactly side on, from the left of the normal view (a cross section of the
+ * floor, flat like the face of the tower), and low, only a little above the floor. The height is chosen so that the office looks about
+ * as wide as it is tall times 2.2, which is the shape of the window of the tower.
+ */
+export const ARRIVAL = { yaw: 45, elevation: 0.2 };
 
 /** The drone climbs from the street up to the office floor between these two moments. */
 export const CLIMB_FROM_MS = 150;

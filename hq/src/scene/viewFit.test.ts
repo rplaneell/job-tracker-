@@ -1,8 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { ARRIVAL } from '../domain/intro';
 import { OFFICE } from './layout';
+import { rotateDirection } from './rotation';
 import { viewExtent, zoomToFit } from './viewFit';
 
 const unitBox = { minX: -1, maxX: 1, minZ: -1, maxZ: 1, height: 2 };
+
+/** The direction the camera has at arrival: the corner view turned round to the left, with its height scaled down. */
+const BASE = [1, 1, 1].map((n) => n / Math.sqrt(3)) as [number, number, number];
+const turned = rotateDirection(BASE, (ARRIVAL.yaw * Math.PI) / 180);
+const ARRIVAL_DIRECTION: [number, number, number] = [turned[0], turned[1] * ARRIVAL.elevation, turned[2]];
 
 describe('viewExtent', () => {
   it('sees a box square on as its own width and height, centred on what the camera looks at', () => {
@@ -56,9 +63,20 @@ describe('zoomToFit', () => {
   });
 
   it('makes the real office fit the window of the tower from the left', () => {
-    const e = viewExtent(OFFICE.bounds, [1, 0.22 / 1.4, 0.2], OFFICE.center as unknown as [number, number, number]);
-    const zoom = zoomToFit(e, 772, 350);
-    expect(e.width * zoom).toBeLessThanOrEqual(772);
-    expect(e.height * zoom).toBeLessThanOrEqual(350);
+    const e = viewExtent(OFFICE.bounds, [1, 0.142, 0], OFFICE.center as unknown as [number, number, number]);
+    const zoom = zoomToFit(e, 772, 350, 1);
+    expect(e.width * zoom).toBeLessThanOrEqual(772.001);
+    expect(e.height * zoom).toBeLessThanOrEqual(350.001);
+  });
+
+  it('sees the office from the arrival direction as a shape the same as the window, so it fills the window', () => {
+    // Exactly side on, with the height the arrival uses: 0.2 of the corner view's height.
+    const d = ARRIVAL_DIRECTION;
+    const e = viewExtent(OFFICE.bounds, d, OFFICE.center as unknown as [number, number, number]);
+    const windowAspect = 772 / 350;
+    expect(e.width / e.height).toBeGreaterThan(windowAspect * 0.85);
+    expect(e.width / e.height).toBeLessThan(windowAspect * 1.15);
+    // And it is a flat section: the width is the depth of the floor plan, not its diagonal.
+    expect(e.width).toBeCloseTo(OFFICE.bounds.maxZ - OFFICE.bounds.minZ, 0);
   });
 });

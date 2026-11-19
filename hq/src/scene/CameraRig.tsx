@@ -43,7 +43,8 @@ export function CameraRig({ corner }: { corner: number }) {
       const [ax, ay, az] = rotateDirection(dir, (ARRIVAL.yaw * Math.PI) / 180);
       const arrival = viewExtent(OFFICE.bounds, [ax, ay * ARRIVAL.elevation, az], [overview.x, overview.y, overview.z]);
       const k = towerScale(size.width, size.height);
-      const fitted = zoomToFit(arrival, TOWER_WINDOW.w * k, TOWER_WINDOW.h * k) / fit;
+      // The office touches the edges of the window, because its walls are the limits of the building.
+      const fitted = zoomToFit(arrival, TOWER_WINDOW.w * k, TOWER_WINDOW.h * k, 1) / fit;
       camera.zoom = fit * (1 + (fitted - 1) * intro.zoomIn);
       // Centre the office in the window at arrival, and ease back to the normal centre as the camera zooms out.
       current.copy(overview);

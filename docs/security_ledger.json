@@ -499,6 +499,26 @@
    "detail": "The owner's master CV and photo were saved to the owner only table (read back as counts only: 1 row, 3 experience entries, 3 degrees, 10 skills, 3 languages, photo present). Three tasks were claimed and finished through the real tool, each version passed the truthfulness checks on the first submission, the audit log holds ids only, and three one page A4 PDFs were produced. The Back Market listing asks for SQL and data tools that are not in the CV, so the draft does not claim them.",
    "limit": "The checks cannot judge meaning, so the owner reads every draft. The CV text and photo were handled only in the private scratch folder and the owner's own database, never in the repository.",
    "date": "2026-11-19"
+  },
+  {
+   "id": 51,
+   "area": "Database access",
+   "check": "Private career document tables (migration 0006)",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The access check failed first (tables missing). After applying: the owner can read the document and its revisions but cannot write them from the browser, revisions cannot be changed or deleted even by the all powerful role (append only triggers), and another signed in user sees nothing. Loosening the read policy in a rolled back transaction made the check fail. No test rows were left.",
+   "limit": "The document is private text in the owner's own database. Only the service role writes it, so a mistake in a tool could still overwrite the current version, but the revisions keep every earlier one.",
+   "date": "2026-11-19"
+  },
+  {
+   "id": 52,
+   "area": "Privacy",
+   "check": "Career document handling",
+   "outcome": "clean",
+   "proof": "ran",
+   "detail": "The owner's career document (identity, goals, verified facts, decisions, open questions, interview seeds) was built in the private scratch folder from the CV and the conversation, stored in the owner only table with revision 1 and read back by size only. It is not in the repository (the staged diff was scanned for the owner's name, email, phone and employer before committing). The product design document written alongside contains no personal data.",
+   "limit": "The scratch copy exists on the session machine until it is cleaned up. The CV photo and text were handled only there and in the owner's database.",
+   "date": "2026-11-19"
   }
  ]
 }

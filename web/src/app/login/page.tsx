@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { loginMessage, type LoginProblem } from "@/lib/loginMessage";
 import { browserClient } from "@/lib/supabase/client";
 
@@ -19,7 +20,7 @@ export default function Login() {
     setState("sending");
     setProblem(null);
     const { error } = await browserClient().auth.signInWithOtp({
-      email,
+      email: normalizeEmail(email),
       options: { shouldCreateUser: false, emailRedirectTo: `${location.origin}/auth/callback` },
     });
     if (error) setProblem({ status: error.status, code: error.code });

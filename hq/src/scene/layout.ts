@@ -2,6 +2,8 @@
 export const OFFICE = {
   /** Middle of the floor plan. */
   center: [-5.04, 0.6, 5] as const,
+  /** The box the office fills, in metres: the whole floor plan and the height of its walls. Used to fit the opening animation to it. */
+  bounds: { minX: -10.1, maxX: 0.1, minZ: -0.1, maxZ: 10.1, height: 3.2 },
   /** Curved reception desk (the part named Reception_4 in the model). */
   desk: { center: [-0.93, 0.45, 4.88] as const },
 };

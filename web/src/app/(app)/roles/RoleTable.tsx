@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { applyFilters, cityOptions, countByCountry, isLinkedInAlert, type RoleRow } from "@/lib/filters";
+import { applyFilters, canDismiss, cityOptions, countByCountry, isLinkedInAlert, type RoleRow } from "@/lib/filters";
 import { COUNTRY_CODE, FIELD, LEVEL, ago, where } from "@/lib/labels";
 import { safeHref } from "@/lib/safeHref";
 import { STAGES, type Stage } from "@/lib/stages";
@@ -21,7 +21,7 @@ function Tags({ role, stage }: { role: RoleRow; stage?: string }) {
   );
 }
 
-export default function RoleTable({ roles, stages: initialStages }: { roles: RoleRow[]; stages: Record<string, string> }) {
+export default function RoleTable({ roles: allRoles, stages: initialStages }: { roles: RoleRow[]; stages: Record<string, string> }) {
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [source, setSource] = useState<"" | "linkedin" | "boards">("");
@@ -32,6 +32,8 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
   const [stages, setStages] = useState(initialStages);
   const [openId, setOpenId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [removed, setRemoved] = useState<string[]>([]);
+  const roles = useMemo(() => allRoles.filter((r) => !removed.includes(r.id)), [allRoles, removed]);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const list = useMemo(() => applyFilters(roles, { country, city, source, field, search, matchedOnly }), [roles, country, city, source, field, search, matchedOnly]);
@@ -56,6 +58,15 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
     const { error: err } = await browserClient().from("applications").upsert(row, { onConflict: "role_id" });
     if (err) return setError("That did not save. Check your connection and try again.");
     setStages({ ...stages, [id]: stage });
+  }
+
+  /** The owner has checked a LinkedIn alert. It is only marked, never deleted, so the next intake cannot add it back. */
+  async function dismiss(id: string) {
+    setError("");
+    const { error: err } = await browserClient().from("roles").update({ dismissed_at: new Date().toISOString() }).eq("id", id);
+    if (err) return setError("That did not save. Check your connection and try again.");
+    setRemoved((ids) => [...ids, id]);
+    setOpenId(null);
   }
 
   async function remove(id: string) {
@@ -156,6 +167,7 @@ export default function RoleTable({ roles, stages: initialStages }: { roles: Rol
               {safeHref(open.url) && <a className="btn primary" href={safeHref(open.url)} target="_blank" rel="noopener noreferrer">Open the posting</a>}
               <Link className="btn" href={`/roles/${open.id}`}>Notes and details</Link>
               {stages[open.id] && <button className="btn" type="button" onClick={() => remove(open.id)}>Remove from pipeline</button>}
+              {canDismiss(open) && <button className="btn" type="button" onClick={() => dismiss(open.id)}>Checked, remove this alert</button>}
             </div>
           </aside>
         </>

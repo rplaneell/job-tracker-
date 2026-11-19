@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyFilters, cityOptions, countByCountry, isLinkedInAlert, isUnwantedTitle, type RoleRow } from "./filters";
+import { applyFilters, canDismiss, cityOptions, countByCountry, isLinkedInAlert, isUnwantedTitle, type RoleRow } from "./filters";
 
 const row = (over: Partial<RoleRow>): RoleRow => ({
   source: "greenhouse", id: "1", company: "Acme", title: "Business Analyst", city: "Zurich", country: "Switzerland",
@@ -120,5 +120,25 @@ describe("senior roles are never shown", () => {
     const rows = [row({ id: "1", title: "Senior Consultant" }), row({ id: "2", title: "Associate Consultant" }), row({ id: "3", title: "Sr. Analyst", matched: false })];
     expect(applyFilters(rows, none).map((r) => r.id)).toEqual(["2"]);
     expect(applyFilters(rows, { ...none, matchedOnly: true }).map((r) => r.id)).toEqual(["2"]);
+  });
+});
+
+describe("removing a checked alert", () => {
+  it("hides a role the owner has dismissed, and keeps the others", () => {
+    const rows = [row({ id: "1", source: "linkedin_alert" }), row({ id: "2", source: "linkedin_alert", dismissed_at: "2026-11-19T12:00:00Z" })];
+    expect(applyFilters(rows, none).map((r) => r.id)).toEqual(["1"]);
+  });
+  it("treats a missing or null dismissal as not dismissed", () => {
+    const rows = [row({ id: "1" }), row({ id: "2", dismissed_at: null })];
+    expect(applyFilters(rows, none).map((r) => r.id).sort()).toEqual(["1", "2"]);
+  });
+  it("does not count a dismissed role in the country or city lists", () => {
+    const rows = [row({ id: "1" }), row({ id: "2", dismissed_at: "2026-11-19T12:00:00Z" })];
+    expect(countByCountry(rows)).toEqual({ Switzerland: 1 });
+    expect(cityOptions(rows)).toEqual([{ city: "Zurich", count: 1 }]);
+  });
+  it("only LinkedIn alerts can be removed this way", () => {
+    expect(canDismiss(row({ source: "linkedin_alert" }))).toBe(true);
+    expect(canDismiss(row({ source: "greenhouse" }))).toBe(false);
   });
 });

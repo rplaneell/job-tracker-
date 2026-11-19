@@ -28,7 +28,7 @@ jobs:
           node-version: "22"
       - run: cd web && npm ci
       - run: cd web && npx vitest run --coverage
-      - run: cd web && npx next build
+      - run: cd web && npm run build
   hq:
     runs-on: ubuntu-latest
     steps:

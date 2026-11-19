@@ -148,6 +148,16 @@ def check_email_setting(name: str, raw: str) -> str:
     return value
 
 
+def email_problem(to: str, sender: str) -> str | None:
+    """What is wrong with the email settings, in words, or None. A wrong setting never stops the collection."""
+    for name, raw in (("ALERT_EMAIL_TO", to), ("ALERT_EMAIL_FROM", sender)):
+        try:
+            check_email_setting(name, raw)
+        except SystemExit as exc:
+            return str(exc)
+    return None
+
+
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -158,8 +168,8 @@ def main() -> int:
 
     from jobtracker.notify import deliver
 
-    check_email_setting("ALERT_EMAIL_TO", os.environ.get("ALERT_EMAIL_TO", ""))
-    check_email_setting("ALERT_EMAIL_FROM", os.environ.get("ALERT_EMAIL_FROM", ""))
+    # Checked now, reported after the roles are saved: a wrong email setting must never stop the collection.
+    problem = email_problem(os.environ.get("ALERT_EMAIL_TO", ""), os.environ.get("ALERT_EMAIL_FROM", ""))
     root = repo_root()
     sources = load_all_sources(root)
     rules = load_rules(root / "rules.yaml")
@@ -173,6 +183,9 @@ def main() -> int:
     print(f"seen {result.total_seen}, new matched {len(result.new_matched)}, failed {len(result.failures)}")
     if result.queue_error:
         print(f"scouting task not queued: {result.queue_error}")
+    if problem:
+        print(f"roles were saved, but the email was not sent: {problem}")
+        return 1
     try:
         deliver(result, os.environ.get("DASHBOARD_URL", ""), resend.Emails.send)
     except Exception as exc:  # the roles are already saved, so say so plainly instead of dumping a traceback

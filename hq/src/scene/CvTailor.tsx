@@ -1,3 +1,4 @@
+import { modelUrl } from '../data/modelUrl';
 import { Html, useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo, useRef } from 'react';
 import { AnimationMixer, Box3, LoopOnce, LoopRepeat, type AnimationClip, type Group, type Mesh, type Object3D } from 'three';
@@ -9,7 +10,7 @@ import { useHq } from '../state/useHq';
 import { CV_STATION } from './layout';
 import { useIntroPop } from './useIntroPop';
 
-const URL = '/models/cv_tailor.glb';
+const URL = modelUrl('cv_tailor.glb');
 /** About the height of the Office Manager, so the two read as grown ups next to the small goblins. */
 const HEIGHT = 1.7;
 

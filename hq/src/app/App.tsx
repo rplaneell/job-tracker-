@@ -1,3 +1,4 @@
+import { OFFICE_LINKS } from '../data/links';
 import { useEffect, useMemo } from 'react';
 import { buildReceptionView } from '../domain/reception';
 import { SAMPLE_APPLICATIONS, SAMPLE_CV_DRAFTS, SAMPLE_CV_TASKS, SAMPLE_PRIORITIES, SAMPLE_SCOUT_ITEMS, SAMPLE_SCOUT_TASKS } from '../domain/sample';
@@ -49,12 +50,24 @@ export function App() {
 
       <div className={`chrome pointer-events-none absolute inset-0 ${chromeOn ? '' : 'chrome-off'}`}>
         <header className="pointer-events-auto absolute left-4 top-4 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-sage-700 text-sm font-bold text-white">HQ</span>
+          <img src="/brand/the-climb-mark.png" alt="" width={32} height={32} className="h-8 w-8 rounded-xl" />
           <div className="leading-tight">
-            <div className="text-sm font-semibold tracking-tight">Job HQ</div>
+            <div className="text-sm font-semibold tracking-tight">the climb</div>
             <div className="text-[11px] text-ink-soft">Visual proof · Reception</div>
           </div>
         </header>
+
+        <nav aria-label="The rest of the app" className="pointer-events-auto absolute right-4 top-4 flex flex-wrap justify-end gap-2">
+          {OFFICE_LINKS.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="rounded-full border border-white/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-ink-soft shadow-sm backdrop-blur-xl hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-500"
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
 
         {focus === null && (
           <p className="absolute bottom-4 left-4 max-w-[19rem] rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 text-xs text-ink-soft shadow-[0_8px_30px_rgba(31,42,39,0.12)] backdrop-blur-xl">

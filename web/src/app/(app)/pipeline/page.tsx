@@ -25,7 +25,7 @@ export default async function Pipeline() {
         <div className="panel empty">
           <strong>Your pipeline is empty</strong>
           <span>Open a role and pick a stage. It appears here straight away.</span>
-          <Link className="btn primary" href="/">Browse roles</Link>
+          <Link className="btn primary" href="/roles">Browse roles</Link>
         </div>
       )}
     </>

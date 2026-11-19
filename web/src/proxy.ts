@@ -1,7 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
-const PUBLIC_PATHS = ["/login", "/auth/callback"];
+import { isPublicPath } from "@/lib/publicPaths";
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -26,8 +25,7 @@ export async function proxy(request: NextRequest) {
   } catch {
     signedIn = false; // an unreachable auth server must never grant access
   }
-  const isPublic = PUBLIC_PATHS.some((p) => request.nextUrl.pathname.startsWith(p));
-  if (!signedIn && !isPublic) {
+  if (!signedIn && !isPublicPath(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   return response;

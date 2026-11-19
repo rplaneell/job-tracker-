@@ -1,3 +1,4 @@
+import { modelUrl } from '../data/modelUrl';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useLayoutEffect, useMemo, useRef } from 'react';
@@ -6,7 +7,7 @@ import { revealLift, waveOf, type Wave } from '../domain/intro';
 import { introClock, introNow } from '../state/introClock';
 import { applyPalette } from './palette';
 
-const URL = '/models/office.glb';
+const URL = modelUrl('office.glb');
 
 interface Part {
   mesh: Mesh;

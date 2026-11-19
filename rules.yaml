@@ -5,14 +5,25 @@ city_limits:
   Spain: [Barcelona]
 include_keywords:
   [analyst, consultant, consulting, associate, intern, internship, graduate,
-   business development, strategy, investment, venture]
+   business development, strategy, investment, venture,
+   # life science and health business, in the title itself
+   life sciences, life science, healthcare, health care, pharma, pharmaceutical, biotech, medtech,
+   market access, health economics,
+   # early career markers
+   trainee,
+   # Spanish and Catalan, the other allowed languages
+   becario, becaria, prácticas, practicas, pràctiques, consultor, consultora, consultoría, consultoria,
+   analista, estrategia, estratègia]
 # Your profile: R&D biotech and lab experience, no management experience. So management and
 # senior titles are out, and so is any role asking for more than max_years_experience years.
 max_years_experience: 2
 exclude_keywords:
   [senior, director, principal, vice president, vp, head, chief, partner, manager, lead, staff,
    engineer, engineering, developer, software, designer, recruiter, marketing, account executive,
-   customer success, support, social media, quality assurance, qa, retail, sales associate, part-time, part time]
+   customer success, support, social media, quality assurance, qa, retail, sales associate, part-time, part time,
+   # clinical, lab and gig work is not business work, even when the title says health or pharma
+   clinical, nurse, physician, doctor, rater, trainer, freelance, technician, scientist, laboratory, pharmacist,
+   therapist, safety, care, operator, warehouse, driver, dental, executive assistant, administrative assistant]
 field_keywords:
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]

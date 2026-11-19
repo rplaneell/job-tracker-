@@ -28,7 +28,6 @@ jobs:
           node-version: "22"
       - run: cd web && npm ci
       - run: cd web && npx vitest run --coverage
-      # npm run build also builds the 3D office into the dashboard (the prebuild step)
       - run: cd web && npm run build
   hq:
     runs-on: ubuntu-latest

@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build:office": "npm ci --prefix ../hq && npm run build:embed --prefix ../hq",
-    "prebuild": "npm run build:office",
     "build": "next build",
     "start": "next start",
     "test": "vitest run"

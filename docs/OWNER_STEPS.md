@@ -75,7 +75,7 @@ Your CV text never goes into the activity log and is never sent to any outside s
 The dashboard project now builds the 3D office (Job HQ) into itself and serves it at `/hq`. After you sign in, `/` opens the office. Roles live at `/roles`, and the office links to Roles, Pipeline, Your CV and Sources.
 
 * **One Vercel project is enough.** The separate Job HQ Vercel project is no longer needed. You can delete it in Vercel (Project, Settings, Advanced, Delete Project).
-* **One Vercel setting to check.** The dashboard project builds the office from the `hq` folder, which sits next to the dashboard's `web` folder. In Vercel, open the dashboard project, then Settings, General, Root Directory, and make sure **Include source files outside of the Root Directory in the Build Step** is switched on (it normally is by default). If a build fails saying it cannot find `../hq`, this is the cause.
+* **No special Vercel setting is needed.** The built office is committed inside the dashboard folder (`web/public/hq`), so Vercel only needs the `web` folder, as before. When the office source in `hq` changes, run `cd web && npm run build:office` and commit the result. A test in `hq` fails if that copy is missing or out of date.
 * **The office still shows sample data** labelled Simulation until it can read your database (milestone M1).
 
 ## The daily email sender

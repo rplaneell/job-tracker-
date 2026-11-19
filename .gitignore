@@ -35,6 +35,3 @@ coverage/
 
 # Personal Claude Code permission choices for this computer
 .claude/settings.local.json
-
-# The 3D office is built into the dashboard at build time
-web/public/hq/

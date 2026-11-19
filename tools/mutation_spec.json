@@ -469,6 +469,30 @@
       "file": "collector/src/jobtracker/alerts.py",
       "old": "\"detail\": summary}",
       "new": "\"detail\": {**summary, \"titles\": [r.title for r in roles]}}"
+    },
+    {
+      "name": "tags: one passing science mention is enough",
+      "file": "collector/src/jobtracker/rules.py",
+      "old": "return found >= rules.science_min_terms",
+      "new": "return found >= 1"
+    },
+    {
+      "name": "tags: shop floor titles can be science work",
+      "file": "collector/src/jobtracker/rules.py",
+      "old": "    if _any(role.title, rules.operational_title_words):\n        return False  #",
+      "new": "    if False:\n        return False  #"
+    },
+    {
+      "name": "tags: the description is used for the other labels again",
+      "file": "collector/src/jobtracker/rules.py",
+      "old": "if tag != skip and _any(role.title, keywords):",
+      "new": "if tag != skip and _any(f\"{role.title} {role.description}\", keywords):"
+    },
+    {
+      "name": "tags: science words in the title no longer count",
+      "file": "collector/src/jobtracker/rules.py",
+      "old": "    if _any(role.title, rules.field_keywords.get(\"health_science\", [])):\n        return True",
+      "new": "    if False:\n        return True"
     }
   ]
 }

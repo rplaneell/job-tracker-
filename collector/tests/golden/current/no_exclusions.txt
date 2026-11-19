@@ -167,8 +167,8 @@ Tandem Health | Customer Success Specialist - 6 month FTC (parental leave cover)
 Tandem Health | Customer Success Specialist - Netherlands | Netherlands | no | field=None | level=None
 Tandem Health | Customer Success Specialist - Netherlands | Netherlands | no | field=None | level=None
 Tandem Health | Marketing Associate - Netherlands | Netherlands | MATCH | field=None | level=entry_level
-Tandem Health | Medical Operations - Netherlands | Netherlands | no | field=None | level=None
-Tandem Health | Medical Operations - Spain | Spain | no | field=None | level=None
+Tandem Health | Medical Operations - Netherlands | Netherlands | no | field=health_science | level=None
+Tandem Health | Medical Operations - Spain | Spain | no | field=health_science | level=None
 Tandem Health | Project Delivery Lead | Netherlands | no | field=None | level=None
 Tandem Health | Project Delivery Lead  | Netherlands | no | field=None | level=None
 Tandem Health | Project Delivery Lead, Spain | Spain | no | field=None | level=None
@@ -177,12 +177,12 @@ Typeform | AI Product Operations Lead | Netherlands | no | field=None | level=No
 Typeform | Senior IT Engineer | Netherlands | no | field=None | level=None
 Typeform | Senior Paid Marketing Strategist | Netherlands | no | field=None | level=None
 Edge Co | Business Analyst Intern | Spain | MATCH | field=business_analyst | level=internship
-Edge Co | Business Analyst | Spain | no | field=consulting | level=entry_level
+Edge Co | Business Analyst | Spain | no | field=business_analyst | level=entry_level
 Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
 Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
 Edge Co | Business Analyst | Spain | no | field=business_analyst | level=entry_level
 Edge Co | Business Analyst | Spain | MATCH | field=business_analyst | level=entry_level
-Edge Co | Strategy Associate, Life Sciences | Switzerland | no | field=consulting | level=entry_level
+Edge Co | Strategy Associate, Life Sciences | Switzerland | no | field=health_science | level=entry_level
 Edge Co | Graduate Consultant | Denmark | MATCH | field=consulting | level=entry_level
 Edge Co | Senior Consultant | Netherlands | MATCH | field=consulting | level=None
 Edge Co | Team Lead, Consulting | Netherlands | MATCH | field=consulting | level=None

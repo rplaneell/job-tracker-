@@ -44,9 +44,11 @@ def test_include_keyword_matches_whole_words_only():
     assert not matches(role(title="Internal Auditor"), RULES)
 
 
-def test_tag_field_health_science_from_title_or_description():
-    assert tag_field(role(title="Analyst", description="Work in biotech markets"), RULES) == "health_science"
+def test_tag_field_health_science_from_the_title_or_from_a_posting_that_is_clearly_about_science():
+    assert tag_field(role(title="Health Analyst"), RULES) == "health_science"
     assert tag_field(role(title="Analyst"), RULES) is None
+    # one passing mention in the description no longer counts: it used to label any role, from a receptionist to a picker
+    assert tag_field(role(title="Analyst", description="Work in biotech markets"), RULES) is None
 
 
 def test_tag_level_internship():

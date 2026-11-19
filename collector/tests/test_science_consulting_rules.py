@@ -94,12 +94,14 @@ def test_senior_clinical_lab_and_gig_titles_stay_out(title):
     assert not matches(role(title), RULES), title
 
 
-def test_the_target_places_are_unchanged():
-    assert set(RULES.countries) == {"Spain", "Switzerland", "Belgium", "Netherlands", "Denmark"}
+def test_the_target_places():
+    # The United States was added on the owner's request. Spain is still limited to Barcelona.
+    assert set(RULES.countries) == {"Spain", "Switzerland", "Belgium", "Netherlands", "Denmark", "United States"}
     assert RULES.city_limits == {"Spain": ["Barcelona"]}
     assert not matches(role("Life Sciences Consultant", country="France", city="Paris"), RULES)
     assert not matches(role("Life Sciences Consultant", country="Spain", city="Madrid"), RULES)
     assert matches(role("Life Sciences Consultant", country="Spain", city="Barcelona"), RULES)
+    assert matches(role("Life Sciences Consultant", country="United States", city="Boston"), RULES)
 
 
 def test_a_role_asking_for_many_years_is_still_out():

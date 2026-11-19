@@ -493,6 +493,12 @@
       "file": "collector/src/jobtracker/rules.py",
       "old": "    if _any(role.title, rules.field_keywords.get(\"health_science\", [])):\n        return True",
       "new": "    if False:\n        return True"
+    },
+    {
+      "name": "locations: any two capital letters count as a US state",
+      "file": "collector/src/jobtracker/adapters/locations.py",
+      "old": "if m.group(2) in US_STATES:",
+      "new": "if m.group(2):"
     }
   ]
 }

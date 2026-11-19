@@ -9,7 +9,7 @@ from jobtracker.adapters.locations import parse_location
 from jobtracker.models import Role
 from jobtracker.registry import Source
 
-COUNTRY_CODES = {"ES": "Spain", "CH": "Switzerland", "BE": "Belgium", "NL": "Netherlands", "DK": "Denmark"}
+COUNTRY_CODES = {"ES": "Spain", "CH": "Switzerland", "BE": "Belgium", "NL": "Netherlands", "DK": "Denmark", "US": "United States"}
 
 
 def fetch_lever(client: httpx.Client, source: Source) -> list[Role]:

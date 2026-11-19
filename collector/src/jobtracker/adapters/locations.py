@@ -16,7 +16,13 @@ COUNTRIES = {
     "spain": "Spain", "switzerland": "Switzerland", "schweiz": "Switzerland",
     "belgium": "Belgium", "netherlands": "Netherlands", "the netherlands": "Netherlands",
     "denmark": "Denmark",
+    "united states": "United States", "usa": "United States", "u.s.a.": "United States", "u.s.": "United States",
 }
+# Two letter US state codes. DE (Delaware) is left out on purpose: in a posting it is far more often Germany.
+US_STATES = frozenset(
+    "AL AK AZ AR CA CO CT DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split()
+)
+_CITY_STATE = re.compile(r"(?:^|[,;/]\s*|\s-\s)([A-Z][\w.'\- ]*?),\s*([A-Z]{2})(?![\w])")
 
 
 def _ascii(text: str) -> str:
@@ -43,6 +49,9 @@ def parse_location(raw: str) -> tuple[str | None, str | None, bool | None]:
     if cities:
         key = cities[0][1]
         return (key.title(), CITIES[key], remote)
+    for m in _CITY_STATE.finditer(raw):
+        if m.group(2) in US_STATES:
+            return (m.group(1).strip(), "United States", remote)
     countries = _find(COUNTRIES, text)
     if countries:
         return (None, COUNTRIES[countries[0][1]], remote)

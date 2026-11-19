@@ -155,3 +155,9 @@ def test_the_real_rules_drop_senior_roles():
     real = load_rules(Path(__file__).resolve().parents[2] / "rules.yaml")
     assert is_dropped(role(title="Senior Consultant, Life Sciences"), real)
     assert not is_dropped(role(title="Associate Consultant, Life Sciences"), real)
+
+
+def test_the_real_rules_include_the_united_states():
+    from jobtracker.run import repo_root
+
+    assert "United States" in load_rules(repo_root() / "rules.yaml").countries

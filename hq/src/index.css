@@ -181,13 +181,17 @@ canvas:active {
   will-change: transform;
 }
 .climb-plane {
+  /* The height and the top come from the painting (set in the page), so they always match it. */
   position: absolute;
   left: -600px;
-  top: -1700px;
   width: 1200px;
-  height: 3400px;
   background: var(--facade, none) 0 0 / 100% 100% no-repeat;
   will-change: transform;
+}
+.climb-interior {
+  /* The room behind the office, placed exactly where the window of the tower is. */
+  background-image: var(--interior, none);
+  background-repeat: no-repeat;
 }
 .climb-ghost {
   pointer-events: none;
@@ -205,14 +209,6 @@ canvas:active {
   opacity: 0;
   pointer-events: none;
   will-change: transform, opacity;
-}
-
-.intro-flash {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 48%, rgba(255, 244, 222, 0.98) 0%, rgba(255, 236, 200, 0.7) 35%, rgba(255, 236, 200, 0) 75%);
 }
 
 /* The header and buttons arrive at the end of the opening animation. */

@@ -1,6 +1,7 @@
 /**
- * The opening animation: a drone climbs the glass tower floor by floor until it reaches the office window, comes round from the left to the lit office
- * floor, whose glass shows the real office as a side view, and that view swings round into the normal view, all in 3 seconds.
+ * The opening animation: a drone climbs the glass tower floor by floor until it reaches the office window, comes up the left of the tower to the
+ * office floor, which is the whole floor of the tower. It arrives there, with the real office seen from the left through the glass,
+ * then zooms out and swings round into the actual dashboard, all in 3 seconds.
  * This file holds only the timing maths, so it can be tested without a screen. Times are in milliseconds.
  */
 
@@ -9,7 +10,7 @@ export const INTRO_MS = 3000;
 /** People who ask their system for less motion get a short fade instead of the climb and the camera move. */
 export const REDUCED_MS = 500;
 /** When the soft floor shadows are drawn, once, after every part and character is in place. */
-export const SHADOWS_AT_MS = 2450;
+export const SHADOWS_AT_MS = 2350;
 /** When the header and the buttons start to fade in. */
 export const CHROME_AT_MS = 2600;
 /** The speech bubbles stay hidden until this long after the animation ends, so the last frame is the clean office. */
@@ -38,16 +39,22 @@ export function introDuration(reduced: boolean): number {
 }
 
 /** The big window of the office floor, in the pixels of the painted tower. The real 3D office shows through it. */
-export const TOWER_WINDOW = { w: 772, h: 418 };
+export const TOWER_WINDOW = { w: 772, h: 350 };
 
 /** How big to draw the tower so that its office window fits the screen: about the same share of the height as before, but never wider than the screen. */
 export function towerScale(width: number, height: number): number {
   return Math.min(height / 730, (0.92 * width) / TOWER_WINDOW.w);
 }
 
+/** How the 3D camera sees the office when the drone arrives: round to the left of the normal view, and low, almost level with the floor. */
+export const ARRIVAL = { yaw: 50, elevation: 0.22 };
+
 /** The drone climbs from the street up to the office floor between these two moments. */
 export const CLIMB_FROM_MS = 150;
-export const CLIMB_TO_MS = 1650;
+export const CLIMB_TO_MS = 1550;
+/** The drone hovers at the office until this moment, then zooms out into the dashboard. */
+export const ZOOM_OUT_FROM_MS = 2000;
+export const ZOOM_OUT_TO_MS = 2900;
 
 /** What the screen overlay and the camera should do at one moment. */
 export interface IntroFrame {
@@ -67,17 +74,17 @@ export interface IntroFrame {
   glide: number;
   /** How much of the real 3D office shows through the window, from 0 (none) to 1 (all of it). */
   office: number;
-  /** Bright flash as the drone flies in, 0 to 1. */
-  flash: number;
-  /** How much the tower has grown, so it feels like the camera passes through the window. */
+  /** How much the tower has shrunk away as the drone zooms out. 1 is full size. */
   wallScale: number;
   /** 1 while the tower is solid, 0 once it is gone. */
   wallOpacity: number;
+  /** How far the 3D office has been let out of the window of the tower, from 0 (cut to the window) to 1 (free, the whole screen). */
+  release: number;
   /** Full screen cover used by the reduced motion fade. 1 is covered, 0 is clear. */
   veil: number;
-  /** How far the 3D camera is still zoomed out to fit the whole office in the window. 1 is fitted to the window, 0 is the normal overview. */
+  /** How far the 3D camera is still zoomed in so the office fills the window. 1 is filling the window, 0 is the normal dashboard view. */
   zoomIn: number;
-  /** How far the 3D camera is still round to the left of the normal view, in degrees. The side view swings round to the normal one. */
+  /** How far the 3D camera is still round to the left of the normal view, in degrees. The side view swings round to the dashboard view. */
   yaw: number;
   /** Camera height, as a multiple of the normal isometric height. Low is a side view, and it rises to 1. */
   elevation: number;
@@ -92,16 +99,14 @@ export function climbSpeedAt(ms: number): number {
 
 export function introFrame(ms: number, reduced: boolean): IntroFrame {
   if (reduced) {
-    return { active: ms < REDUCED_MS, climb: 1, speed: 0, tilt: 0, roll: 0, drift: 0, glide: 0, office: 1, flash: 0, wallScale: 1, wallOpacity: 0, veil: 1 - span(ms, 0, REDUCED_MS), zoomIn: 0, yaw: 0, elevation: 1 };
+    return { active: ms < REDUCED_MS, climb: 1, speed: 0, tilt: 0, roll: 0, drift: 0, glide: 0, office: 1, wallScale: 1, wallOpacity: 0, release: 1, veil: 1 - span(ms, 0, REDUCED_MS), zoomIn: 0, yaw: 0, elevation: 1 };
   }
   const climb = easeInOutCubic(span(ms, CLIMB_FROM_MS, CLIMB_TO_MS));
   const speed = climbSpeedAt(ms);
-  // From the moment the drone reaches the window, the side view swings round to the normal view and the tower falls away.
-  const swing = easeInOutCubic(span(ms, 1650, 2800));
-  const flashUp = span(ms, 1800, 2000);
-  const flashDown = 1 - span(ms, 2000, 2400);
+  // The drone hovers at the office, then zooms out and swings round into the dashboard view.
+  const swing = easeInOutCubic(span(ms, ZOOM_OUT_FROM_MS, ZOOM_OUT_TO_MS));
   // The roll settles before the drone arrives, so the window is level when the real office shows through it.
-  const calm = 1 - span(ms, 1300, 1600);
+  const calm = 1 - span(ms, 1250, 1500);
   return {
     active: ms < INTRO_MS,
     climb,
@@ -111,16 +116,16 @@ export function introFrame(ms: number, reduced: boolean): IntroFrame {
     roll: Math.sin(ms * 0.0125) * (0.25 + 0.9 * speed) * calm,
     drift: Math.sin(ms * 0.0071 + 1) * (0.25 + 0.5 * speed) * calm,
     // It starts on the left of the tower and slides across to face the window as it climbs.
-    glide: 1 - easeInOutCubic(span(ms, CLIMB_FROM_MS, 1700)),
-    office: span(ms, 1350, 1650),
-    flash: 0.35 * Math.min(flashUp, flashDown),
-    // The push in starts before the climb has finished, so the drone never stops: one movement flows into the next.
-    wallScale: lerp(1, 4.2, span(ms, 1650, 2500) ** 2),
-    wallOpacity: 1 - span(ms, 2100, 2500),
+    glide: 1 - easeInOutCubic(span(ms, CLIMB_FROM_MS, CLIMB_TO_MS)),
+    office: span(ms, 1300, 1550),
+    // As the drone zooms out the tower shrinks away behind it, and the office is let out of its window to become the dashboard.
+    wallScale: 1 - 0.45 * span(ms, ZOOM_OUT_FROM_MS, 2700) ** 2,
+    wallOpacity: 1 - span(ms, 2050, 2450),
+    release: span(ms, 2150, 2750),
     veil: 0,
     zoomIn: 1 - swing,
-    yaw: 50 * (1 - swing),
-    elevation: lerp(0.32, 1, swing),
+    yaw: ARRIVAL.yaw * (1 - swing),
+    elevation: lerp(ARRIVAL.elevation, 1, swing),
   };
 }
 
@@ -129,19 +134,19 @@ export type Wave = 'floor' | 'walls' | 'desks' | 'seating' | 'tech' | 'small';
 
 /** When each group starts, and how far (in metres) it travels. Negative starts below its place, positive starts above. */
 export const WAVES: Record<Wave, { start: number; from: number }> = {
-  floor: { start: 1300, from: -0.9 },
-  walls: { start: 1380, from: -3 },
-  desks: { start: 1460, from: 1.8 },
-  seating: { start: 1540, from: 1.8 },
-  tech: { start: 1620, from: 1.8 },
-  small: { start: 1700, from: 1.8 },
+  floor: { start: 1200, from: -0.9 },
+  walls: { start: 1280, from: -3 },
+  desks: { start: 1360, from: 1.8 },
+  seating: { start: 1440, from: 1.8 },
+  tech: { start: 1520, from: 1.8 },
+  small: { start: 1600, from: 1.8 },
 };
 /** How long one group takes to land. */
 export const WAVE_MS = 450;
 /** How long a character takes to pop in. */
 export const POP_MS = 350;
 /** When each character starts to pop in. Goblins add a little per goblin. */
-export const POP_START = { manager: 1750, cv: 1800, linkedin: 1850, goblins: 1900, goblinStep: 50 };
+export const POP_START = { manager: 1650, cv: 1700, linkedin: 1750, goblins: 1800, goblinStep: 50 };
 
 const BY_MATERIAL: Record<string, Wave> = {
   'floor.001': 'floor',

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { CHROME_AT_MS, LABEL_DELAY_MS, TOWER_WINDOW, introFrame, towerScale } from '../domain/intro';
 import { introClock, introGate, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
-import { FACADE, canvasUrl, drawClouds, drawFacade, drawSkyline } from './facade';
+import { FACADE, canvasUrl, drawClouds, drawFacade, drawInterior, drawSkyline } from './facade';
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** How far, in pixels of the painted tower, the drone starts to the left of it. */
@@ -26,6 +26,9 @@ export function Intro() {
   const world = useRef<HTMLDivElement>(null);
   const tilt = useRef<HTMLDivElement>(null);
   const plane = useRef<HTMLDivElement>(null);
+  const backWorld = useRef<HTMLDivElement>(null);
+  const backTilt = useRef<HTMLDivElement>(null);
+  const backPlane = useRef<HTMLDivElement>(null);
   const ghostA = useRef<HTMLDivElement>(null);
   const ghostB = useRef<HTMLDivElement>(null);
   const skyline = useRef<HTMLDivElement>(null);
@@ -34,7 +37,6 @@ export function Intro() {
   const sun = useRef<HTMLDivElement>(null);
   const haze = useRef<HTMLDivElement>(null);
   const vignette = useRef<HTMLDivElement>(null);
-  const flash = useRef<HTMLDivElement>(null);
   const veil = useRef<HTMLDivElement>(null);
   const setChromeOn = useHq((s) => s.setChromeOn);
   const setLabelsOn = useHq((s) => s.setLabelsOn);
@@ -55,9 +57,9 @@ export function Intro() {
     let cancelled = false;
     // If painting is ever slow, do not make people wait for it for long: start without the tower after a few seconds.
     const giveUp = window.setTimeout(() => introGate.picturesReady(), 4000);
-    void Promise.all([canvasUrl(drawFacade()), canvasUrl(drawSkyline()), canvasUrl(drawClouds())]).then(([facade, skylineUrl, cloudsUrl]) => {
+    void Promise.all([canvasUrl(drawFacade()), canvasUrl(drawSkyline()), canvasUrl(drawClouds()), canvasUrl(drawInterior())]).then(([facade, skylineUrl, cloudsUrl, interior]) => {
       if (cancelled) return;
-      setTextures({ '--facade': facade, '--skyline': skylineUrl, '--clouds': cloudsUrl } as CSSProperties);
+      setTextures({ '--facade': facade, '--skyline': skylineUrl, '--clouds': cloudsUrl, '--interior': interior } as CSSProperties);
       // Give the page one frame to put the pictures in place before the clock starts.
       requestAnimationFrame(() => introGate.picturesReady());
     });
@@ -94,11 +96,17 @@ export function Intro() {
         const glidePx = f.glide * GLIDE_PX * k; // the tower starts off to the right, because the drone is on its left
         const blur = f.speed * 70; // how far the ghost copies trail, to streak the windows when the drone is fast
         const shift = (dy: number) => `translateX(${glidePx}px) scale(${k}) translateY(${FACADE.h / 2 - centerY + dy}px)`;
-        set(world.current, 'transform', `translateX(${f.drift}%) rotate(${f.roll}deg) scale(${f.wallScale})`);
+        const worldMove = `translateX(${f.drift}%) rotate(${f.roll}deg) scale(${f.wallScale})`;
+        set(world.current, 'transform', worldMove);
         set(world.current, 'opacity', String(f.wallOpacity));
+        // The room behind the office moves exactly as the tower does, so it stays in the window.
+        set(backWorld.current, 'transform', worldMove);
+        set(backWorld.current, 'opacity', String(f.wallOpacity));
         set(back.current, 'opacity', String(f.wallOpacity));
         set(tilt.current, 'transform', `rotateX(${f.tilt}deg)`);
+        set(backTilt.current, 'transform', `rotateX(${f.tilt}deg)`);
         set(plane.current, 'transform', shift(0));
+        set(backPlane.current, 'transform', shift(0));
         set(ghostA.current, 'transform', shift(blur));
         set(ghostA.current, 'opacity', String(f.speed * 0.34));
         set(ghostB.current, 'transform', shift(-blur));
@@ -111,7 +119,6 @@ export function Intro() {
         set(sun.current, 'opacity', String(f.climb * 0.9));
         set(haze.current, 'opacity', String((1 - f.climb) * 0.8));
         set(vignette.current, 'opacity', String(1 - f.climb));
-        set(flash.current, 'opacity', String(f.flash));
 
         // The real office shows only through the window, so it is cut to the same rectangle, slightly inside it (the steel frame
         // covers the difference). The rectangle follows the window as the tower slides across and then grows past the screen.
@@ -119,10 +126,12 @@ export function Intro() {
         const cx = w / 2 + glidePx * s;
         const hw = (TOWER_WINDOW.w / 2 - 6) * k * s;
         const hh = (TOWER_WINDOW.h / 2 - 6) * k * s;
-        const top = h / 2 - hh;
-        const left = cx - hw;
-        const right = w - (cx + hw);
-        const bottom = h - (h / 2 + hh);
+        // As the drone zooms out the office is let out of its window: the cut opens up to the whole screen.
+        const open = f.release;
+        const top = lerp(h / 2 - hh, 0, open);
+        const left = lerp(cx - hw, 0, open);
+        const right = lerp(w - (cx + hw), 0, open);
+        const bottom = lerp(h - (h / 2 + hh), 0, open);
         const covers = top <= 0 && left <= 0 && right <= 0 && bottom <= 0;
         root().setProperty('--office-clip', covers ? 'none' : `inset(${Math.max(0, top)}px ${Math.max(0, right)}px ${Math.max(0, bottom)}px ${Math.max(0, left)}px)`);
         root().setProperty('--office-opacity', String(f.office));
@@ -159,6 +168,10 @@ export function Intro() {
     return <div ref={veil} className="intro-veil" aria-hidden="true" />;
   }
 
+  // The size of every painted layer comes from the painting itself, so the two cannot drift apart.
+  const planeBox: CSSProperties = { height: FACADE.h, top: -FACADE.h / 2 };
+  const interiorBox: CSSProperties = { ...planeBox, backgroundPosition: `${FACADE.window.x}px ${FACADE.window.y}px`, backgroundSize: `${FACADE.window.w}px ${FACADE.window.h}px` };
+
   return (
     <>
       {/* Behind the 3D office: the sky and the city. */}
@@ -167,22 +180,28 @@ export function Intro() {
         <div ref={dusk} className="climb-dusk" />
         <div ref={sun} className="climb-sun" style={{ opacity: 0 }} />
         <div ref={skyline} className="climb-skyline" />
+        <div ref={backWorld} className="climb-world">
+          <div className="climb-stage">
+            <div ref={backTilt} className="climb-tilt">
+              <div ref={backPlane} className="climb-plane climb-interior" style={interiorBox} />
+            </div>
+          </div>
+        </div>
       </div>
       {/* In front of the 3D office: the tower with its window cut out, the clouds, and the flash. */}
       <div className="intro" style={textures} aria-hidden="true">
         <div ref={world} className="climb-world">
           <div className="climb-stage">
             <div ref={tilt} className="climb-tilt">
-              <div ref={ghostA} className="climb-plane climb-ghost" />
-              <div ref={ghostB} className="climb-plane climb-ghost" />
-              <div ref={plane} className="climb-plane" />
+              <div ref={ghostA} className="climb-plane climb-ghost" style={planeBox} />
+              <div ref={ghostB} className="climb-plane climb-ghost" style={planeBox} />
+              <div ref={plane} className="climb-plane" style={planeBox} />
             </div>
           </div>
           <div ref={clouds} className="climb-clouds" />
           <div ref={haze} className="climb-haze" />
           <div ref={vignette} className="climb-vignette" />
         </div>
-        <div ref={flash} className="intro-flash" />
       </div>
     </>
   );

@@ -1,11 +1,12 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo } from 'react';
 import { OrthographicCamera, Vector3 } from 'three';
-import { TOWER_WINDOW, introFrame, towerScale } from '../domain/intro';
+import { ARRIVAL, TOWER_WINDOW, introFrame, towerScale } from '../domain/intro';
 import { introClock, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
 import { CAMERA, CORNERS, CV_STATION, GLASS_OFFICE, LINKEDIN_STATION, OFFICE, fitZoom } from './layout';
 import { rotateDirection } from './rotation';
+import { viewExtent, zoomToFit } from './viewFit';
 
 const UP = new Vector3(0, 1, 0);
 
@@ -33,17 +34,24 @@ export function CameraRig({ corner }: { corner: number }) {
     direction.set(...rotateDirection(base, turned.yaw)).normalize();
     right.crossVectors(UP, direction).normalize().negate();
     const fit = fitZoom(size.width, size.height);
-    // The opening animation moves the camera itself. It starts low, as a side view of the whole office from the left, small enough
-    // to fit in the window of the tower, and swings round and up into the normal view.
+    // The opening animation moves the camera itself. The drone arrives at the office floor of the tower, and the camera then sees the
+    // whole office from the left, low and to scale, filling the window of the tower exactly. It then zooms out and swings round
+    // into the normal dashboard view.
     const intro = introFrame(introNow(), introClock.reduced);
     if (intro.active) {
-      // Seen from the side the office is about 13 m across, so it fills the window of the tower.
-      const window = (TOWER_WINDOW.w * towerScale(size.width, size.height) * 0.92) / (13 * fit);
-      const fitted = Math.min(1.5, Math.max(0.3, window));
-      current.copy(overview);
-      const [dx, dy, dz] = rotateDirection([direction.x, direction.y, direction.z], (intro.yaw * Math.PI) / 180);
-      tilted.set(dx, dy * intro.elevation, dz);
+      const dir: [number, number, number] = [direction.x, direction.y, direction.z];
+      const [ax, ay, az] = rotateDirection(dir, (ARRIVAL.yaw * Math.PI) / 180);
+      const arrival = viewExtent(OFFICE.bounds, [ax, ay * ARRIVAL.elevation, az], [overview.x, overview.y, overview.z]);
+      const k = towerScale(size.width, size.height);
+      const fitted = zoomToFit(arrival, TOWER_WINDOW.w * k, TOWER_WINDOW.h * k) / fit;
       camera.zoom = fit * (1 + (fitted - 1) * intro.zoomIn);
+      // Centre the office in the window at arrival, and ease back to the normal centre as the camera zooms out.
+      current.copy(overview);
+      current.x += (arrival.right[0] * arrival.centerRight + arrival.up[0] * arrival.centerUp) * intro.zoomIn;
+      current.y += (arrival.right[1] * arrival.centerRight + arrival.up[1] * arrival.centerUp) * intro.zoomIn;
+      current.z += (arrival.right[2] * arrival.centerRight + arrival.up[2] * arrival.centerUp) * intro.zoomIn;
+      const [dx, dy, dz] = rotateDirection(dir, (intro.yaw * Math.PI) / 180);
+      tilted.set(dx, dy * intro.elevation, dz);
       camera.position.copy(current).addScaledVector(tilted.normalize(), CAMERA.distance);
       camera.lookAt(current);
       camera.updateProjectionMatrix();

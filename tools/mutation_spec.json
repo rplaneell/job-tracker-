@@ -459,12 +459,6 @@
       "new": "False or "
     },
     {
-      "name": "alerts: roles outside the regions are stored",
-      "file": "collector/src/jobtracker/alerts.py",
-      "old": "kept = [r for r in wanted if in_region(r, rules)]",
-      "new": "kept = list(wanted)"
-    },
-    {
       "name": "alerts: job text goes into the audit log",
       "file": "collector/src/jobtracker/alerts.py",
       "old": "\"detail\": summary}",

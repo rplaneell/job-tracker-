@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three';
 import type { ScoutStatus } from '../domain/scouting';
 import { SHADOWS_AT_MS } from '../domain/intro';
-import { introClock, introNow } from '../state/introClock';
+import { introClock, introGate, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
 import { CameraRig } from './CameraRig';
 import { LinkedInDesk } from './LinkedInDesk';
@@ -34,7 +34,7 @@ function ReadyFlag() {
   useEffect(() => {
     document.body.dataset.ready = '1';
     // Everything has loaded, so the opening animation can start from its first frame.
-    introClock.begin(performance.now());
+    introGate.modelsReady();
   }, []);
   return null;
 }

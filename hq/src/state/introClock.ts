@@ -34,5 +34,29 @@ export const introClock = {
   },
 };
 
+let modelsReady = false;
+let picturesReady = !enabled || reduced; // the reduced motion fade and the skipped animation need no pictures
+let started = false;
+
+function maybeStart(): void {
+  if (started || !modelsReady || !picturesReady) return;
+  started = true;
+  const now = performance.now();
+  introClock.begin(now);
+  document.body.dataset.introStart = String(Math.round(now));
+}
+
+/** The animation starts only when everything it shows has loaded: the 3D models and the painted tower, so it is never cut short. */
+export const introGate = {
+  modelsReady: () => {
+    modelsReady = true;
+    maybeStart();
+  },
+  picturesReady: () => {
+    picturesReady = true;
+    maybeStart();
+  },
+};
+
 /** Milliseconds into the animation right now. */
 export const introNow = () => clock.ms(performance.now());

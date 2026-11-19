@@ -190,6 +190,13 @@ describe('when the animation plays', () => {
     expect(introEnabledFromSearch('?intro=0')).toBe(false);
   });
 
+  it('plays once per session: not again after it has been seen, unless intro=1 asks for it', () => {
+    expect(introEnabledFromSearch('', true)).toBe(false);
+    expect(introEnabledFromSearch('?corner=1', true)).toBe(false);
+    expect(introEnabledFromSearch('?intro=1', true)).toBe(true);
+    expect(introEnabledFromSearch('?intro=0', false)).toBe(false);
+  });
+
   it('skips for a link straight into a department, unless intro=1 asks for it', () => {
     expect(introEnabledFromSearch('?focus=cv')).toBe(false);
     expect(introEnabledFromSearch('?focus=cv&intro=1')).toBe(true);

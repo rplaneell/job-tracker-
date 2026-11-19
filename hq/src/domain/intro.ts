@@ -157,13 +157,16 @@ export function popScale(ms: number, start: number, reduced: boolean): number {
   return t >= 1 ? 1 : Math.max(0.001, easeOutBack(t));
 }
 
-/** The animation plays unless the link says `?intro=0`. A link straight into a department (`?focus=`) skips it too, unless `?intro=1`. */
-export function introEnabledFromSearch(search: string): boolean {
+/**
+ * The animation plays once per browser session, so coming back to the office from another page does not replay it.
+ * `?intro=0` always turns it off and `?intro=1` always plays it. A link straight into a department (`?focus=`) skips it.
+ */
+export function introEnabledFromSearch(search: string, seenThisSession = false): boolean {
   const params = new URLSearchParams(search);
   const asked = params.get('intro');
   if (asked === '0') return false;
   if (asked === '1') return true;
-  return !params.has('focus');
+  return !seenThisSession && !params.has('focus');
 }
 
 export type IntroState = 'off' | 'waiting' | 'playing' | 'done';

@@ -115,3 +115,28 @@ def test_the_error_reply_never_includes_more_than_300_characters():
     with pytest.raises(RuntimeError) as info:
         upsert(store, [role("1")], T1)
     assert len(str(info.value)) < 400
+
+
+def upsert_flags(store, roles, now, flags):
+    return store.upsert_roles(roles, dict(flags), {r.key: ("consulting", "internship") for r in roles}, now)
+
+
+def test_a_role_that_newly_passes_the_filter_is_returned_for_review():
+    store = Store(FakeClient())
+    r = role("1")
+    upsert_flags(store, [r], T1, {r.key: False})  # stored, but not kept
+    assert [x.source_id for x in upsert_flags(store, [r], T2, {r.key: True})] == ["1"]  # the rules changed, now kept
+
+
+def test_a_role_that_was_already_kept_is_not_returned_again():
+    store = Store(FakeClient())
+    r = role("1")
+    upsert_flags(store, [r], T1, {r.key: True})
+    assert upsert_flags(store, [r], T2, {r.key: True}) == []
+
+
+def test_a_role_that_stops_passing_the_filter_is_not_returned():
+    store = Store(FakeClient())
+    r = role("1")
+    upsert_flags(store, [r], T1, {r.key: True})
+    assert upsert_flags(store, [r], T2, {r.key: False}) == []

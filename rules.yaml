@@ -23,7 +23,9 @@ exclude_keywords:
    customer success, support, social media, quality assurance, qa, retail, sales associate, part-time, part time,
    # clinical, lab and gig work is not business work, even when the title says health or pharma
    clinical, nurse, physician, doctor, rater, trainer, freelance, technician, scientist, laboratory, pharmacist,
-   therapist, safety, care, operator, warehouse, driver, dental, executive assistant, administrative assistant]
+   therapist, safety, care, operator, warehouse, driver, dental, executive assistant, administrative assistant,
+   # hotel and restaurant work is not business work either
+   kitchen, housekeeping, front office, f&b, food, beverage, reservation, events, rooms, hotel, hospitality]
 field_keywords:
   consulting: [consultant, consulting, strategy, advisory]
   finance: [finance, financial, banking, investment banking, equity, m&a, treasury]

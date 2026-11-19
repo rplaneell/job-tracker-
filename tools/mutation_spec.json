@@ -433,6 +433,18 @@
       "file": "collector/src/jobtracker/run.py",
       "old": "((\"ALERT_EMAIL_TO\", to), (\"ALERT_EMAIL_FROM\", sender))",
       "new": "((\"ALERT_EMAIL_TO\", to),)"
+    },
+    {
+      "name": "store: a role that newly passes the filter is never sent to review",
+      "file": "collector/src/jobtracker/store.py",
+      "old": "if row[\"matched\"] and not existing[role.key]:",
+      "new": "if False:"
+    },
+    {
+      "name": "store: every kept role is sent to review again each run",
+      "file": "collector/src/jobtracker/store.py",
+      "old": "if row[\"matched\"] and not existing[role.key]:",
+      "new": "if row[\"matched\"]:"
     }
   ]
 }

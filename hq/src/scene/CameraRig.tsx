@@ -1,6 +1,8 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useMemo } from 'react';
 import { OrthographicCamera, Vector3 } from 'three';
+import { introFrame } from '../domain/intro';
+import { introClock, introNow } from '../state/introClock';
 import { useHq } from '../state/useHq';
 import { CAMERA, CORNERS, CV_STATION, GLASS_OFFICE, OFFICE, fitZoom } from './layout';
 
@@ -19,9 +21,22 @@ export function CameraRig({ corner }: { corner: number }) {
   const station = useMemo(() => new Vector3(...CV_STATION.center), []);
   const current = useMemo(() => overview.clone(), [overview]);
   const goal = useMemo(() => new Vector3(), []);
+  const tilted = useMemo(() => new Vector3(), []);
 
   useFrame((_, dt) => {
     const base = fitZoom(size.width, size.height);
+    // The opening animation moves the camera itself: from the entrance, low and close, up and back to the overview.
+    const intro = introFrame(introNow(), introClock.reduced);
+    if (intro.active) {
+      current.lerpVectors(overview, desk, intro.slide);
+      tilted.copy(direction);
+      tilted.y *= intro.elevation;
+      camera.zoom = base * intro.zoomFactor;
+      camera.position.copy(current).addScaledVector(tilted.normalize(), CAMERA.distance);
+      camera.lookAt(current);
+      camera.updateProjectionMatrix();
+      return;
+    }
     const focused = focus !== null;
     const zoom = focused ? base * (focus === 'scouting' ? CAMERA.scoutFocusFactor : focus === 'cv' ? CAMERA.cvFocusFactor : CAMERA.focusFactor) : base;
     goal.copy(focus === 'reception' ? desk : focus === 'scouting' ? glass : focus === 'cv' ? station : overview);
